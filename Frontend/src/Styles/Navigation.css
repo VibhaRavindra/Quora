@@ -1,0 +1,95 @@
+.header {
+  position: fixed;
+  width: 100vw;
+  height: 54px;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 3px 2px -2px rgba(200,200,200,0.2);
+  display: -webkit-box!important;
+  display: -ms-flexbox!important;
+  display: flex!important;
+  justify-content: center;
+  position: fixed;
+}
+.header-nav{
+  width: 914px;
+}
+.header-elem{
+  cursor: pointer;
+}
+.header-elem div{
+  padding: 0px 35px;
+}
+.quora-logo{
+  width: 84px;
+  height: 50px;
+  cursor: pointer;
+  margin-right: 20px;
+}
+.header-logo-text{
+  font-size: 14px;
+  font-weight: bold;
+  color: #666;
+  float: left;
+  line-height: 51px;
+}
+.home{
+  width: 96px;
+}
+.answer, .spaces {
+  width: 106px;
+}
+.notifications{
+  width: 140px;
+}
+.home-elem{
+  background: url('../Images/home.svg') no-repeat 8px center;
+}
+.answer-elem{
+  background: url('../Images/answer.svg') no-repeat 8px center;
+}
+.spaces-elem{
+  background: url('../Images/spaces.svg') no-repeat 8px center;
+}
+.notifications-elem{
+  background: url('../Images/notifications.svg') no-repeat 8px center;
+}
+.profile{
+  width: 35px;
+  height: 54px;
+  margin-left: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.profile-logo{
+  width: 30px;
+  height: 30px;
+  margin: auto;
+  margin-top: 12px;
+  border-radius: 100%;
+  background: url('../Images/profile_logo.png') no-repeat center;
+}
+.search-box{
+  font-size: 15px;
+  border: 1px solid #e2e0e0;
+  border-radius: 4px;
+  margin-top: 10px;
+  padding: 6px 32px;
+  padding-left: 26px;
+  background: url('../Images/quora_search.png') no-repeat 8px center;
+  box-shadow: inset 0 1px 1px rgba(200,200,200,0.3);
+}
+.add-question{
+  width: 153px;
+  height: 16px;
+  padding: 5px 6px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #fff;
+  border: 1px #b92b27 solid;
+  background: #b92b27;
+  border-radius: 3px;
+  margin-top: 12px;
+  line-height: 14px;
+  cursor: pointer;
+}
+  
