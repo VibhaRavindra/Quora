@@ -66,6 +66,9 @@ users_following:{
 topics_followed:{
   type:Array,
 },
+questions_following:{
+  type: [Question.QuestionSchema],    
+},
 answers_answered:{
     type: [Answer.AnswerSchema],    
 },
