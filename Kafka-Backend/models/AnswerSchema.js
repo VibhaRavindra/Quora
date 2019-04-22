@@ -5,7 +5,6 @@ const AnswerSchema = new Schema({
     answer: {
     type: String,
       required: true,
-      unique: true 
     },
     owner_username: {
         type: String,
