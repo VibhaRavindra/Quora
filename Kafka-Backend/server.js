@@ -1,14 +1,16 @@
 var connection =  new require('./kafka/Connection');
 
 //topics file
+var account = require('./services/account.js');
 var followtopics = require('./services/followtopics.js');
 
-
 // Set up Database connection
-
 const mongoose=require('mongoose')
 mongoose.connect('mongodb+srv://kavya:kavya@cluster0-33gdb.mongodb.net/test?retryWrites=true',{ useNewUrlParser: true , poolSize: 10 }, function(err) {
-  if (err) throw err;
+  if (err) {
+      console.log("ERROR! MONGO MONGOOSE")
+      throw err;
+    }
   else {
       console.log('Successfully connected to MongoDB');
   }
@@ -27,17 +29,19 @@ function handleTopicRequest(topic_name, fname){
         console.log('message received for ' + topic_name +" ", fname);
         console.log(JSON.stringify(message.value));
         var data = JSON.parse(message.value);
-
         switch (topic_name) {
-
-        case 'follow_topics' :
-        followtopics.followService(data.data, function(err, res){
+            case 'follow_topics' :
+            followtopics.followService(data.data, function(err, res){
+                    response(data, res, producer);
+                    return;
+                })
+                break;
+            case 'account':
+            account.followService(data.data, function(err, res){
                 response(data, res, producer);
                 return;
             })
             break;
-
-    
         }
     })
 };
@@ -62,4 +66,5 @@ function response(data, res, producer) {
 // Add your TOPICs here
 //first argument is topic name
 //second argument is a function that will handle this topic request
+handleTopicRequest("account",account)
 handleTopicRequest("follow_topics",followtopics);

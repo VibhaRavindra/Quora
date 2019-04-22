@@ -183,6 +183,7 @@
     border-radius: 3px!important;
     float: left;
     margin-right: 17px;
+    cursor: pointer;
 }
 .topic-btn{
     background-color: #329bff;
@@ -194,4 +195,54 @@
     float: right;
     margin-right: 15px;
     margin-top: 20px;
+    cursor: pointer;
+}
+.check{
+    width:16px;
+    height:16px;
+    /* margin-left: 89px;
+    margin-top: 16px; */
+}
+.check-conatiner{
+    width: 28px;
+    height: 29px;
+    margin-left: 82px;
+    margin-top: 8px;
+    border-radius: 100%;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0);
+}
+.topic-tech:hover .check-conatiner{
+    background-color: rgba(255, 255, 255, 0.5);
+}
+.topic-tech:hover .check{
+    display:inline-block;
+    width:16px;
+    height:16px;
+    background-size:16px 16px;
+    background-repeat:no-repeat;
+    background-image:url('../Images/check1.svg');
+    margin-top: 7px;
+}
+.topic-tech:active .check-container{
+    background-color: #329bff;
+}
+.topic-tech:active .check{
+    display:inline-block;
+    width:16px;
+    height:16px;
+    background-size:16px 16px;
+    background-repeat:no-repeat;
+    background-image:url('../Images/check-white.svg');
+    margin-top: 7px;
+}
+.unsuccess-signup{
+    width: 52%;
+    margin: auto;
+    text-align: center;
+    height: 80px;
+    border-radius: 10px;
+    border: 1px red solid;
+    line-height: 36px;
+    margin-bottom: 35px;
 }

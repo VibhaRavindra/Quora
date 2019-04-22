@@ -4,8 +4,7 @@ var Comment = require('./CommentSchema');
 const AnswerSchema = new Schema({
     answer: {
     type: String,
-      required: true,
-      unique: true 
+      required: true
     },
     owner_username: {
         type: String,
