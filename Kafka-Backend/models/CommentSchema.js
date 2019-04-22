@@ -4,8 +4,7 @@ var Schema = mongoose.Schema;
 const CommentSchema = new Schema({
   comment: {
   type: String,
-    required: true,
-    unique: true 
+    required: true, 
   },
   owner_username: {
     type: String,
