@@ -1,6 +1,8 @@
 //Libraries
 var express = require('express');
 var path = require('path');
+const multer = require('multer');
+const FormData = multer();
 // App Instance
 var app = express();
 var bodyParser = require('body-parser');
@@ -30,6 +32,7 @@ mongoose.connect('mongodb+srv://kavya:kavya@cluster0-33gdb.mongodb.net/test?retr
 })
 //server configuration
 var basePath = '/quora';
+var account_basepath = '/account';
 
 //use express session to maintain session data
 app.use(session({
@@ -54,8 +57,8 @@ app.use(function(req, res, next) {
 app.use(morgan('dev'));
 
 // Routes and Backend Funcioncalities
-
 var followRoutes = require('./src/routes/followRoutes');
+var Account = require('./src/routes/Account');
 
 app.use(express.static('public'));
 
@@ -71,6 +74,7 @@ app.use(bodyParser.json());
 
 
 app.use(basePath, followRoutes);
+app.use(account_basepath, Account);
 app.use('/uploads', express.static(path.join(__dirname, '/uploads/')));
 
 // Execute App

@@ -3,8 +3,8 @@ var Schema = mongoose.Schema;
 
 const CommentSchema = new Schema({
   comment: {
-  type: String,
-    required: true, 
+    type: String,
+    required: true
   },
   owner_username: {
     type: String,
