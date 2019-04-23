@@ -1,72 +1,91 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
+var Question = require('./QuestionSchema');
+var Answer= require('./AnswerSchema');
+var Bookmark= require('./BookmarkSchema');
 //schema
-UserSchema = new Schema({
-  firstname: {
+const UserSchema = new Schema({
+
+user_name: {
     type: String,
-    default: ''
-  },
-  lastname: {
+  required: true
+},
+user_tagline: {
+  type: String,
+  required: true
+},
+user_profile_pic:{
     type: String,
-    default: ''
-  },
-  email: {
+    required:true
+},
+firstname: {
+  type: String,
+  
+},
+lastname:{
     type: String,
-    default: ''
-  },
-  password: {
+  
+},
+city: {
+  type: String,
+  
+},
+state:{
     type: String,
-    default: ''
+  
+},
+zipcode: {
+  type: String,
+ 
+  validate: {
+    validator: function(v) {
+      return /^[0-9]{5}(?:-[0-9]{4})?$/.test(v);
+    },
+    message: props => `${props.value} is not a valid zipcode number!`
   },
-  created: {
+  
+},
+education:{
+    type: String,
+   
+},
+career: {
+  type: String,
+
+},
+aboutme:{
+    type: String,
+ 
+},
+users_followers:{
     type: Number,
-    default: ''
-  },
-  isOwner: {
-    type: String,
-    default: 'N'
-  },
-  phone: {
+},
+users_following:{
+    type:Number, 
+},
+topics_followed:{
+  type:Array,
+},
+answers_answered:{
+    type: [Answer.AnswerSchema],    
+},
+questions_asked:{
+    type: [Question.QuestionSchema],    
+},
+bookmarks:{
+    type:[Bookmark.BookmarkSchema],
+},
+profileview_count:{
     type: Number,
-    default: ''
-  },
-  aboutMe: {
-    type: String,
-    default: ''
-  },
-  city: {
-    type: String,
-    default: ''
-  },
-  state: {
-    type: String,
-    default: ''
-  },
-  country: {
-    type: String,
-    default: ''
-  },
-  company: {
-    type: String,
-    default: ''
-  },
-  school: {
-    type: String,
-    default: ''
-  },
-  hometown: {
-    type: String,
-    default: ''
-  },
-  languages: {
-    type: String,
-    default: ''
-  },
-  gender: {
-    type: String,
-    default: ''
-  },
+ },
+status:{
+  type:String,
+  default:"Activated"
+}
+
 });
     
-module.exports = mongoose.model('Users', UserSchema); 
+var users=mongoose.model('Users',UserSchema)
+module.exports = {users,UserSchema};
+
+

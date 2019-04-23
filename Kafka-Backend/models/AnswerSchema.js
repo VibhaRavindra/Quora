@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var Comment = require('./CommentSchema');
 const AnswerSchema = new Schema({
     answer: {
-    type: String,
+      type: String,
       required: true
     },
     owner_username: {
