@@ -12,11 +12,12 @@ class Main extends Component {
     return (
       <div>
         <Route exact path="/home" component={Home}/>
-        <Route exact path="/SeeAllNotifications" component={SeeAllNotifications}/>
+      
         <Route path = "/header" component = {Header} />
         
         <Route path = "/signup" component = {SignUp} />
         <Route path = "/topics" component = {ChooseTopics} />
+        <Route exact path="/SeeAllNotifications" component={SeeAllNotifications}/>
       </div>
     );
   }

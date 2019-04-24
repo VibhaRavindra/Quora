@@ -82,9 +82,9 @@ Others      <br />
                                                            
                                                         <hr />
 
-              {this.state.rows.map(member=><li id="notification-single-elem">  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>)} 
+                                                        {this.state.rows.map(member=><li id="notification-single-elem">  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>)} 
           
-           
+        
                                                     </div>
                                                 </Tab.Pane>
                                                 <Tab.Pane eventKey="second">
