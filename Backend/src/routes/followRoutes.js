@@ -150,4 +150,24 @@ router.route('/question/unfollowquestion').post( function (req, res) {
     }
   })
 });
+router.route('/question/unfollowtopic').post( function (req, res) {
+
+  console.log("In Follow Topic Route");
+  console.log(req.body);
+  //username
+  //topicname
+
+  kafka.make_request('follow_topics',{"path":"unfollowtopic", "body": req.body}, function(error,result){
+    if (error) {
+      console.log(error);
+      console.log("Question not found");
+      res.status(400).json({responseMessage: 'Question not found'});
+    } else {
+      console.log("Question Found");
+      
+      res.writeHead(200, {'content-type':'application/json'});
+      res.end(JSON.stringify(result.result));
+    }
+  })
+});
 module.exports = router;

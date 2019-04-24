@@ -30,6 +30,9 @@ exports.followService = function followService(msg, callback){
             case "unfollowquestion":
             unfollowquestion(msg,callback);
             break;
+            case "unfollowtopic":
+            unfollowtopic(msg,callback);
+            break;
             
     
     }
@@ -178,6 +181,22 @@ function unfollowuser(msg, callback){
             callback(null, {status:400,error});
         } else {
                   
+            callback(null, {status: 200, result});
+        }
+    })
+   
+}
+
+function unfollowtopic(msg, callback){
+
+    console.log("In listing property topic service. Msg: ", msg)
+
+  Users.users.update( {"user_name":msg.body.username},{$pull:{topics_followed:msg.body.topicname}}, function (error,result) {
+        if (error) {
+            console.log(error.message)
+            callback(null, {status:400,error});
+        } else {
+           
             callback(null, {status: 200, result});
         }
     })
