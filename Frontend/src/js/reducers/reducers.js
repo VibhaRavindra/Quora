@@ -1,4 +1,4 @@
-import { SIGN_IN,SIGN_OUT,SIGN_UP } from "../constants/action-types";
+import { SIGN_IN,SIGN_OUT,SIGN_UP,NOTIFICATIONS } from "../constants/action-types";
 
 const initialState = {
     signupSuccess:null,
@@ -21,7 +21,11 @@ function rootReducer(state = initialState, action) {
             signupSuccess:null,
             signupMessage:null
         });
-    } else if(action.type === SIGN_OUT) {
+    }
+    else if(action.type === NOTIFICATIONS) {
+        return action.payload;
+    }     
+    else if(action.type === SIGN_OUT) {
         return initialState;
     }
     return state;
