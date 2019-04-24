@@ -24,6 +24,12 @@ exports.followService = function followService(msg, callback){
             case "getusersquestions":
             getusersquestions(msg,callback);
             break;
+            case "unfollowuser":
+            unfollowuser(msg,callback);
+            break;
+            case "unfollowquestion":
+            unfollowquestion(msg,callback);
+            break;
             
     
     }
@@ -61,7 +67,7 @@ function followquestion(msg, callback){
 
     console.log("In listing property topic service. Msg: ", msg)
 
-  Questions.questions.update( {"_id":msg.body.qid},{$push:{answers:msg.body.answers}},function (error,result) {
+  Questions.questions.update( {"_id":msg.body.qid},{$push:{followers:msg.body.follower_username}},function (error,result) {
         if (error) {
             console.log(error.message)
             callback(null, {status:400,error});
@@ -144,9 +150,39 @@ function getusersquestions(msg, callback){
                  
            }
                 
-    })
+    })   
+}
 
-    
+function unfollowuser(msg, callback){
+
+
+    Users.users.update( {"user_name":msg.body.user_name},{$pull:{users_followers:msg.body.unfollow_user_name}}, function (error,result) {
+          if (error) {
+              console.log(error.message)
+              callback(null, {status:400,error});
+          } else {
+             
+              callback(null, {status: 200, result});
+          }
+      })
+     
+  }
+
+  function unfollowquestion(msg, callback){
+
+    console.log("In listing property topic service. Msg: ", msg)
+
+  Questions.questions.update( {"_id":msg.body.qid},{$pull:{followers:msg.body.follower_username}},function (error,result) {
+        if (error) {
+            console.log(error.message)
+            callback(null, {status:400,error});
+        } else {
+                  
+            callback(null, {status: 200, result});
+        }
+    })
    
 }
+
+
 
