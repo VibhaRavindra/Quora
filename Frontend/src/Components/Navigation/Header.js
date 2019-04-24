@@ -67,7 +67,7 @@ this.openNotification=this.openNotification.bind(this);
                 <div className="notifications-box">
                 {this.state.open && (
             <div className="notifications-elem_dropdowncontents">
-            <div className="head_notification_dropdown"><Link to='/SeeAllNotifications'>See all notifications</Link> <span className="read-notifications"> Mark these as read</span></div>
+            <div className="head_notification_dropdown"><Link to='/SeeAllNotifications' className="Link-color">See all notifications</Link> <span className="read-notifications"> Mark these as read</span></div>
             <ul>  {
               this.state.questions.map(member=><li>  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.questions}</span><span className="timestamp-notification">  {member.timestamp}</span></li>)} 
               </ul>
