@@ -17,12 +17,9 @@ var passport = require('passport');
 console.log("Initializing passport");
 app.use(passport.initialize());
 
-// Bring in defined Passport Strategy
-require('./config/passport').passport;
-
 // Set up Database connection
 // Bring in defined Passport Strategy
-require('./config/passport').passport;
+require('./config/passport')(passport);
 const mongoose=require('mongoose')
 mongoose.connect('mongodb+srv://kavya:kavya@cluster0-33gdb.mongodb.net/test?retryWrites=true',{ useNewUrlParser: true , poolSize: 10 }, function(err) {
   if (err) throw err;
@@ -59,7 +56,7 @@ app.use(morgan('dev'));
 // Routes and Backend Funcioncalities
 var followRoutes = require('./src/routes/followRoutes');
 var Account = require('./src/routes/Account');
-
+var profileRoutes = require('./src/routes/profile');
 app.use(express.static('public'));
 
 //use cors to allow cross origin resource sharing
@@ -75,6 +72,7 @@ app.use(bodyParser.json());
 
 app.use(basePath, followRoutes);
 app.use(account_basepath, Account);
+app.use(basePath, profileRoutes);
 app.use('/uploads', express.static(path.join(__dirname, '/uploads/')));
 
 // Execute App

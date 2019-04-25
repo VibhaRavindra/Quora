@@ -3,13 +3,15 @@ import '../../Styles/Account.css';
 import Logo from '../../Images/quora.svg';
 import { signup, signin } from "../../js/actions/action";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 function mapStateToProps(store) {
     return {
-        signupSuccess:store.signupSuccess,
-        signupMessage:store.signupMessage,
-        signinSuccess:store.signinSuccess,
-        signinMessage:store.signinMessage
+        signupSuccess:store.account.signupSuccess,
+        signupMessage:store.account.signupMessage,
+        signinSuccess:store.account.signinSuccess,
+        signinMessage:store.account.signinMessage,
+        select_topics:store.account.select_topics
     }
 }
 
@@ -37,7 +39,17 @@ class SignUp extends Component {
         this.props.signin(data);
     }
     render() {
+        console.log("signupSuccess", this.props.signupSuccess)
+        console.log("signupMessage", this.props.signupMessage)
+        console.log("signinSuccess", this.props.signinSuccess)
+        console.log("signinMessage", this.props.signinMessage)
+        console.log("select_topics", this.props.select_topics)
         let message;
+        if(this.props.signinSuccess && this.props.select_topics!= null && !this.props.select_topics){
+            return(<Redirect to="/quora/topics"/>)
+        } else if(this.props.signinSuccess && this.props.select_topics != null && this.props.select_topics){
+            return(<Redirect to="/quora/home"/>)
+        }
         if(this.props.signupSuccess != null && this.props.signupSuccess){
             message = <div className="success-signup"><span>{this.props.signupMessage}</span></div>
         }
@@ -45,7 +57,7 @@ class SignUp extends Component {
             message = <div className="unsuccess-signup"><span>{this.props.signupMessage}</span></div>
         }
         if(this.props.signinSuccess != null && !this.props.signinSuccess){
-            message = <div><h4>{this.props.signinMessage}</h4></div>
+            message = <div className="unsuccess-signup"><span>{this.props.signinMessage}</span></div>
         } 
         return (
         <div className="account-parent-container">

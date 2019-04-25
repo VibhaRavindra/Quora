@@ -50,10 +50,10 @@ const UserSchema = new Schema({
     type: String
   },
   users_followers:{
-    type: Number
+    type: Array
   },
   users_following:{
-    type:Number 
+    type:Array 
   },
   topics_followed:{
     type:Array
