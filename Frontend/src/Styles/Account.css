@@ -1,10 +1,10 @@
 .account-container{
-    width: 655px;
+    width: 670px;
     background: #fff;
     border: 1px solid #e2e2e2;
     box-shadow: 0 0 5px #888;
     border-radius: 4px;
-    overflow-y: hidden;
+    overflow: hidden;
     margin: auto;
     padding: 40px 0px 50px 0px;
     margin-top: 8%;
@@ -21,6 +21,7 @@
     color: #949494;
     font-size: 17px;
     text-align: center;
+    padding-top: 25px;
     padding-bottom: 30px;
 }
 .signup-text{
@@ -31,19 +32,19 @@
     font-weight: bold;
 }
 .signup{
-    width: 49%;
+    width: 50%;
     float: left;
     border-right: 1px solid #e2e2e2;
 }
 .login{
-    width: 50%;
+    width: 49%;
     float: left;
 }
 .first-half{
-    margin-left: 2%;
+    margin-left: 6%;
 }
 .first-half, .second-half{
-    width: 48%;
+    width: 45%;
     float: left;
 }
 .first-name{
@@ -56,13 +57,13 @@
     background-color: #fafafa;
     border-radius: 3px;
     text-decoration: none;
-    padding: 3px 5px;
-    height: 15px;
+    padding: 2px 5px;
+    /* height: 15px; */
     outline: 0;
     border: 1px solid #e2e2e2;
     font-size: 12px;
     margin-bottom: 10px;
-    width: 116px;
+    width: 133px;
     box-shadow: inset 0 1px 1px rgba(200,200,200,0.3);
 }
 .account-labels{
@@ -70,6 +71,7 @@
     color: #666;
     font-weight: bold;
     text-align: left;
+    height: 16px;
     line-height: 25px;
 }
 .first-name-label{
@@ -79,11 +81,11 @@
     text-align: left;
 }
 .email{
-    width: 250px;
-    margin-left: 28px;
+    width: 274px;
+    margin-left: 29px;
 }
 .email-label{
-    margin-left: 30px;
+    margin-left: 32px;
 }
 .account-btn, .account-btn-login{
     background: #3e78ad;
@@ -94,7 +96,7 @@
     font-size: 12px;
     padding: 4px 6px 6px 6px;
     border: 1px solid #3e78ad;
-    margin-left: 228px;
+    margin-left: 258px;
     margin-top: 10px;
     cursor: pointer;
 }
@@ -105,7 +107,7 @@
     padding-left: 10px;
     padding-right: 10px;
     font-size: 13px;
-    margin-left: 232px;
+    margin-left: 262px;
 }
 .account-parent-container{
     width: 100%;
@@ -144,7 +146,7 @@
 }
 .topic-modal{
     width: 660px;
-    height: 216px;
+    height: 275px;
     border-left: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     box-shadow: 0 1px 2px rgba(200,200,200,0.6);
@@ -182,7 +184,7 @@
     background-size: cover;
     border-radius: 3px!important;
     float: left;
-    margin-right: 17px;
+    margin-right: 6px;
     cursor: pointer;
 }
 .topic-btn{
@@ -217,10 +219,10 @@
     text-align: center;
     background-color: rgba(255, 255, 255, 0);
 }
-.topic-tech:hover .check-conatiner{
+.topic-tech:hover .check-conatiner, .topic-science:hover .check-conatiner, .topic-sports:hover .check-conatiner, .topic-health:hover .check-conatiner, .topic-music:hover .check-conatiner{
     background-color: rgba(255, 255, 255, 0.5);
 }
-.topic-tech:hover .check{
+.topic-tech:hover .check, .topic-science .check, .topic-sports .check, .topic-health .check, .topic-music .check{
     display:inline-block;
     width:16px;
     height:16px;
@@ -229,18 +231,6 @@
     background-image:url('../Images/check1.svg');
     margin-top: 7px;
 }
-/* .topic-tech:active .check-container{
-    background-color: #329bff;
-}
-.topic-tech:active .check{
-    display:inline-block;
-    width:16px;
-    height:16px;
-    background-size:16px 16px;
-    background-repeat:no-repeat;
-    background-image:url('../Images/check-white.svg');
-    margin-top: 7px;
-} */
 .unsuccess-signup{
     width: 52%;
     margin: auto;
