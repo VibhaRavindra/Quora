@@ -1,0 +1,87 @@
+.ask-question-title{
+    font-weight: 500;
+    text-align: center;
+    overflow: hidden;
+    padding: 16px 32px;
+    color: #b92b27;
+    border-bottom: 1.5px solid #b92b27;
+    font-size: 15px;
+    line-height: 1.4;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.ask-question-header{
+   padding-left:0px;
+   padding-right:1rem;
+   padding-top:0.2rem;
+   padding-bottom: 0rem;
+   background: #fafafa;
+}
+
+.tips-heading{
+    font-weight: 500!important;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    margin-bottom: 4px!important;
+}
+
+.tips{
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 1.4;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 2;
+    padding: 0px 30px;
+}
+
+.tip-icon{
+    background: url('../Images/ask-question-ul.svg') no-repeat 3px center;
+  }
+
+  .modal-dialog{
+    width: 720px;
+  }
+
+  .ask-question-footer{
+    background: #fafafa;
+    padding-bottom:0px;
+  }
+
+  .add-question-button{
+    user-select: none;
+    box-sizing: border-box;
+    transition: opacity ease-in-out 100ms,color ease-in-out 100ms,background-color ease-in-out 100ms,border-color ease-in-out 100ms;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px 0 rgba(200,200,200,0.2);
+    font-weight: 500;
+    outline: 0;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    background: #3e78ad;
+    color: #fff;
+    border: 1px solid #3a66ad;
+    box-shadow: 0 1px 1px 0 rgba(200,200,200,0.6);
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .add-question-button:hover{
+    user-select: none;
+    box-sizing: border-box;
+    transition: opacity ease-in-out 100ms,color ease-in-out 100ms,background-color ease-in-out 100ms,border-color ease-in-out 100ms;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px 0 rgba(200,200,200,0.2);
+    font-weight: 500;
+    outline: 0;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    background: #3e78ad;
+    color: #fff;
+    border: 1px solid black;
+    box-shadow: 0 1px 1px 0 rgba(200,200,200,0.6);
+    font-size: 15px;
+    line-height: 1.4;
+  }
