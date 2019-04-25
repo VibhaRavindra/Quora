@@ -85,13 +85,13 @@ class SignUp extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="row">
+                        <div className="email-div">
                             <label className="account-labels email-label">EMAIL</label>
                             <div className="input-email">
                                 <input className="email account-input" type="email" name="user_name" required></input>
                             </div>
                         </div>
-                        <div className="row">
+                        <div className="pw">
                             <label className="account-labels email-label">PASSWORD</label>
                             <div className="input-email">
                                 <input className="email account-input" type="password" name="password" required></input>
@@ -105,15 +105,11 @@ class SignUp extends Component {
                 <div className="login">
                     <p className="signup-text">Login</p>
                     <form className="form" onSubmit={this.submitSignIn}>
-                        <div className="row">
-                            <div className="input-email">
-                                <input className="email account-input" type="email" name="user_name" required></input>
-                            </div>
+                        <div className="input-email">
+                            <input className="email account-input" type="email" name="user_name" required></input>
                         </div>
-                        <div className="row">
-                            <div className="input-email">
-                                <input className="email account-input email-top" type="password" name="password" required></input>
-                            </div>
+                        <div className="input-email">
+                            <input className="email account-input email-top" type="password" name="password" required></input>
                         </div>
                         <div className="row">
                             <button type="submit" className="account-btn-login">Login</button>
