@@ -5,6 +5,8 @@ import Home from './Home/Home';
 // import '../App.css';
 import SignUp from './Account/SignUp';
 import ChooseTopics from './Account/ChooseTopics';
+import SeeAllNotifications from './Notifications/SeeAllNotifications';
+import Profile from './Profile/Profile';
 
 class Main extends Component {
   render() {
@@ -15,6 +17,8 @@ class Main extends Component {
           <Route path = "/signup" component = {SignUp} />
           <Route path = "/quora/topics" component = {ChooseTopics} />
           <Route exact path="/home" component={Home}/>
+     <Route path = "/profile" component = {Profile} />
+        <Route exact path="/SeeAllNotifications" component={SeeAllNotifications}/>
         </div>
       );
     } else {
