@@ -10,18 +10,24 @@ import Profile from './Profile/Profile';
 
 class Main extends Component {
   render() {
-    return (
-      <div>
-        <Route exact path="/home" component={Home}/>
-      
-        <Route path = "/header" component = {Header} />
-        
-        <Route path = "/signup" component = {SignUp} />
-        <Route path = "/topics" component = {ChooseTopics} />
-        <Route path = "/profile" component = {Profile} />
+    if("jwtToken" in localStorage) {
+      return (
+        <div>
+          <Route path = "/header" component = {Header} />
+          <Route path = "/signup" component = {SignUp} />
+          <Route path = "/quora/topics" component = {ChooseTopics} />
+          <Route exact path="/home" component={Home}/>
+     <Route path = "/profile" component = {Profile} />
         <Route exact path="/SeeAllNotifications" component={SeeAllNotifications}/>
-      </div>
-    );
+        </div>
+      );
+    } else {
+      return(
+        <div>
+          <Route path = "/quora" component = {SignUp} />
+        </div>
+      )
+    }
   }
 }
 
