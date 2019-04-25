@@ -4,6 +4,7 @@ import { Nav, Tab, Col, Row } from 'react-bootstrap';
 import '../../Styles/Home.css';
 import feedImg from '../../Images/feed.png';
 import { Link } from "react-router-dom";
+import AskQuestion from "../Question/AskQuestion";
 
 class Home extends Component {
     constructor(props) {
@@ -85,7 +86,7 @@ class Home extends Component {
                 }
 
                 ansdiv = (
-                    <div style={{marginTop:"0.3em"}}>
+                    <div style={{ marginTop: "0.3em" }}>
                         <div className="row">
                             <div className="col-1 answer-user-pic">
                                 {imgdiv}
@@ -114,32 +115,32 @@ class Home extends Component {
 
             let questionFooterDiv = null;
             questionFooterDiv = (
-            <div>
-            <div className="row" style={{marginTop:"0.3em"}}>
-                <div className="question-footer-elem" style={{marginLeft:"0.3em"}}>
-                <div className="answer-icon answer-icon-label">Answer</div>
-                </div>
-                <div className="question-footer-elem">
-                <div className="pass-icon answer-icon-label">Pass</div>
-                </div>
-                <div className="question-footer-elem" >
-                <div className="follow-icon answer-icon-label">Follow</div>
-                </div>
-                <div className="question-footer-elem-share-icons" style={{marginLeft:"20em"}}>
-                <div className="fb-icon answer-icon-hide">a</div>
-                </div>
-                <div className="question-footer-elem-share-icons">
-                <div className="twitter-icon answer-icon-hide">a</div>
-                </div>
-                <div className="question-footer-elem-share-icons">
-                <div className="share-icon answer-icon-hide">a</div>
-                </div>
-                <div className="question-footer-elem-share-icons">
-                <div className="dots-icon answer-icon-hide">a</div>
-                </div>
+                <div>
+                    <div className="row" style={{ marginTop: "0.3em" }}>
+                        <div className="question-footer-elem" style={{ marginLeft: "0.3em" }}>
+                            <div className="answer-icon answer-icon-label">Answer</div>
+                        </div>
+                        <div className="question-footer-elem">
+                            <div className="pass-icon answer-icon-label">Pass</div>
+                        </div>
+                        <div className="question-footer-elem" >
+                            <div className="follow-icon answer-icon-label">Follow</div>
+                        </div>
+                        <div className="question-footer-elem-share-icons" style={{ marginLeft: "20em" }}>
+                            <div className="fb-icon answer-icon-hide">a</div>
+                        </div>
+                        <div className="question-footer-elem-share-icons">
+                            <div className="twitter-icon answer-icon-hide">a</div>
+                        </div>
+                        <div className="question-footer-elem-share-icons">
+                            <div className="share-icon answer-icon-hide">a</div>
+                        </div>
+                        <div className="question-footer-elem-share-icons">
+                            <div className="dots-icon answer-icon-hide">a</div>
+                        </div>
 
-            </div>
-            </div>
+                    </div>
+                </div>
             );
 
 
@@ -171,7 +172,7 @@ class Home extends Component {
                                     <Row>
                                         <Col sm={2}>
                                             <Nav variant="pills" className="flex-column feed-nav">
-                                                <Nav.Item style={{marginBottom: "-1em"}}>
+                                                <Nav.Item style={{ marginBottom: "-1em" }}>
                                                     <Nav.Link eventKey="first">
                                                         <div className="row">
                                                             <img className="left-nav-feed-img" src={feedImg} alt="Feed" />
@@ -195,7 +196,11 @@ class Home extends Component {
                                                                         <div className="home-profie-name">{localStorage.getItem("name")}</div>
                                                                     </div>
                                                                 }
-                                                                <span className="card-title profile-question-card">What is your question or link?</span>
+                                                                <button className="btn" data-toggle="modal" data-target="#askQuestion">
+
+                                                                    <span className="card-title profile-question-card">What is your question or link?</span>
+                                                                </button>
+                                                                <AskQuestion/>
                                                             </div>
                                                         </div>
                                                         {questionsDiv}
