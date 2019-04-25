@@ -3,7 +3,7 @@ var Users = require('../models/UserSchema');
 var Questions = require('../models/QuestionSchema');
 var Notifications = require('../models/NotificationSchema');
 var Connection=require('../DatabaseConnection')
-
+const {redisClient} = require('../redisClient')
 
 exports.followService = function followService(msg, callback){
     console.log("In follow Service path:", msg.path);

@@ -213,7 +213,9 @@ font-weight: 500;
     border-right: none;
     border-left:none;
     position: relative; 
+    float: left;
  z-index: 2;
+ border-bottom: solid 0.25px #ccc ;
  font-family: 'q_serif',Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif;
 }
 

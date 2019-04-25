@@ -5,7 +5,7 @@ import '../../Styles/SeeAllNotifications.css';
 import feedImg from '../../Images/feed.png';
 import { Link } from "react-router-dom";
 import axios from 'axios';
-import {abc} from './abc.png';
+import abc from './abc.png';
 
 
 

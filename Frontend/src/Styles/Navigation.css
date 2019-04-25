@@ -109,7 +109,7 @@ ul {
   list-style: none;
   padding: 0;
   margin-top:20px; 
-  position: absolute;
+
 
 }
 li {
@@ -138,7 +138,7 @@ padding-right:5px;
     border-left: solid 0.25px rgb(136, 135, 135);
     border-right: solid 0.25px rgb(136, 135, 135);
     position: absolute;
-    z-index: 999;
+
   }
 
 
@@ -160,8 +160,8 @@ li:hover {
   width:480px;
   -webkit-box-direction:normal;
   background-color: white;
-
-  position: sticky;
+  position: relative;
+  z-index: 999;
 
   }
   .question-notification {
@@ -177,3 +177,4 @@ li:hover {
   .Link-color{
     color: black;
   }
+ 

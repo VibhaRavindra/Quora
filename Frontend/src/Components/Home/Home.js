@@ -4,7 +4,6 @@ import { Nav, Tab, Col, Row } from 'react-bootstrap';
 import '../../Styles/Home.css';
 import feedImg from '../../Images/feed.png';
 import { Link } from "react-router-dom";
-
 class Home extends Component {
     constructor(props) {
         super(props);
