@@ -197,11 +197,16 @@
     margin-top: 20px;
     cursor: pointer;
 }
+.btn-disabled{
+    opacity: .5!important;
+    pointer-events: none!important;
+}
 .check{
-    width:16px;
-    height:16px;
-    /* margin-left: 89px;
-    margin-top: 16px; */
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-size: 16px 16px;
+    margin-top: 7px;
 }
 .check-conatiner{
     width: 28px;
@@ -224,7 +229,7 @@
     background-image:url('../Images/check1.svg');
     margin-top: 7px;
 }
-.topic-tech:active .check-container{
+/* .topic-tech:active .check-container{
     background-color: #329bff;
 }
 .topic-tech:active .check{
@@ -235,7 +240,7 @@
     background-repeat:no-repeat;
     background-image:url('../Images/check-white.svg');
     margin-top: 7px;
-}
+} */
 .unsuccess-signup{
     width: 52%;
     margin: auto;
@@ -243,6 +248,22 @@
     height: 80px;
     border-radius: 10px;
     border: 1px red solid;
-    line-height: 36px;
+    line-height: 78px;
     margin-bottom: 35px;
+    margin-top: -15px;
+    color: red;
+    font-weight: bold;
+}
+.success-signup{
+    width: 52%;
+    margin: auto;
+    text-align: center;
+    height: 80px;
+    border-radius: 10px;
+    border: 1px #10b010 solid;
+    line-height: 78px;
+    margin-bottom: 35px;
+    margin-top: -15px;
+    color: #10b010;
+    font-weight: bold;
 }
