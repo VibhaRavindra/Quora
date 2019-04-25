@@ -22,9 +22,6 @@ function rootReducer(state = initialState, action) {
             signupMessage:null
         });
     }
-    else if(action.type === NOTIFICATIONS) {
-        return action.payload;
-    }     
     else if(action.type === SIGN_OUT) {
         return initialState;
     }
