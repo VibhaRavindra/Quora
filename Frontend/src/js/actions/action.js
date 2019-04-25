@@ -1,16 +1,20 @@
-import { SIGN_IN,SIGN_OUT,SIGN_UP } from "../constants/action-types";
+import { SIGN_IN,SIGN_OUT,SIGN_UP,SELECTED_TOPICS } from "../constants/action-types";
 
 // actions for sign up
 export function signup(formdata) {
+  console.log("Inside Action.js")
   return (dispatch)=>{
   fetch('/account/signup',{
       body: formdata,
       method: 'PUT'
-  }).then((response)=>response.json())
+  })
+  .then((response)=>response.json())
   .then((response)=>dispatch(signupUpdate(response)))
   }
 }
 function signupUpdate(returndata) {
+  console.log("in signup update")
+  console.log(returndata)
     return { type: SIGN_UP, payload:returndata}
 }
 
@@ -27,8 +31,10 @@ export function signin(formdata){
 function signinUpdate(returndata) {
     if(returndata.signinSuccess) {
       localStorage.setItem("jwtToken",returndata.token)
+      localStorage.setItem("user_name",returndata.user_name)
+      localStorage.setItem("firstname",returndata.firstname)
+      localStorage.setItem("lastname",returndata.lastname)
       localStorage.setItem("userid",returndata.userid)
-      localStorage.setItem("username",returndata.user_name)
     }
     return { type: SIGN_IN, payload:returndata}
   }
@@ -46,4 +52,30 @@ function signoutUpdate(returndata) {
     localStorage.removeItem("userid")
     localStorage.removeItem("username")
     return { type: SIGN_OUT}
+}
+
+//actions for choose-topics
+export function selectTopics(selectedTopics){
+  return (dispatch) => {
+    fetch('/account/selectedTopics',{
+      method: 'POST',
+      body: JSON.stringify({
+        topics:selectedTopics,
+        userid:localStorage.getItem('userid'),
+        user_name:localStorage.getItem('user_name')
+      }),
+      headers:{
+        'Authorization': "Bearer " + localStorage.getItem("jwtToken"),
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then((response)=>dispatch(selectTopicsUpdate(response)))
+  }
+}
+function selectTopicsUpdate(returndata) {
+  if(returndata.selectTopicsSuccess) {
+    localStorage.setItem("selected_topics",returndata.selected_topics)
+  }
+  return { type: SELECTED_TOPICS, payload:returndata}
 }

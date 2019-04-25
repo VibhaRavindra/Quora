@@ -26,11 +26,14 @@ exports.followService = function followService(msg, callback){
         case "signin":
             signin(msg,callback);
             break;
+        case "selectedTopics":
+            selectedTopics(msg,callback);
+            break;
     }
 };
 
 function signup(msg, callback){
-    console.log(msg);
+    console.log("Inside Kafka Backend signup and msg = ",msg);
     let hashpw;
     bcrypt.hash(msg.body.password, saltRounds, function(err, hash) {
         if(err){
@@ -38,83 +41,139 @@ function signup(msg, callback){
         }
         hashpw = hash;
     });
+    let newUser = new users({user_name:msg.body.user_name, firstname:msg.body.firstname, lastname:msg.body.lastname})
+    let mongo_userid = String(newUser._id);
     mysqlconnection.beginTransaction(function(err) {
         if (err) { 
+            console.log("INSIDE ERROR 1")
             callback(null,{
                 signupSuccess:false,
                 signupMessage:"Sign Up Failed"
             })
-            throw err; 
+            // throw err; 
         }
-        const signUpQuery = "INSERT INTO Users(user_name,firstname,lastname, password) VALUES(?,?,?,?)"
-        mysqlconnection.query(signUpQuery,[msg.body.user_name,msg.body.firstname,msg.body.lastname,hashpw],(err,result)=>{
-            if(err.code == "ER_DUP_ENTRY"){
+        const signUpQuery = "INSERT INTO Users(user_name,firstname,lastname, password, mongo_userid) VALUES(?,?,?,?,?)"
+        mysqlconnection.query(signUpQuery,[msg.body.user_name,msg.body.firstname,msg.body.lastname,hashpw,mongo_userid],(err,result)=>{
+            if(err){
                 console.log(err)
+                console.log("INSIDE ERROR 2")
+                mysqlconnection.rollback(function() {
+                    // throw err;
+                });
                 callback(null,{
                     signupSuccess:false,
-                    signupMessage:"User Already Exists"
-                })
-            } else if(err){
-                console.log(err)
-                callback(null,{
-                    signupSuccess:false,
-                    signupMessage:"Sign Up Failed"
+                    signupMessage:"User already Exists!"
                 })
             } else {
-                users.findOne({user_name:msg.body.user_name}, function(err, findUser){
+                newUser.save(function (err, result) {
                     if (err) {
-                        console.log("err UserModel.findOne")
+                        console.log("err newUser save")
                         mysqlconnection.rollback(function() {
-                            throw err;
+                            // throw err;
                         });
                         callback(null,{
                             signupSuccess:false,
                             signupMessage:"Sign Up Failed"
                         })
-                    }
-                    if(findUser == null){
-                        var newUser = new users({ 
-                            user_name: msg.body.user_name, 
-                            firstname: msg.body.firstname, 
-                            lastname: msg.body.lastname,
-                            password: hashpw
-                        });
-                        newUser.save(function (err, result) {
-                            if (err) {
-                                mysqlconnection.rollback(function() {
-                                    throw err;
-                                });
-                                console.log("err newUser save")
-                                callback(null,{
-                                    signupSuccess:false,
-                                    signupMessage:"Sign Up Failed"
-                                })
-                            }else{
-                                console.log("all done")
-                                mysqlconnection.commit(function(err) {
-                                    if (err) { 
-                                        mysqlconnection.rollback(function() {
-                                        throw err;
-                                        });
-                                    }
-                                });
-                                callback(null,{
-                                    signupSuccess:true,
-                                    signupMessage:"Sign Up Success. Sign In to continue!"
-                                })
-                            }
-                        });     
                     }else{
-                        mysqlconnection.rollback(function() {
-                            throw err;
+                        mysqlconnection.commit(function(err) {
+                            if (err) { 
+                                mysqlconnection.rollback(function() {
+                                // throw err;
+                                });
+                            }
                         });
-                        console.log("User already exists")
                         callback(null,{
-                            signupSuccess:false,
-                            signupMessage:"User Already Exists"
+                            signupSuccess:true,
+                            signupMessage:"Sign Up Success. Sign In to continue!"
                         })
                     }
-                }) 
+                })
+            }
+        })
+    })
+}
+
+function signin(msg, callback){
+    mysqlconnection.query('SELECT * FROM Users WHERE user_name=?',[msg.body.user_name], 
+    function(err, rowsOfTable, fieldsOfTable){ 
+        if(err){
+            callback(null,{
+                signinSuccess:false,
+                signinMessage:"Sign In Failed"
+            })
+        }
+        var UserArray = [];
+        if(rowsOfTable.length == 1){
+            var result = bcrypt.compareSync(msg.body.password, rowsOfTable[0].password);
+            if(result){
+                console.log("SIGNIN SUCCESS")
+                console.log(rowsOfTable[0].firstname)
+                console.log(rowsOfTable[0].lastname)
+                console.log(rowsOfTable[0].mongo_userid)
+                console.log(rowsOfTable[0].select_topics)
+                callback(null,{
+                    signinSuccess:true,
+                    user_name: rowsOfTable[0].user_name,
+                    firstname: rowsOfTable[0].firstname,
+                    lastname: rowsOfTable[0].lastname,
+                    userid: rowsOfTable[0].mongo_userid,
+                    select_topics: rowsOfTable[0].select_topics
+                });
+            } else{
+                callback(null,{
+                    signinSuccess:false,
+                    signinMessage:"Password Incorrect!"
+                })
+            }
+        } else {
+            callback(null,{
+                signinSuccess:false,
+                signinMessage:"User does not Exist!"
+            })
+        }
+    })
+}
+
+function selectedTopics(msg, callback){
+    mysqlconnection.beginTransaction(function(err) {
+        if (err) { 
+            callback(null,{
+                selectTopicsSuccess:false
+            })
+        }
+        console.log("msg.body.user_name ",msg.body.user_name)
+        const query = "UPDATE Users SET select_topics = ? WHERE user_name = ?"
+        mysqlconnection.query(query,[1,msg.body.user_name],(err,result)=>{
+            if(err){
+                console.log(err)
+                mysqlconnection.rollback(function() {});
+                callback(null,{
+                    selectTopicsSuccess:false,
+                    select_topics: false
+                })
+            } else {
+                users.findOneAndUpdate({_id:msg.body.userid}, { $push: { topics_followed: { $each: msg.body.topics }}}, function(err, result){
+                    if (err){
+                        console.log(err)
+                        mysqlconnection.rollback(function() {});
+                        callback(null,{
+                            selectTopicsSuccess:false,
+                            select_topics: false
+                        })
+                    } else {
+                        mysqlconnection.commit(function(err) {
+                            if (err) { 
+                                mysqlconnection.rollback(function() {
+                                });
+                            }
+                        });
+                        callback(null,{
+                            selectTopicsSuccess:true,
+                            select_topics: true
+                        })
+                    }
+                })
             }
         })
     })

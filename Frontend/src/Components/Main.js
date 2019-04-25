@@ -6,13 +6,21 @@ import ChooseTopics from './Account/ChooseTopics';
 
 class Main extends Component {
   render() {
-    return (
-      <div>
-        <Route path = "/header" component = {Header} />
-        <Route path = "/signup" component = {SignUp} />
-        <Route path = "/topics" component = {ChooseTopics} />
-      </div>
-    );
+    if("jwtToken" in localStorage) {
+      return (
+        <div>
+          <Route path = "/header" component = {Header} />
+          <Route path = "/signup" component = {SignUp} />
+          <Route path = "/quora/topics" component = {ChooseTopics} />
+        </div>
+      );
+    } else {
+      return(
+        <div>
+          <Route path = "/quora" component = {SignUp} />
+        </div>
+      )
+    }
   }
 }
 

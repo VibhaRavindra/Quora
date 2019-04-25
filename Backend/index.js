@@ -17,12 +17,9 @@ var passport = require('passport');
 console.log("Initializing passport");
 app.use(passport.initialize());
 
-// Bring in defined Passport Strategy
-require('./config/passport').passport;
-
 // Set up Database connection
 // Bring in defined Passport Strategy
-require('./config/passport').passport;
+require('./config/passport')(passport);
 const mongoose=require('mongoose')
 mongoose.connect('mongodb+srv://kavya:kavya@cluster0-33gdb.mongodb.net/test?retryWrites=true',{ useNewUrlParser: true , poolSize: 10 }, function(err) {
   if (err) throw err;

@@ -5,8 +5,11 @@ const multer = require('multer');
 const FormData = multer();
 
 // Set up middleware
+var jwt = require('jsonwebtoken');
 var passport = require('passport');
+// Set up middleware
 var requireAuth = passport.authenticate('jwt', {session: false});
+
 
 router.put('/signup', FormData.none(), (req,res,next) => {
     let body = {
@@ -43,22 +46,37 @@ router.post('/signin', FormData.none(), (req,res,next) => {
             })
         }else{
             var token = {
-                IsLoggedIn : result.isLoggedIn,
-                isStudent:result.isStudent,
-                userid:result.userid,
-                user_name:result.user_name
+                signinSuccess : result.signinSuccess,
+                user_name:result.user_name,
+                firstname: result.firstname,
+                lastname: result.lastname,
+                userid: result.userid
             }
             var signed_token = jwt.sign(token, "cmpe273", {
                 expiresIn: 86400 // in seconds
             });
             result.token = signed_token
-            // req.session.IsLoggedIn = result.isLoggedIn;
-            // req.session.isStudent = result.isStudent;
-            // req.session.userid =  result.userid;
-            // req.session.user_name = result.user_name;
+            console.log(result);
             res.send(result);
         }
     });
 })
+router.post('/selectedTopics', (req,res,next) => {
+    let body = {
+      topics: req.body.topics,
+      userid: req.body.userid,
+      user_name: req.body.user_name
+    }
+    console.log("Inside Backend Account.js", body)
+    kafka.make_request('account', {"path":"selectedTopics", body}, function(err,result){
+        if (err){
+            res.send({
+                selectTopicsSuccess:false,
+            })
+        }else{
+            res.send(result);
+        }
+    });
+});
 
 module.exports = router;
