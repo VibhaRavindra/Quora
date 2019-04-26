@@ -23,6 +23,7 @@ class Main extends Component {
           <Route path="/answer/create" component={AnswerForm} />
           <Route exact path="/quora/home" component={Home} />
           <Route path="/profile" component={Profile} />
+         <Route path = "/displayprofile" component = {displayprofile} />
           <Route exact path="/SeeAllNotifications" component={SeeAllNotifications} />
         </div>
      );

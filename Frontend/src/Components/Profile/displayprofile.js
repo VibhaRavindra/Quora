@@ -10,22 +10,17 @@ import AddTagline from './AddTagline'
 import AddEmployment from './AddEmployment';
 import AddLocation from './AddLocation';
 import AddEducation from './AddEducation';
-class Profile extends Component {
+class displayprofile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            defaultImg: false,
-            questions: [],
-            taglinepop:[],
-            selectedFile: null,
-             loaded: 0,
              rows:[{}],
              name:"",
              tagline:"",
              profilepic:"",
              employment:"",
              education:"",
-             location:"",
+             state:"",
              followers:"",
              following:"",
              followersrows:"",
@@ -34,33 +29,13 @@ class Profile extends Component {
              followingrows:""
         }
         this.showfollowers=this.showfollowers.bind(this);
-        this.updatetaglinevalue=this.updatetaglinevalue.bind(this);
-        this.updateemploymentvalue=this.updateemploymentvalue.bind(this);
-        this.updateeducationvalue=this.updateeducationvalue.bind(this);
         this.showfollowing=this.showfollowing.bind(this);
-        this.updatelocationvalue=this.updatelocationvalue.bind(this);
       
     }
 
-    handleselectedFile = event => {
-        this.setState({
-          selectedFile: event.target.files[0],
-          loaded: 0,
-        })
-      }
-
-
-    closeDiv = (event, index) => {
-        console.log(index);
-
-        let questionsArr = this.state.questions;
-        console.log(questionsArr[index].question);
-        questionsArr.splice(index, 1);
-        this.setState({ questions: questionsArr });
-    }
 componentWillMount=()=>{
     var data={
-        "user_name":"kavya.chennoju@sjsu.edu"
+        "user_name":"vibhashree.ravindra@sjsu.edu"
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
@@ -74,50 +49,11 @@ componentWillMount=()=>{
                 rows : response.data,
             })
         }
-        this.setState({tagline:this.state.rows.user_tagline,employment:this.state.rows.career,education:this.state.rows.education,followers:this.state.rows.users_followers,following:this.state.rows.users_following})
+        this.setState({name:this.state.rows.firstname+" "+this.state.rows.lastname,tagline:this.state.rows.user_tagline,employment:this.state.rows.career,education:this.state.rows.education,followers:this.state.rows.users_followers,following:this.state.rows.users_following})
  
     })
       .catch()
   }
-
-handleUpload = () => {
-    localStorage.setItem("user_name","kavya.chennoju@sjsu.edu")
-    console.log(localStorage.getItem("user_name"))
-    const data = new FormData()
-    data.append('selectedFile', this.state.selectedFile, this.state.selectedFile.name)
-    console.log(this.state.selectedFile)
-  data.set("user_name",localStorage.getItem("user_name"))
-    axios
-      .post('http://localhost:3001/quora/addprofilepic', data)
-      .then(res => {
-        console.log(res.data)
-      })
-  }
-  updatetaglinevalue(x){
-  
-    this.setState({
-        tagline : (x),
-    })
-}
-updateemploymentvalue(y){
-    console.log("updating employment")
-    this.setState({
-        employment : (y),
-    })
-console.log(this.state.employment)
-}
-updateeducationvalue(x){
-    console.log("updating")
-    this.setState({
-        education : (x),
-    })
-}
-updatelocationvalue(x){
-    console.log("updating")
-    console.log(x)
-    this.setState({location:x})
-
-}
 showfollowers(){
     this.setState({followerstab:true,followingtab:false})
     var data={
@@ -165,7 +101,7 @@ showfollowing(){
  
     render() {
     
-     console.log("tagline now is"+this.state.location)
+     console.log("tagline now is"+this.state.tagline)
    let followersdisplay=[],x="",followingdisplay=[],y="";
    if(this.state.followerstab===true && this.state.followingtab===false)
    for(x in this.state.followersrows)
@@ -188,56 +124,33 @@ showfollowing(){
             <div style={{ background: "#fafafa", height: "100vh" }}>
          
                 <Header />
-              
 <div className="profile-pic" >
            <img src={abc} width="120" height="120" /> <div className="upload-propic">
-           <input type="file" name="" id="p" onChange={this.handleselectedFile} />
-        <button onClick={this.handleUpload}>Upload</button>
-        <div> {Math.round(this.state.loaded, 2)} %</div></div>
+          </div>
         <br />
         <span className="info">
-        <b>{localStorage.getItem("Name")}</b>
+        <b>{this.state.name}</b>
         </span><br />
-        {this.state.tagline==="" ? 
+       
         <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
-        Add Profile Credential
+     {this.state.tagline}
         </span>
-        :
-        <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
-        {
-            console.log(this.state.tagline)}{this.state.tagline}
-        </span>
-        }<AddTagline triggertagline={this.updatetaglinevalue}/> <br />
+     <br />
             
         </div>
     <span className="credentials-profile">Credentials & Highlights</span>
     <hr className="credential-hr"/> 
     <span className="credentials-profile-add">
-    {this.state.employment==="" ? <span data-toggle="modal" data-target="#employment">
-    Add employment credential</span>:
-    <span data-toggle="modal" data-target="#employment">{console.log(this.state.employment)}{this.state.employment}</span>}
-    <AddEmployment triggeremployment={this.updateemploymentvalue}/><br />
-    {this.state.education==="" ? 
-                <span data-toggle="modal" data-target="#education">
-                
-                Add education credential
-                </span> :  <span data-toggle="modal" data-target="#education">
-                
+   {this.state.employment}
+ <br />
+   
                 {this.state.education}
-                </span>}
-                
-                <AddEducation triggereducation={this.updateeducationvalue}/><br />
-                
-                {this.state.location==="" ? 
-                <span data-toggle="modal" data-target="#location">
-                
-                Add location credential
-                </span> :  <span data-toggle="modal" data-target="#location">
-                
-                {this.state.location}
-                </span>}
-                
- <AddLocation triggerlocation={this.updatelocationvalue}/></span><br />
+               
+                <br />
+ <span data-toggle="modal" data-target="#location">
+ Add a location credential
+ </span>
+ <AddLocation/></span><br />
               
                 <hr />
                 <br />
@@ -289,11 +202,13 @@ Activity<br />
 
                     </div>
                 </div>
-                
+                </div>
+
 </div>
-            </div>
+
+
         )
     }
 }
 
-export default Profile;
+export default displayprofile;

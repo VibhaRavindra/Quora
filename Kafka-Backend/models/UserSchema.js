@@ -12,14 +12,16 @@ const UserSchema = new Schema({
     sparse: true 
   },
   user_tagline: {
-    type: String
+    type: String,
+    default:""
   },
   user_profile_pic:{
       type: String
   },
   firstname: {
     type: String,
-    required: true
+    required: true,
+    default:""
   },
   lastname:{
     type: String,
@@ -41,10 +43,12 @@ const UserSchema = new Schema({
     }
   },
   education:{
-    type: String
+    type: String,
+    default:""
   },
   career: {
-    type: String
+    type: String,
+    default:""
   },
   aboutme:{
     type: String
@@ -73,7 +77,11 @@ const UserSchema = new Schema({
   status:{
     type:String,
     default:"Activated"
-  }
+  },
+questions_followed:{
+    type:[Question.QuestionSchema],
+    required:true
+},
 });
     
 var users=mongoose.model('Users',UserSchema)

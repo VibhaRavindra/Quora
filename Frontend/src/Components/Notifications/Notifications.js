@@ -11,27 +11,27 @@ class Notifications extends Component {
     }
    
     }
-    componentDidMount(){
-                var data={
-                  "user_name":"kavya.chennoju@sjsu.edu"
-                }
-                axios.defaults.withCredentials = true;
-                //make a post request with the user data
-                axios.post("http://localhost:3001/quora/notifications",data, localStorage.getItem('jwtToken'))
-                        .then(response => {
+    // componentDidMount(){
+    //             var data={
+    //               "user_name":"kavya.chennoju@sjsu.edu"
+    //             }
+    //             axios.defaults.withCredentials = true;
+    //             //make a post request with the user data
+    //             axios.post("http://localhost:3001/quora/notifications",data, localStorage.getItem('jwtToken'))
+    //                     .then(response => {
                         
-                  console.log("Status Code : ",response.status);
-                  if(response.status === 200){
-                      console.log(response.data);
-                      this.setState({
-                          rows : response.data,
-                      })
-                      this.props.triggerupdate(JSON.stringify(this.state.rows))
-                  }
-                 console.log("No. of courses= "+this.state.rows[0].qid) 
-              })
-                .catch()
-            }
+    //               console.log("Status Code : ",response.status);
+    //               if(response.status === 200){
+    //                   console.log(response.data);
+    //                   this.setState({
+    //                       rows : response.data,
+    //                   })
+    //                   this.props.triggerupdate(JSON.stringify(this.state.rows))
+    //               }
+    //              console.log("No. of courses= "+this.state.rows[0].qid) 
+    //           })
+    //             .catch()
+    //         }
                
           
      
