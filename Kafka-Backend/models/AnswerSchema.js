@@ -15,12 +15,10 @@ const AnswerSchema = new Schema({
         required: true
     },
     owner_tagline: {
-        type: String,
-        required: true
+        type: String
     },
     owner_profile_pic: {
         type: String,
-        required: true
     },
      is_anonymous: {
        type: Boolean,
@@ -48,10 +46,6 @@ const AnswerSchema = new Schema({
        type: Date, 
          default: Date.now,
          required: true
-     },
-     answer_images: {
-      type: Array,
-      default:[]
      },
      comments: {
       type: [Comment.CommentSchema],

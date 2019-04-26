@@ -131,13 +131,13 @@ class ChooseTopics extends Component {
 
     return (
         <div className="topic-container">
-            <div className="topic-header row">
+            <div className="topic-header">
                 <img className="topic-logo" src={Logo} alt="Quora"></img>
                 <span className="topic-header-text">One Last Step</span>
             </div>
             <div className="topic-modal">
                 <div className="topic-modal-header">What are your interests?</div>
-                <div className="topic-list row">
+                <div className="topic-list">
                     <div className="topic-tech" onClick={this.clickTech}>
                         <div className="check-conatiner" style={{backgroundColor:TechBgColor}}>
                             <div className="check" style={TechBgImage}></div>

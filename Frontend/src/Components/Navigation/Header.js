@@ -44,7 +44,7 @@ this.openNotification=this.openNotification.bind(this);
     return (
      
       <div className="row">
-          <div className="header">
+          <div className="header" >
               <div>
                 <img className="quora-logo" src={Logo} alt="Quora"/>
               </div>
