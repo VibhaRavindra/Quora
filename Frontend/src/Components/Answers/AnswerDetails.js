@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
-import '../../Styles/Answer.css'
+import '../../Styles/Answer.css' 
 import '../../Styles/AnswerButtons.css'
 
 

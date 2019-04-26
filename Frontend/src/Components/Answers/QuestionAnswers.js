@@ -18,7 +18,7 @@ class QuestionAnswers extends Component {
         this.CreateAnswer = this.CreateAnswer.bind(this);
     }
 
-    componentDidMount() {
+    componentWillMount() {
         let topicsArr = [];
         topicsArr = ["Technology", "Science"];
         localStorage.setItem("topics", topicsArr);
@@ -27,6 +27,8 @@ class QuestionAnswers extends Component {
             this.setState({ defaultImg: true });
         }
         console.log("CALL")
+        axios.defaults.withCredentials = true;
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
         axios.get('/answer/' + this.props.match.params.questionId)
         .then((response) => {
           if (response !== undefined)
@@ -114,7 +116,6 @@ class QuestionAnswers extends Component {
 
             </div>
             </div>
-            <div>{this.state.openAnswer}</div>
             </div>
             );
 
@@ -124,6 +125,7 @@ class QuestionAnswers extends Component {
                     <div className="card-body question-card-body">
                             <span className="card-title question-card">{record.question}</span>
                             {questionFooterDiv}
+                            {this.state.openAnswer}
                             {ansdiv}
                     </div>
                 </div>
@@ -131,7 +133,7 @@ class QuestionAnswers extends Component {
         });
 
         return (
-            <div style={{ background: "#fafafa", height: "100vh" }}>
+            <div className="question-answers" style={{ background: "#fafafa", height: "100vh" }}>
                 {redirectVar}
                 <Header />
                 <div className="row">
