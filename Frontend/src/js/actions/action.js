@@ -35,6 +35,7 @@ function signinUpdate(returndata) {
       localStorage.setItem("firstname",returndata.firstname)
       localStorage.setItem("lastname",returndata.lastname)
       localStorage.setItem("userid",returndata.userid)
+      localStorage.setItem("topics",returndata.topics)
     }
     return { type: SIGN_IN, payload:returndata}
   }
@@ -74,8 +75,14 @@ export function selectTopics(selectedTopics){
   }
 }
 function selectTopicsUpdate(returndata) {
-  if(returndata.selectTopicsSuccess) {
-    localStorage.setItem("selected_topics",returndata.selected_topics)
+  // if(returndata.selectTopicsSuccess) {
+  //   localStorage.setItem("selected_topics",returndata.selected_topics)
+  // }
+  console.log("Inside selectTopicsUpdate, returndata.topics : "+ returndata.topics)
+  console.log("Inside selectTopicsUpdate, returndata : "+ returndata)
+  if (localStorage.getItem('topics').length === 0){
+    console.log("localStorage : ('topics').length === 0")
+    localStorage.setItem("topics",returndata.topics)
   }
   return { type: SELECTED_TOPICS, payload:returndata}
 }

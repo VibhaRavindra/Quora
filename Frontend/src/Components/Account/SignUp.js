@@ -11,7 +11,7 @@ function mapStateToProps(store) {
         signupMessage:store.account.signupMessage,
         signinSuccess:store.account.signinSuccess,
         signinMessage:store.account.signinMessage,
-        select_topics:store.account.select_topics
+        isTopicSelected:store.account.isTopicSelected
     }
 }
 
@@ -43,11 +43,12 @@ class SignUp extends Component {
         console.log("signupMessage", this.props.signupMessage)
         console.log("signinSuccess", this.props.signinSuccess)
         console.log("signinMessage", this.props.signinMessage)
-        console.log("select_topics", this.props.select_topics)
+        console.log("isTopicSelected", this.props.isTopicSelected)
         let message;
-        if(this.props.signinSuccess && this.props.select_topics!= null && !this.props.select_topics){
+        if(this.props.signinSuccess && this.props.isTopicSelected!= null && !this.props.isTopicSelected){
+            console.log("inside 1st if condition");
             return(<Redirect to="/quora/topics"/>)
-        } else if(this.props.signinSuccess && this.props.select_topics != null && this.props.select_topics){
+        } else if(this.props.signinSuccess && this.props.isTopicSelected != null && this.props.isTopicSelected){
             return(<Redirect to="/quora/home"/>)
         }
         if(this.props.signupSuccess != null && this.props.signupSuccess){
