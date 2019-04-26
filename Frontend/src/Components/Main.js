@@ -13,7 +13,7 @@ import displayprofile from './Profile/displayprofile'
 
 class Main extends Component {
   render() {
-   // if ("jwtToken" in localStorage) {
+    if ("jwtToken" in localStorage) {
       return (
         <div>
           <Route path="/header" component={Header} />
@@ -27,13 +27,13 @@ class Main extends Component {
           <Route exact path="/SeeAllNotifications" component={SeeAllNotifications} />
         </div>
     );
-   // } else {
-    //  return (
-      //  <div>
-        //  <Route path="/quora" component={SignUp} />
-       // </div>
-     // )
-    //}
+    } else {
+      return (
+        <div>
+         <Route path="/quora" component={SignUp} />
+        </div>
+     )
+    }
   }
 }
 
