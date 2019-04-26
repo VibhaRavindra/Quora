@@ -24,7 +24,9 @@
       background-color: #f6f6f6;
       border: 0;
       padding-left: 10px;
-      padding-bottom: 10px;
+			padding-bottom: 30px;
+			padding-top: 30px;
+			margin-top: 0px
    }
     .answer-form .answer-form-footer {
       padding: 10px;
@@ -119,11 +121,4 @@
 	 padding-left: 0;
 	 font-weight: 400;
 	 font-size: 14px;
-}
- .answer-form-container {
-   margin: 20px;
-}
-
-h2 {
-  font-size: 13px;
 }

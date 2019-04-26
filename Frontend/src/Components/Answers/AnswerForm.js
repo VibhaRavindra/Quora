@@ -12,7 +12,6 @@ class AnswerForm extends React.Component {
     super(props)
     this.state = { text: '', open: false };
     this.handleChange = this.handleChange.bind(this);
-    //this.submitAnswer = this.submitAnswer.bind(this);
     //this.successfulSubmit = this.successfulSubmit.bind(this);
   }
 
@@ -36,10 +35,9 @@ class AnswerForm extends React.Component {
     user_profile_pic: "swe.jpg",
     user_tagline: "Software Engineer",
   }
-//retrieves the courses based on information entered
-// axios.defaults.headers.common['Authorization'] = 'jwt ' + localStorage.getItem('userToken');
-//axios.post('/answer/5cbddb2ca8bd2772b4f4545b', data)
-axios.post('/answer/'+this.props.question_id, data)
+  axios.defaults.withCredentials = true;
+  axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+  axios.post('/answer/'+this.props.question_id, data)
     .then((response) => {
         if (response !== undefined)
             if (response.status === 200) {
