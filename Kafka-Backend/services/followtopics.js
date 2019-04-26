@@ -46,14 +46,14 @@ function getnotifications(msg, callback){
         } else {  for(i in result){
                            questionsfollowed.push(result[i]._id)
                       }
-                      console.log(questionsfollowed) 
+               
                       Notifications.notifications.find( {qid:{$in:questionsfollowed}} , function(err,result){
                         if (err) {
                             console.log(err);
                             console.log("unable to read the database");
                             callback(err, "unable to read the database");
                         } else 
-                                   { console.log("yippeee got notification",result)
+                                   { 
                                        callback(null, {status: 200, result});}
                                 
                     })
@@ -79,7 +79,7 @@ function followquestion(msg, callback){
             callback(null, {status: 200, result});
         }
     })
-   
+
 }
 function followtopic(msg, callback){
 

@@ -91,8 +91,7 @@ router.route('/addlocation').post( function (req, res) {
   console.log("In addeducation Route");
   console.log(req.body);
   //user_name
-  //zipcode
-  //states
+  //location
 
   kafka.make_request('profile',{"path":"addlocation", "body": req.body}, function(error,result){
     if (error) {
