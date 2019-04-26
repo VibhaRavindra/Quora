@@ -16,7 +16,7 @@ class Main extends Component {
           <Route path = "/header" component = {Header} />
           <Route path = "/signup" component = {SignUp} />
           <Route path = "/quora/topics" component = {ChooseTopics} />
-          <Route exact path="/home" component={Home}/>
+          <Route exact path="/quora/home" component={Home}/>
      <Route path = "/profile" component = {Profile} />
         <Route exact path="/SeeAllNotifications" component={SeeAllNotifications}/>
         </div>
