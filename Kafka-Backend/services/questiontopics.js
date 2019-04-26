@@ -1,4 +1,5 @@
 var Questions = require('../models/QuestionSchema');
+var Users = require('../models/UserSchema');
 
 exports.questionService = function questionService(msg, callback) {
     console.log("In question Service path:", msg.path);
@@ -19,6 +20,7 @@ exports.questionService = function questionService(msg, callback) {
 function createQuestion(msg, callback) {
 
     console.log("In create question. Msg: ", msg);
+    let timestamp = new Date();
     let questionData = {
         "question": msg.body.question,
         "topic_name": msg.body.topic_name,
@@ -26,7 +28,8 @@ function createQuestion(msg, callback) {
         "owner_name": msg.body.owner_name,
         "owner_username": msg.body.owner_username,
         "owner_profile_pic": msg.body.owner_profile_pic,
-        "owner_tagline": msg.body.owner_tagline
+        "owner_tagline": msg.body.owner_tagline,
+        "timestamp" : timestamp
     }
     console.log("question data:", questionData);
     Questions.questions.findOne({ "question": msg.body.question }, function (err, rows) {
@@ -45,8 +48,14 @@ function createQuestion(msg, callback) {
                     } else {
                         if (results) {
                             console.log("Saved to questions Successful");
-                            console.log("results:", results);
-                            callback(null, { status: 200 });
+                            Users.users.findOneAndUpdate({ "user_name": msg.body.owner_username }, { $push: { questions_asked: {"question": msg.body.question, "timestamp": timestamp} } }, function (error,result) {
+                                if (error) {
+                                    console.log(error.message)
+                                    callback(null, {status:400,error});
+                                } else {
+                                    callback(null, {status: 200});
+                                }
+                            });
                         }
                         else {
                             console.log("Unable to save data");

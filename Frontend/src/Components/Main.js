@@ -26,13 +26,13 @@ class Main extends Component {
          <Route path = "/displayprofile" component = {displayprofile} />
           <Route exact path="/SeeAllNotifications" component={SeeAllNotifications} />
         </div>
-     );
+    );
     } else {
       return (
         <div>
-          <Route path="/quora" component={SignUp} />
+         <Route path="/quora" component={SignUp} />
         </div>
-      )
+     )
     }
   }
 }

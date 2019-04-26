@@ -66,7 +66,7 @@ const UserSchema = new Schema({
     type: [Answer.AnswerSchema] 
   },
   questions_asked:{
-    type: [Question.QuestionSchema]    
+    type: Array    
   },
   bookmarks:{
     type:[Bookmark.BookmarkSchema],
