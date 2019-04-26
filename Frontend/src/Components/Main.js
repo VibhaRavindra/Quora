@@ -9,6 +9,7 @@ import SignUp from './Account/SignUp';
 import ChooseTopics from './Account/ChooseTopics';
 import SeeAllNotifications from './Notifications/SeeAllNotifications';
 import Profile from './Profile/Profile';
+import displayprofile from './Profile/displayprofile'
 
 class Main extends Component {
   render() {
