@@ -5,27 +5,33 @@ import '../../Styles/Home.css';
 import feedImg from '../../Images/feed.png';
 import { Link } from "react-router-dom";
 import AskQuestion from "../Question/AskQuestion";
+import { connect } from 'react-redux';
+import { getAllQuestions, getTopicQuestions } from '../../js/actions/question_actions';
 
 class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
             defaultImg: false,
-            questions: []
+            questions: [],
+            isDefaultTopic : true
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         let topicsArr = [];
         topicsArr = ["Technology", "Science"];
         localStorage.setItem("topics", topicsArr);
         localStorage.setItem("name", "Akhila");
-        if (localStorage.getItem("image") === null) {
+        //if (localStorage.getItem("image") === null) {
             this.setState({ defaultImg: true });
-        }
-        let questions = [{ question: "What is 2/2", answer: { ans: "1", name: "Severus Snape", tagline: "Professor at Hogsward", timestamp: "" } },
-        { question: "Who is the president of USA", answer: { ans: "Trump", name: "Cinderella", tagline: "Princess", timestamp: "2019-04-22T15:26:46.320+00:00" } }];
-        this.setState({ questions: questions });
+        //}
+        await this.props.getAllQuestions();
+        let questions = null;
+        questions = this.props.questions.questions;
+        console.log(this.props.questions.questions);
+        this.setState({ questions: questions});
+
     }
 
     closeDiv = (event, index) => {
@@ -35,6 +41,21 @@ class Home extends Component {
         console.log(questionsArr[index].question);
         questionsArr.splice(index, 1);
         this.setState({ questions: questionsArr });
+    }
+
+    handleTopicSelect = async (key) => {
+        console.log(key);
+        if(key === "first"){
+            await this.props.getAllQuestions();
+        }
+        else{
+            this.setState({isDefaultTopic: false});
+            await this.props.getTopicQuestions(key);
+        }
+        let questions = null;
+        questions = this.props.questions.questions;
+        console.log(this.props.questions.questions);
+        this.setState({ questions: questions});
     }
 
     render() {
@@ -63,16 +84,20 @@ class Home extends Component {
             )
         });
 
+       
+
+       
 
         questionsDiv = this.state.questions.map((record, index) => {
+            console.log(record);
             let ansdiv = null;
-            if (record.answer.ans !== "" || record.answer.ans != null) {
+            if (record.answers.length>0) {
                 let imgdiv = null;
-                if (record.answer.img == null) {
+                //if (record.answers.owner_profile_pic == null) {
                     imgdiv = <div className="questions-default-logo"></div>;
-                }
+                //}
 
-                if (record.answer.timestamp) {
+                if (record.answers[0].timestamp) {
                     /* let timestamp = new Date(record.answer.timestamp);
                      var date = timestamp.getDate();
                      var month = timestamp.getMonth(); 
@@ -81,7 +106,7 @@ class Home extends Component {
      
                      var dateTime = date + "/" +(month + 1) + "/" + year;*/
 
-                    var dateTime = record.answer.timestamp.replace("T", " ");
+                    var dateTime = record.answers[0].timestamp.replace("T", " ");
                     dateTime = dateTime.substring(0, dateTime.indexOf('.'));
                 }
 
@@ -94,9 +119,9 @@ class Home extends Component {
                             <div className="col-9">
                                 <div className="row">
                                     <Link className="question-link" to={"/profile/" + record.user_id}>
-                                        <div className="answer-user-profile">{record.answer.name},</div>
+                                        <div className="answer-user-profile">{record.answers[0].owner_name},</div>
                                     </Link>
-                                    <div className="answer-user-profile">&nbsp;{record.answer.tagline}</div>
+                                    <div className="answer-user-profile">&nbsp;{record.answers[0].owner_tagline}</div>
                                 </div>
                                 <div className="row">
                                     <div className="answer-timestamp"><span>Answered&nbsp;</span>{dateTime}</div>
@@ -106,7 +131,7 @@ class Home extends Component {
 
                         </div>
                         <div className="row answer-to-question">
-                            {record.answer.ans}
+                            {record.answers[0].answer}
                         </div>
 
                     </div>
@@ -124,9 +149,9 @@ class Home extends Component {
                             <div className="pass-icon answer-icon-label">Pass</div>
                         </div>
                         <div className="question-footer-elem" >
-                            <div className="follow-icon answer-icon-label">Follow</div>
+                            <div className="follow-icon answer-icon-label">Follow {(record.followers.length == 0)? "": record.followers.length}</div>
                         </div>
-                        <div className="question-footer-elem-share-icons" style={{ marginLeft: "20em" }}>
+                        <div className="question-footer-elem-share-icons" style={{ marginLeft: "18em" }}>
                             <div className="fb-icon answer-icon-hide">a</div>
                         </div>
                         <div className="question-footer-elem-share-icons">
@@ -148,7 +173,11 @@ class Home extends Component {
                 <div className="card question-card">
                     <div className="card-body question-card-body">
                         <span className="pull-right clickable close-icon" data-effect="fadeOut" onClick={(event) => this.closeDiv(event, index)}><i class="fa fa-times"></i></span>
+                        {this.state.isDefaultTopic ?
                         <p className="question-card-subtitle"> Answer . Topic you might like</p>
+                        :
+                        <p className="question-card-subtitle"> Answer . Topic you like</p>
+                        }
                         <Link className="question-link" to={"/question/" + record._id}>
                             <span className="card-title question-card">{record.question}</span>
                         </Link>
@@ -156,6 +185,19 @@ class Home extends Component {
                         {questionFooterDiv}
                     </div>
                 </div>
+            )
+        });
+
+        let tabPanesDiv = null;
+        tabPanesDiv = userTopics.map((record, index) => {
+
+            return (
+                <Tab.Pane eventKey={record}>
+                    <div id="accordion">
+                        {questionsDiv}
+                    </div>
+                    </Tab.Pane>
+
             )
         });
 
@@ -168,7 +210,7 @@ class Home extends Component {
                         <div className="row justify-content-center align-items-center" style={{ height: '10vh' }}>
 
                             <div className="col-12">
-                                <Tab.Container id="left-tabs-example" defaultActiveKey="first" onSelect={this.handleSelect}>
+                                <Tab.Container id="left-tabs-example" defaultActiveKey="first" onSelect={this.handleTopicSelect}>
                                     <Row>
                                         <Col sm={2}>
                                             <Nav variant="pills" className="flex-column feed-nav">
@@ -206,11 +248,7 @@ class Home extends Component {
                                                         {questionsDiv}
                                                     </div>
                                                 </Tab.Pane>
-                                                <Tab.Pane eventKey="second">
-                                                    <div id="accordion">
-                                                        {"Second tab selected"}
-                                                    </div>
-                                                </Tab.Pane>
+                                                {tabPanesDiv}
                                             </Tab.Content>
                                         </Col>
                                     </Row>
@@ -225,4 +263,8 @@ class Home extends Component {
     }
 }
 
-export default Home;
+const mapStateToProps = state => ({
+    questions : state.question.payload
+});
+
+export default connect(mapStateToProps, { getAllQuestions, getTopicQuestions})(Home);

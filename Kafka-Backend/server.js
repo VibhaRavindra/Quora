@@ -4,6 +4,7 @@ var connection = new require('./kafka/Connection');
 var account = require('./services/account.js');
 var followtopics = require('./services/followtopics.js');
 var profile = require('./services/profile.js');
+var questiontopics = require('./services/questiontopics');
 var answer = require('./services/answer.js');
 
 // Set up Database connection
@@ -56,6 +57,12 @@ function handleTopicRequest(topic_name, fname) {
                     return;
                 })
                 break;
+                case 'question_topics' :
+                questiontopics.questionService(data.data, function(err, res){
+                        response(data, res, producer);
+                        return;
+                    })
+                    break;
         }
     })
 };
@@ -81,7 +88,8 @@ function response(data, res, producer) {
 // Add your TOPICs here
 //first argument is topic name
 //second argument is a function that will handle this topic request
-handleTopicRequest("account", account)
-handleTopicRequest("follow_topics", followtopics);
-handleTopicRequest("profile", profile)
+handleTopicRequest("account",account)
+handleTopicRequest("follow_topics",followtopics);
+handleTopicRequest("profile",profile)
+handleTopicRequest("question_topics", questiontopics);
 handleTopicRequest("answer",answer);
