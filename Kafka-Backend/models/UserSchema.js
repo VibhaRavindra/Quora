@@ -18,6 +18,9 @@ const UserSchema = new Schema({
   user_profile_pic:{
       type: String
   },
+  b64:{
+    type: String
+},
   firstname: {
     type: String,
     required: true,

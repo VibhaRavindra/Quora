@@ -151,6 +151,7 @@ font-weight: 500;
   .follow-icon{
     background: url('../Images/feed-follow.svg') no-repeat 3px center;
   }
+  
 
   .fb-icon{
     background: url('../Images/feed-fb.svg') no-repeat 3px center;
@@ -195,4 +196,12 @@ font-weight: 500;
 
   .question-footer-elem-share-icons{
     cursor: pointer;
+  }
+  #unfollow-ques{
+    top: 75px;
+    left:170px;
+    position: absolute;
+  }
+  .head{
+    position: fixed;
   }

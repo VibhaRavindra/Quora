@@ -6,7 +6,9 @@ import feedImg from '../../Images/feed.png';
 import { Link } from "react-router-dom";
 import AskQuestion from "../Question/AskQuestion";
 import { connect } from 'react-redux';
+import unfollow from '../../Images/unfollow.png';
 import { getAllQuestions, getTopicQuestions } from '../../js/actions/question_actions';
+import axios from 'axios';
 
 class Home extends Component {
     constructor(props) {
@@ -14,7 +16,8 @@ class Home extends Component {
         this.state = {
             defaultImg: false,
             questions: [],
-            isDefaultTopic : true
+            isDefaultTopic : true,
+            followedquestions:[]
         }
     }
 
@@ -57,6 +60,28 @@ class Home extends Component {
         console.log(this.props.questions.questions);
         this.setState({ questions: questions});
     }
+   followquestion=(e,x)=>{
+       console.log(localStorage.getItem("user_name"));
+       console.log("hiphip",x);
+    
+       var data={
+           follower_username:localStorage.getItem("user_name"),
+           qid:x
+       }
+       axios.post("http://localhost:3001/quora/question/followquestion",data, localStorage.getItem('jwtToken'))
+         
+   }
+   unfollowquestion=(e,x)=>{
+    console.log(localStorage.getItem("user_name"));
+    console.log("hophop",x);
+    
+    var data={
+        follower_username:localStorage.getItem("user_name"),
+        qid:x
+    }
+    axios.post("http://localhost:3001/quora/question/unfollowquestion",data, localStorage.getItem('jwtToken'))
+      
+}
 
     render() {
         let redirectVar = '';
@@ -64,6 +89,8 @@ class Home extends Component {
         /*if (!localStorage.getItem('cookie1')) {
             redirectVar = <Redirect to="/login" />
         }*/
+        let topicsArr = ["Technology", "Science"];
+        localStorage.setItem("topics", topicsArr);
 
         let topicsDiv = null;
         let topics = localStorage.getItem("topics");
@@ -149,7 +176,7 @@ class Home extends Component {
                             <div className="pass-icon answer-icon-label">Pass</div>
                         </div>
                         <div className="question-footer-elem" >
-                            <div className="follow-icon answer-icon-label">Follow {(record.followers.length == 0)? "": record.followers.length}</div>
+                        {record.followers.includes(localStorage.getItem("user_name")) ? <div id="unfollow-ques answer-icon-label" onClick={e=>this.unfollowquestion(e,record._id)}> <img src={unfollow} width="60" height="40" />{"  "}{(record.followers.length == 0)? "": record.followers.length}</div>:<div className="follow-icon answer-icon-label" onClick={e=>this.followquestion(e,record._id)}>Follow {(record.followers.length == 0)? "": record.followers.length}</div>}
                         </div>
                         <div className="question-footer-elem-share-icons" style={{ marginLeft: "18em" }}>
                             <div className="fb-icon answer-icon-hide">a</div>
@@ -204,7 +231,7 @@ class Home extends Component {
         return (
             <div style={{ background: "#fafafa", height: "100vh" }}>
                 {redirectVar}
-                <Header />
+                 <Header />
                 <div className="row">
                     <div className="container" style={{ marginTop: "5em" }}>
                         <div className="row justify-content-center align-items-center" style={{ height: '10vh' }}>
