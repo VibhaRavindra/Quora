@@ -14,10 +14,6 @@ owner_name: {
     type: String,
     required: true
 },
-owner_tagline: {
-    type: String,
-    required: true
-},
 owner_profile_pic: {
     type: String,
     required: true
