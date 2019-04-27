@@ -4,6 +4,8 @@ import Logo from '../../Images/quora.svg';
 import Notifications from '../Notifications/Notifications';
 import {Link} from 'react-router-dom'
 import abc from './abc.png'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Profile from '../Profile/Profile'
 class Header extends Component {
   constructor(props){
     super(props);
@@ -81,7 +83,17 @@ this.openNotification=this.openNotification.bind(this);
                 <input className="search-box" placeholder="Search Quora"></input>
               </div>
               <div className="profile">
-                <div className="profile-logo"></div>
+                <div className="profile-logo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+                </div>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/profile">Profile</a>
+                    <a class="dropdown-item" href="/messages">Messages</a>
+                    <a class="dropdown-item" href="/yourcontent">Your Content</a>
+                    <a class="dropdown-item" href="settings">Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Logout</a>
+                </div>
               </div>
               <div>
                 <div className="add-question">Add Question or Link</div>
