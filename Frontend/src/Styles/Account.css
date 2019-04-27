@@ -7,7 +7,7 @@
     overflow: hidden;
     margin: auto;
     padding: 40px 0px 50px 0px;
-    margin-top: 8%;
+    margin-top: 4%;
 }
 .account-logo-container{
     text-align: center;
@@ -222,7 +222,7 @@
 .topic-tech:hover .check-conatiner, .topic-science:hover .check-conatiner, .topic-sports:hover .check-conatiner, .topic-health:hover .check-conatiner, .topic-music:hover .check-conatiner{
     background-color: rgba(255, 255, 255, 0.5);
 }
-.topic-tech:hover .check, .topic-science .check, .topic-sports .check, .topic-health .check, .topic-music .check{
+.topic-tech:hover .check, .topic-science:hover .check, .topic-sports:hover .check, .topic-health:hover .check, .topic-music:hover .check{
     display:inline-block;
     width:16px;
     height:16px;
