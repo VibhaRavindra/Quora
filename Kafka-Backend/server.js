@@ -4,6 +4,7 @@ var connection = new require('./kafka/Connection');
 var account = require('./services/account.js');
 var followtopics = require('./services/followtopics.js');
 var profile = require('./services/profile.js');
+var questiontopics = require('./services/questiontopics');
 var answer = require('./services/answer.js');
 var search = require('./services/search.js');
 
@@ -63,6 +64,12 @@ function handleTopicRequest(topic_name, fname) {
                     return;
                 })
                 break;
+                case 'question_topics' :
+                questiontopics.questionService(data.data, function(err, res){
+                        response(data, res, producer);
+                        return;
+                    })
+                    break;
         }
     })
 };
@@ -93,3 +100,4 @@ handleTopicRequest("follow_topics", followtopics);
 handleTopicRequest("profile", profile)
 handleTopicRequest("answer",answer);
 handleTopicRequest("search",search);
+handleTopicRequest("question_topics", questiontopics);

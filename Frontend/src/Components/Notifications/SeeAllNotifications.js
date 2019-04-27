@@ -33,7 +33,6 @@ class SeeAllNotifications extends Component {
                   rows : response.data,
               })
           }
-         console.log("No. of courses= "+this.state.rows[0].question) 
       })
         .catch()
     }

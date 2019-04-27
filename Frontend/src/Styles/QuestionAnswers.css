@@ -37,7 +37,7 @@ font-weight: 500;
     font-size: 13px;
 }
 
-.profile-question-card{
+.profile-question-answer-card{
     margin-top:.3em;
     font-weight: bold;
     font-size: 18px;
@@ -68,11 +68,11 @@ font-weight: 500;
     margin-bottom: 0.5em;
 }
 
-.question-card{
+.question-answer-card{
     margin-bottom: 0.5em;
 }
 
-.question-card-subtitle{
+.question-answer-card-subtitle{
     font-size: 13px;
     color: #949494;
     font-family:  "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -80,24 +80,28 @@ font-weight: 500;
     margin-bottom: 2px;
 }
 
-.question-card .card-title{
+.question-answer-card h5 {
+  margin-bottom: 0px;
+}
+
+.question-answer-card .card-title{
   font-weight: bold;
   font-size: 18px;
   display: block;
   font-family: 'q_serif',Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif;
 }
 
-.question-card-body{
+.question-answer-card-body{
     font-size: 18px;
     display: block;
     font-family: 'q_serif',Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif;
 }
 
-.question-link{
+.question-answer-link{
     color: #333333
 }
 
-.question-link:hover{
+.question-answer-link:hover{
     color: #333333
 }
 
@@ -113,7 +117,7 @@ font-weight: 500;
     font-weight: 400;
 }
 
-.questions-default-logo{
+.question-answers-default-logo{
     margin-top: 0.3em;
     width: 32px;
     height: 32px;
@@ -136,12 +140,12 @@ font-weight: 500;
     cursor: pointer;
   }
 
-  .question-footer-elem div{
+  .question-answer-footer-elem div{
     padding: 0px 30px;
     margin-right: -0.7em;
   }
 
-  .question-footer-elem{
+  .question-answer-footer-elem{
     cursor: pointer;
   }
 
@@ -193,11 +197,11 @@ font-weight: 500;
     color: #fff;
   }
 
-  .question-footer-elem-share-icons div{
+  .question-answer-footer-elem-share-icons div{
     padding: 0px 30px;
     margin-right: -1.7em;
   }
 
-  .question-footer-elem-share-icons{
+  .question-answer-footer-elem-share-icons{
     cursor: pointer;
   }

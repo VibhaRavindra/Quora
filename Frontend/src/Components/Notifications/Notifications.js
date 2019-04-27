@@ -28,7 +28,7 @@ class Notifications extends Component {
                       })
                       this.props.triggerupdate(JSON.stringify(this.state.rows))
                   }
-                 console.log("No. of courses= "+this.state.rows[0].qid) 
+                
               })
                 .catch()
             }

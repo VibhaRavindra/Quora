@@ -14,7 +14,7 @@ router.route('/question/followquestion').post( function (req, res) {
   console.log(req.body);
   //follower_username
   //qid
-
+    console.log(req.body.qid)
   kafka.make_request('follow_topics',{"path":"followquestion", "body": req.body}, function(error,result){
     if (error) {
       console.log(error);
