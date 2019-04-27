@@ -58,6 +58,7 @@ app.use(morgan('dev'));
 var followRoutes = require('./src/routes/followRoutes');
 var Account = require('./src/routes/Account');
 var profileRoutes = require('./src/routes/profile');
+var questionRoutes = require('./src/routes/questionRoutes');
 var Answer = require('./src/routes/Answer');
 
 app.use(express.static('public'));
@@ -76,6 +77,7 @@ app.use(bodyParser.json());
 app.use(basePath, followRoutes);
 app.use(account_basepath, Account);
 app.use(basePath, profileRoutes);
+app.use(basePath, questionRoutes);
 app.use(answer_basepath, Answer);
 
 app.use('/uploads', express.static(path.join(__dirname, '/uploads/')));

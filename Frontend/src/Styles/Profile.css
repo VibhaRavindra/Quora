@@ -7,7 +7,7 @@ hr {
     padding: 0;
     margin-bottom:-12px; 
     position: relative;
-    top:200px; 
+    top:210px; 
     margin-right:400px; 
     margin-left:90px; 
 
@@ -119,4 +119,10 @@ hr {
 }
 #popupCloseButton:hover {
     background-color: #ccc;
+}
+#followers-elem{
+    margin-right:10px;
+    margin-bottom:50px;
+    font-family: 'q_serif',Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif;
+    
 }
