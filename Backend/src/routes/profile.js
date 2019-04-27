@@ -114,9 +114,13 @@ router.route('/addlocation').post( function (req, res) {
 
 router.route('/addprofilepic').post(upload.single('selectedFile'), (req, res) => {
   b64= new Buffer(fs.readFileSync(req.file.path)).toString("base64")
-  console.log(req.param.user_name)
-  
-  kafka.make_request('profile',{"path":"addprofilepic", "body":req.dta }, function(error,result){
+console.log(req.file.filename)
+  var data={
+    user_name:req.body.user_name,
+     "b64":"data:image/jpg;base64,"+b64,
+     "user_profile_pic":req.file.filename 
+  }
+  kafka.make_request('profile',{"path":"addprofilepic", "body":data }, function(error,result){
     if (error) {
       console.log(error);
       console.log("Question not found");
@@ -126,6 +130,7 @@ router.route('/addprofilepic').post(upload.single('selectedFile'), (req, res) =>
   })
   res.writeHead(200, {'content-type':'text/plain'});
   res.end(b64);
+
   res.send();
 });
 

@@ -15,7 +15,8 @@ class Home extends Component {
         this.state = {
             defaultImg: false,
             questions: [],
-            isDefaultTopic : true
+            isDefaultTopic : true,
+            followedquestions:[]
         }
     }
 

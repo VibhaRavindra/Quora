@@ -102,13 +102,30 @@ function addprofilepic(msg, callback){
 
     console.log("In listing property topic service. Msg: ", msg)
 
+    Users.users.findOneAndUpdate({ 'user_name': msg.body.user_name}, { $set: {"user_profile_pic": msg.body.user_profile_pic,"b64":msg.body.b64 } }, function (err, result) {
+        if (err) {
+            console.log(err);
+            callback(err, "Database Error");
+        } else {
+            redisClient.del("applicantProfile_" + msg.body.user_name);
+            callback(null, {status: 200, result});
+        }
+    });
  
    
 }
 
 function getfollowersinfo(msg, callback){
-
-                      Users.users.find( {user_name:{$in:msg.body.followers}} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1}, function(err,result){
+    let usersfollowed=[];
+    
+    Users.users.find({user_name:msg.body.user_name},{"users_followers":1,"_id":0}, function(err,result){
+        if (err) {
+            console.log("unable to read the database questions");
+        } else {
+            if(result[0]!=undefined){
+                      console.log(result[0])
+                      usersfollowed=result[0].users_followers
+                      Users.users.find( {user_name:{$in:usersfollowed}} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1}, function(err,result){
                         if (err) {
                             console.log(err);
                             console.log("unable to read the database");
@@ -119,23 +136,37 @@ function getfollowersinfo(msg, callback){
                             }
                                 
                     })
+                }}
+            })
    
 }
 
 
 function getfollowinginfo(msg, callback){
 
-    Users.users.find( {user_name:{$in:msg.body.following}} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1}, function(err,result){
-      if (err) {
-          console.log(err);
-          console.log("unable to read the database");
-          callback(err, "unable to read the database");
-      } else 
-                 { 
-callback(null, {status: 200, result});
-          }
-              
-  })
+    let usersfollowing=[];
+    Users.users.find({user_name:msg.body.user_name},{"users_following":1,"_id":0}, function(err,result){
+        if (err) {
+            console.log("unable to read the database questions");
+        } else { if(result[0]!=undefined){
+                      console.log(result[0])
+                      usersfollowing=result[0].users_following
+                    console.log(usersfollowing)
+                    Users.users.find( {user_name:{$in:usersfollowing}} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1}, function(err,result){
+                        if (err) {
+                            console.log(err);
+                            console.log("unable to read the database");
+                            callback(err, "unable to read the database");
+                        } else 
+                                   { 
+            callback(null, {status: 200, result});
+                            }
+                                
+                    })
+        }
+                }
+            })
+   
 
 }
 
@@ -150,7 +181,7 @@ function getprofileinfo(msg, callback){
                 result=profile;
             } else {
                 console.log("Get applicant profile : inserting profile into cache");
-                profile = await Users.users.findOne( { user_name: msg.body.user_name },{"_id":0,"firstname":1,"lastname":"1","user_tagline":1,"user_profile_pic":1,"career":1,"education":1,"users_followers":1,"users_following":1,"zipcode":1,"state":1});
+                profile = await Users.users.findOne( { user_name: msg.body.user_name },{"_id":0,"firstname":1,"lastname":"1","user_tagline":1,"user_profile_pic":1,"career":1,"education":1,"users_followers":1,"users_following":1,"zipcode":1,"state":1,"user_profile_pic":1,"b64":1});
                 if (profile) {
                     redisClient.set(redisKey, JSON.stringify(profile), function (error, reply) {
                         if (error) {
