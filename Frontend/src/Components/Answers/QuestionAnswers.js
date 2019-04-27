@@ -16,6 +16,20 @@ class QuestionAnswers extends Component {
             openAnswer: ''
         }
         this.CreateAnswer = this.CreateAnswer.bind(this);
+        this.closeAnswerFormAndReload = this.closeAnswerFormAndReload.bind(this);
+    }
+
+    closeAnswerFormAndReload = () => {
+        axios.defaults.withCredentials = true;
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+        axios.get('/answer/' + this.props.match.params.questionId)
+        .then((response) => {
+          if (response !== undefined)
+            if (response.status === 200) {
+              console.log(response);
+              this.setState({ question: response.data.question, openAnswer : '' });
+            }
+        })
     }
 
     componentWillMount() {
@@ -42,7 +56,7 @@ class QuestionAnswers extends Component {
     CreateAnswer = (questionId) => {
         console.log(questionId);
         this.setState({
-            openAnswer: <AnswerForm question_id = {questionId} />
+            openAnswer: <AnswerForm question_id = {questionId}  closeAnswerFormAndReload = {this.closeAnswerFormAndReload} />
         })
     }; 
 
@@ -74,19 +88,24 @@ class QuestionAnswers extends Component {
 
         questionDiv = (() => {
             let record = this.state.question
-            console.log(JSON.stringify(record))
+            console.log("Debug question div")
             let ansdiv = null;
             
             if (record.answers) {
+                console.log("Debug record.answers")
+                let answersList =record.answers;
+                answersList.sort((a, b) => (b.upvote_count - a.upvote_count !== 0) ? (b.upvote_count - a.upvote_count) : (a.downvote_count - b.downvote_count))
                 
-                ansdiv = record.answers.map((answer, index) => {
-                    if(index < 3) return null;
+                ansdiv = answersList.map((answer, index) => {
+                    console.log("Debug answer div")
+                    console.log("Debug upvote count: " + answer.upvote_count)
                     console.log(JSON.stringify(answer))
-
-                   return( <AnswerDetails answer={answer} /> )
+                    
+                   return( <AnswerDetails answer={answer}/> )
                
                 });
             } else {
+                console.log("Debug no answers")
                 return null;
             }
 
@@ -119,13 +138,13 @@ class QuestionAnswers extends Component {
             </div>
             );
 
-
             return (
-                <div className="card question-card">
-                    <div className="card-body question-card-body">
-                            <span className="card-title question-card">{record.question}</span>
+                <div className="card question-answer-card">
+                    <div className="card-body question-answer-card-body">
+                            <span className="card-title question-answer-card">{record.question}</span>
                             {questionFooterDiv}
                             {this.state.openAnswer}
+                            <h5> {record.answers.length} Answers </h5>
                             {ansdiv}
                     </div>
                 </div>
@@ -143,25 +162,12 @@ class QuestionAnswers extends Component {
                             <div className="col-12">
                                 <Tab.Container id="left-tabs-example" defaultActiveKey="first" onSelect={this.handleSelect}>
                                     <Row>
-                                        <Col sm={2}>
-                                            <Nav variant="pills" className="flex-column feed-nav">
-                                                <Nav.Item style={{marginBottom: "-1em"}}>
-                                                    <Nav.Link eventKey="first">
-                                                        <div className="row">
-                                                            <img className="left-nav-feed-img" src={feedImg} alt="Feed" />
-                                                            <div className="label feed-label">  Feed
-                                                              </div>
-                                                        </div>
-                                                    </Nav.Link>
-                                                </Nav.Item>
-                                                {topicsDiv}
-                                            </Nav>
-                                        </Col>
+                                    <Col sm={1} />
                                         <Col sm={9}>
                                             <Tab.Content>
                                                 <Tab.Pane eventKey="first">
                                                     <div id="accordion">
-                                                        {questionDiv()}
+                                                        {questionDiv()  }
                                                     </div>
                                                 </Tab.Pane>
                                                 <Tab.Pane eventKey="second">

@@ -105,14 +105,14 @@
   right: 0;
 }
 
-ul {
+.header ul {
   list-style: none;
   padding: 0;
   margin-top:20px; 
 
 
 }
-li {
+.header li {
   padding: 8px 0px;
   width: 410px;
   height: 80px;
@@ -142,7 +142,7 @@ padding-right:5px;
   }
 
 
-li:hover {
+.header li:hover {
   background-color: rgba(0, 0, 0, 0.14);
   cursor: pointer;
 }
