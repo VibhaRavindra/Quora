@@ -1,17 +1,45 @@
 import React, { Component } from 'react';
 import '../../Styles/Home.css';
 import { Link } from "react-router-dom";
+import unfollow from '../../Images/unfollow.png';
+import axios from 'axios';
 
 class DisplayQuestion extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            followedquestions:[]
         }
     }
 
+    followquestion=(e,x)=>{
+        console.log(localStorage.getItem("user_name"));
+        console.log("hiphip",x);
+ 
+        var data={
+            follower_username:localStorage.getItem("user_name"),
+            qid:x
+        }
+        axios.post("http://localhost:3001/quora/question/followquestion",data, localStorage.getItem('jwtToken'))
+ 
+    }
+    unfollowquestion=(e,x)=>{
+     console.log(localStorage.getItem("user_name"));
+     console.log("hophop",x);
+ 
+     var data={
+         follower_username:localStorage.getItem("user_name"),
+         qid:x
+     }
+     axios.post("http://localhost:3001/quora/question/unfollowquestion",data, localStorage.getItem('jwtToken'))
+ 
+ }
         
 
     render(){
+
+        let topicsArr = ["Technology", "Science"];
+        localStorage.setItem("topics", topicsArr);
 
         let record = this.props.question;
         let index = this.props.questionIndex;
@@ -74,7 +102,7 @@ class DisplayQuestion extends Component {
                         <div className="pass-icon answer-icon-label">Pass</div>
                     </div>
                     <div className="question-footer-elem" >
-                        <div className="follow-icon answer-icon-label">Follow {(record.followers.length == 0)? "": record.followers.length}</div>
+                    {record.followers.includes(localStorage.getItem("user_name")) ? <div id="unfollow-ques answer-icon-label" onClick={e=>this.unfollowquestion(e,record._id)}> <img src={unfollow} width="60" height="40" />{"  "}{(record.followers.length == 0)? "": record.followers.length}</div>:<div className="follow-icon answer-icon-label" onClick={e=>this.followquestion(e,record._id)}>Follow {(record.followers.length == 0)? "": record.followers.length}</div>}
                     </div>
                     <div className="question-footer-elem-share-icons" style={{ marginLeft: "18em" }}>
                         <div className="fb-icon answer-icon-hide">a</div>
