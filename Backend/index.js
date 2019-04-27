@@ -60,6 +60,7 @@ var Account = require('./src/routes/Account');
 var profileRoutes = require('./src/routes/profile');
 var questionRoutes = require('./src/routes/questionRoutes');
 var Answer = require('./src/routes/Answer');
+var yourcontent= require('./src/routes/yourcontent')
 
 app.use(express.static('public'));
 
@@ -79,6 +80,7 @@ app.use(account_basepath, Account);
 app.use(basePath, profileRoutes);
 app.use(basePath, questionRoutes);
 app.use(answer_basepath, Answer);
+app.use(basepath,yourcontent)
 
 app.use('/uploads', express.static(path.join(__dirname, '/uploads/')));
 
