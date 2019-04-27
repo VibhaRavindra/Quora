@@ -20,7 +20,7 @@ class Main extends Component {
           <Route path="/quora/topics" component={ChooseTopics} />
           <Route path="/answer/question/:questionId" component={QuestionAnswers} />
           <Route path="/answer/create" component={AnswerForm} />
-          <Route exact path="/home" component={Home} />
+          <Route exact path="/quora/home" component={Home} />
           <Route path="/profile" component={Profile} />
           <Route exact path="/SeeAllNotifications" component={SeeAllNotifications} />
         </div>
@@ -28,7 +28,7 @@ class Main extends Component {
     } else {
       return (
         <div>
-          <Route path="/quora" component={SignUp} />
+          <Route path="/" component={SignUp} />
         </div>
       )
     }

@@ -31,6 +31,7 @@ mongoose.connect('mongodb+srv://kavya:kavya@cluster0-33gdb.mongodb.net/test?retr
 var basePath = '/quora';
 var account_basepath = '/account';
 var answer_basepath = '/answer';
+var search_basepath = '/search';
 
 //use express session to maintain session data
 app.use(session({
@@ -59,6 +60,7 @@ var followRoutes = require('./src/routes/followRoutes');
 var Account = require('./src/routes/Account');
 var profileRoutes = require('./src/routes/profile');
 var Answer = require('./src/routes/Answer');
+var Search = require('./src/routes/Search')
 
 app.use(express.static('public'));
 
@@ -77,6 +79,7 @@ app.use(basePath, followRoutes);
 app.use(account_basepath, Account);
 app.use(basePath, profileRoutes);
 app.use(answer_basepath, Answer);
+app.use(search_basepath, Search);
 
 app.use('/uploads', express.static(path.join(__dirname, '/uploads/')));
 

@@ -45,10 +45,10 @@ class SignUp extends Component {
         console.log("signinMessage", this.props.signinMessage)
         console.log("isTopicSelected", this.props.isTopicSelected)
         let message;
-        if(this.props.signinSuccess && this.props.isTopicSelected!= null && !this.props.isTopicSelected){
+        if(localStorage.getItem("jwtToken")!=null && localStorage.getItem("isTopicSelected")== null){
             console.log("inside 1st if condition");
             return(<Redirect to="/quora/topics"/>)
-        } else if(this.props.signinSuccess && this.props.isTopicSelected != null && this.props.isTopicSelected){
+        } else if(localStorage.getItem("jwtToken")!=null && localStorage.getItem("isTopicSelected")!= null){
             return(<Redirect to="/quora/home"/>)
         }
         if(this.props.signupSuccess != null && this.props.signupSuccess){

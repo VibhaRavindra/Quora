@@ -5,6 +5,7 @@ var account = require('./services/account.js');
 var followtopics = require('./services/followtopics.js');
 var profile = require('./services/profile.js');
 var answer = require('./services/answer.js');
+var search = require('./services/search.js');
 
 // Set up Database connection
 const mongoose = require('mongoose')
@@ -40,6 +41,12 @@ function handleTopicRequest(topic_name, fname) {
                 break;
             case 'account':
                 account.followService(data.data, function (err, res) {
+                    response(data, res, producer);
+                    return;
+                })
+                break;
+            case 'search':
+                search.followService(data.data, function (err, res) {
                     response(data, res, producer);
                     return;
                 })
@@ -85,3 +92,4 @@ handleTopicRequest("account", account)
 handleTopicRequest("follow_topics", followtopics);
 handleTopicRequest("profile", profile)
 handleTopicRequest("answer",answer);
+handleTopicRequest("search",search);
