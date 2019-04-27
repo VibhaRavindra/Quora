@@ -80,9 +80,11 @@ class ChooseTopics extends Component {
         this.props.selectTopics(selectedTopics);
     }
     render() {
-        console.log("selectTopicsSuccess : : "+ this.props.selectTopicsSuccess)
         if(this.props.selectTopicsSuccess) {
             console.log("this.props.selectTopicsSuccess ", this.props.selectTopicsSuccess)
+            return(<Redirect to="/quora/home"/>)
+        }
+        if (localStorage.getItem('isTopicSelected')){
             return(<Redirect to="/quora/home"/>)
         }
         let TechBgColor = null, TechBgImage = null, ScienceBgColor = null, ScienceBgImage = null, MusicBgColor = null, MusicBgImage = null, SportsBgColor = null, SportsBgImage = null, HealthBgColor = null, HealthBgImage = null

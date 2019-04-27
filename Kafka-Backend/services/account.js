@@ -57,9 +57,7 @@ function signup(msg, callback){
             if(err){
                 console.log(err)
                 console.log("INSIDE ERROR 2")
-                mysqlconnection.rollback(function() {
-                    // throw err;
-                });
+                mysqlconnection.rollback(function() {});
                 callback(null,{
                     signupSuccess:false,
                     signupMessage:"User already Exists!"
@@ -95,43 +93,80 @@ function signup(msg, callback){
 }
 
 function signin(msg, callback){
-    mysqlconnection.query('SELECT * FROM Users WHERE user_name=?',[msg.body.user_name], 
-    function(err, rowsOfTable, fieldsOfTable){ 
-        if(err){
+    mysqlconnection.beginTransaction(function(err) {
+        if (err) { 
+            console.log("INSIDE ERROR 1")
             callback(null,{
                 signinSuccess:false,
                 signinMessage:"Sign In Failed"
             })
+            // throw err; 
         }
-        var UserArray = [];
-        if(rowsOfTable.length == 1){
-            var result = bcrypt.compareSync(msg.body.password, rowsOfTable[0].password);
-            if(result){
-                console.log("SIGNIN SUCCESS")
-                console.log(rowsOfTable[0].firstname)
-                console.log(rowsOfTable[0].lastname)
-                console.log(rowsOfTable[0].mongo_userid)
-                console.log(rowsOfTable[0].select_topics)
-                callback(null,{
-                    signinSuccess:true,
-                    user_name: rowsOfTable[0].user_name,
-                    firstname: rowsOfTable[0].firstname,
-                    lastname: rowsOfTable[0].lastname,
-                    userid: rowsOfTable[0].mongo_userid,
-                    select_topics: rowsOfTable[0].select_topics
+        mysqlconnection.query('SELECT * FROM Users WHERE user_name=?',[msg.body.user_name], 
+        function(err, rowsOfTable, fieldsOfTable){ 
+            if(err){
+                mysqlconnection.rollback(function() {
+                    // throw err;
                 });
-            } else{
                 callback(null,{
                     signinSuccess:false,
-                    signinMessage:"Password Incorrect!"
+                    signinMessage:"Sign In Failed"
                 })
             }
-        } else {
-            callback(null,{
-                signinSuccess:false,
-                signinMessage:"User does not Exist!"
-            })
-        }
+            var UserArray = [];
+            if(rowsOfTable.length == 1){
+                var result = bcrypt.compareSync(msg.body.password, rowsOfTable[0].password);
+                if(result){
+                    console.log("SIGNIN SUCCESS")
+                    console.log(rowsOfTable[0].firstname)
+                    console.log(rowsOfTable[0].lastname)
+                    console.log(rowsOfTable[0].mongo_userid)
+                    console.log(rowsOfTable[0].select_topics)
+                    users.findOne({_id: rowsOfTable[0].mongo_userid}, function(err, result){
+                        if(err){
+                            mysqlconnection.rollback(function() {
+                                // throw err;
+                            });
+                            callback(null,{
+                                signinSuccess:false,
+                                signinMessage:"Sign In Failed"
+                            })
+                        }
+                        let topics = result.topics_followed;
+                        let isTopicSelected;
+                        let select_topics
+                        if(topics.length > 0){
+                            isTopicSelected = true;
+                        } else {
+                            isTopicSelected = false;
+                        }
+                        console.log("topics : ", topics);
+                        callback(null,{
+                            signinSuccess:true,
+                            user_name: rowsOfTable[0].user_name,
+                            firstname: rowsOfTable[0].firstname,
+                            lastname: rowsOfTable[0].lastname,
+                            userid: rowsOfTable[0].mongo_userid,
+                            topics: topics,
+                            isTopicSelected: isTopicSelected
+                        });
+                    })
+                } else{
+                    mysqlconnection.rollback(function() {
+                        // throw err;
+                    });
+                    callback(null,{
+                        signinSuccess:false,
+                        signinMessage:"Password Incorrect!"
+                    })
+                }
+            } else {
+                callback(null,{
+                    signinSuccess:false,
+                    signinMessage:"User does not Exist!"
+                })
+            }
+        })
     })
 }
 
@@ -168,9 +203,12 @@ function selectedTopics(msg, callback){
                                 });
                             }
                         });
+                        console.log("IN SELECTED_TOPICS, TOPICS :::;;; : ", msg.body.topics)
                         callback(null,{
                             selectTopicsSuccess:true,
-                            select_topics: true
+                            select_topics: true,
+                            topics: msg.body.topics
+                            // selected_topics: msg.body.topics
                         })
                     }
                 })

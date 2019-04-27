@@ -33,7 +33,7 @@ class Main extends Component {
     } else {
       return (
         <div>
-         <Route path="/quora" component={SignUp} />
+          <Route path="/" component={SignUp} />
         </div>
      )
     }

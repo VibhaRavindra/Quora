@@ -32,9 +32,12 @@ function signinUpdate(returndata) {
     if(returndata.signinSuccess) {
       localStorage.setItem("jwtToken",returndata.token)
       localStorage.setItem("user_name",returndata.user_name)
+      localStorage.setItem("fullname",returndata.firstname + " " +returndata.lastname )
       localStorage.setItem("firstname",returndata.firstname)
       localStorage.setItem("lastname",returndata.lastname)
       localStorage.setItem("userid",returndata.userid)
+      localStorage.setItem("topics",returndata.topics)
+      localStorage.setItem("isTopicSelected",returndata.isTopicSelected)
     }
     return { type: SIGN_IN, payload:returndata}
   }
@@ -74,8 +77,8 @@ export function selectTopics(selectedTopics){
   }
 }
 function selectTopicsUpdate(returndata) {
-  if(returndata.selectTopicsSuccess) {
-    localStorage.setItem("selected_topics",returndata.selected_topics)
+  if (localStorage.getItem('topics').length === 0){
+    localStorage.setItem("topics",returndata.topics)
   }
   return { type: SELECTED_TOPICS, payload:returndata}
 }
