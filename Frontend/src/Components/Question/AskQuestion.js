@@ -40,6 +40,7 @@ class AskQuestion extends Component {
                      "owner_tagline": localStorage.getItem("tagline")
                     };
         await this.props.addQuestion(data);
+        this.refs.question.value="";
         this.inputElement.click();
     }
 
@@ -66,7 +67,7 @@ class AskQuestion extends Component {
                             <form >
                                 <div className="form-group row">
                                     <div className="col-sm-12">
-                                        <textarea className="form-control"  onChange={this.handleQuestionTextChange} id="questionNew" name="newQuestion" 
+                                        <textarea className="form-control" ref="question" onChange={this.handleQuestionTextChange} id="questionNew" name="newQuestion" 
                                         value={this.state.questionText} rows="5" placeholder='Start typing your question with "What", "How", "Why", etc.' required></textarea>
                                     </div>
                                 </div>
