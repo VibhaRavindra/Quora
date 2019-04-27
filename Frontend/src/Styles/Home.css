@@ -196,3 +196,34 @@ font-weight: 500;
   .question-footer-elem-share-icons{
     cursor: pointer;
   }
+
+  .feed-home-nav{
+    color: #666;
+  padding-bottom: 0.7em;
+  }   
+
+.topic-heading{
+  font-family: 'q_serif',Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif;
+  font-weight: bold;
+  line-height: 1.3;
+  color: #333;
+  font-size: 23px;
+  margin-bottom: 2em;
+}
+
+.follow-topic{
+  color: #329bff!important;
+  font-size: 15px!important;
+  font-weight: 500!important;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  padding-left: 2em;
+}
+
+
+.follow-topic-icon{
+  background: url('../Images/follow-topic-icon.svg') no-repeat 3.5px center;
+}
+
+.following-topic-icon{
+  background: url('../Images/following-topic-icon.svg') no-repeat 3.5px center;
+}
