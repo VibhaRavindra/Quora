@@ -41,6 +41,7 @@ class CommentForm extends React.Component {
            if (response.status === 200) {
                console.log(response);
                console.log("Debug axios success")
+               this.setState({text: ''})
                this.props.closeCommentFormAndReload()
            }
    });

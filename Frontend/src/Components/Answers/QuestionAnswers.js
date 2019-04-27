@@ -79,6 +79,8 @@ class QuestionAnswers extends Component {
                 </div>);
             } else {
                 return (<div className="qa-comments">
+                <CommentForm  answer={answer}  closeCommentFormAndReload={this.closeFormAndReload}/>
+
                     <CommentList comments={comments} minimal="true" />
                 </div>);
             }
