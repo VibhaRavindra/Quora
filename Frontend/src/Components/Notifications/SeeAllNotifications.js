@@ -6,6 +6,7 @@ import feedImg from '../../Images/feed.png';
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import abc from './abc.png';
+import {rooturl} from '../../Config/settings'
 
 
 
@@ -23,7 +24,7 @@ class SeeAllNotifications extends Component {
         }
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post("http://localhost:3001/quora/notifications",data, localStorage.getItem('jwtToken'))
+        axios.post("http://"+rooturl+":3001/quora/notifications",data, localStorage.getItem('jwtToken'))
                 .then(response => {
                 
           console.log("Status Code : ",response.status);
