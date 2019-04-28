@@ -30,7 +30,7 @@ class DisplayQuestion extends Component {
 
     followquestion=(e,x)=>{
         console.log(localStorage.getItem("user_name"));
-        console.log("hiphip",x);
+        
  
         var data={
             follower_username:localStorage.getItem("user_name"),
