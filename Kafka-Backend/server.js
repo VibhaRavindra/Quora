@@ -6,7 +6,7 @@ var followtopics = require('./services/followtopics.js');
 var profile = require('./services/profile.js');
 var questiontopics = require('./services/questiontopics');
 var answer = require('./services/answer.js');
-var search = require('./services/search.js');
+var yourcontent = require('./services/yourcontent');
 
 // Set up Database connection
 const mongoose = require('mongoose')
@@ -46,12 +46,6 @@ function handleTopicRequest(topic_name, fname) {
                     return;
                 })
                 break;
-            case 'search':
-                search.followService(data.data, function (err, res) {
-                    response(data, res, producer);
-                    return;
-                })
-                break;
             case 'profile':
                 profile.profileService(data.data, function (err, res) {
                     response(data, res, producer);
@@ -70,6 +64,12 @@ function handleTopicRequest(topic_name, fname) {
                         return;
                     })
                     break;
+                case 'yourcontent' :
+                yourcontent.yourcontentService(data.data, function(err,res){
+                    response(data,res,producer);
+                    return;
+                })
+                break;    
         }
     })
 };
@@ -95,9 +95,9 @@ function response(data, res, producer) {
 // Add your TOPICs here
 //first argument is topic name
 //second argument is a function that will handle this topic request
-handleTopicRequest("account", account)
-handleTopicRequest("follow_topics", followtopics);
-handleTopicRequest("profile", profile)
-handleTopicRequest("answer",answer);
-handleTopicRequest("search",search);
+handleTopicRequest("account",account)
+handleTopicRequest("follow_topics",followtopics);
+handleTopicRequest("profile",profile)
 handleTopicRequest("question_topics", questiontopics);
+handleTopicRequest("answer",answer);
+handleTopicRequest("yourcontent",yourcontent);

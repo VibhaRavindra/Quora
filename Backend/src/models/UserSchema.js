@@ -70,7 +70,7 @@ answers_answered:{
     type: [Answer.AnswerSchema],    
 },
 questions_asked:{
-    type: [Question.QuestionSchema],    
+    type: Array,    
 },
 bookmarks:{
     type:[Bookmark.BookmarkSchema],

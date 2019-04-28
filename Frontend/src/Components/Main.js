@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import Header from './Navigation/Header';
 import Home from './Home/Home';
+import YourContent from './Users/YourContent';
 import QuestionAnswers from './Answers/QuestionAnswers';
 import AnswerForm from './Answers/AnswerForm';
 // import '../App.css';
