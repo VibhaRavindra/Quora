@@ -28,18 +28,8 @@ const AnswerSchema = new Schema({
        type: Boolean,
        default:false
      },
-     upvotes: [ new Schema({ 
-       username: {
-         type: 'string'
-       } 
-     })
-     ],
-     downvotes: [ new Schema({
-       username: {
-        type: 'string' 
-       } 
-     })
-     ],
+     upvotes: [ String ],
+     downvotes: [ String ],
      upvote_count: {
        type: Number
      },

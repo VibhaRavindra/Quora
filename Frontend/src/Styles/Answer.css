@@ -120,6 +120,7 @@
 }
  .ql-editor {
 	 min-height: 150px;
+	 font-weight: normal;
 }
  .no-answers-message {
 	 padding: 16px;
