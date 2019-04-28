@@ -72,6 +72,9 @@ router.post('/selectedTopics', requireAuth, (req,res,next) => {
         if (err){
             res.send({
                 selectTopicsSuccess:false,
+                select_topics: false,
+                isTopicSelected: false,
+                topics: []
             })
         }else{
             res.send(result);
