@@ -57,8 +57,9 @@ function signup(msg, callback){
             if(err){
                 console.log(err)
                 console.log("INSIDE ERROR 2")
-                mysqlconnection.rollback(function() {
-                    // throw err;
+                mysqlconnection.rollback(function(err) {
+                    if(err)
+                        console.log(err)
                 });
                 callback(null,{
                     signupSuccess:false,
@@ -68,8 +69,9 @@ function signup(msg, callback){
                 newUser.save(function (err, result) {
                     if (err) {
                         console.log("err newUser save")
-                        mysqlconnection.rollback(function() {
-                            // throw err;
+                        mysqlconnection.rollback(function(err) {
+                            if(err)
+                                console.log(err)
                         });
                         callback(null,{
                             signupSuccess:false,
@@ -78,8 +80,9 @@ function signup(msg, callback){
                     }else{
                         mysqlconnection.commit(function(err) {
                             if (err) { 
-                                mysqlconnection.rollback(function() {
-                                // throw err;
+                                mysqlconnection.rollback(function(err) {
+                                    if(err)
+                                        console.log(err)
                                 });
                             }
                         });
@@ -95,43 +98,82 @@ function signup(msg, callback){
 }
 
 function signin(msg, callback){
-    mysqlconnection.query('SELECT * FROM Users WHERE user_name=?',[msg.body.user_name], 
-    function(err, rowsOfTable, fieldsOfTable){ 
-        if(err){
+    mysqlconnection.beginTransaction(function(err) {
+        if (err) { 
+            console.log("INSIDE ERROR 1")
             callback(null,{
                 signinSuccess:false,
                 signinMessage:"Sign In Failed"
             })
+            // throw err; 
         }
-        var UserArray = [];
-        if(rowsOfTable.length == 1){
-            var result = bcrypt.compareSync(msg.body.password, rowsOfTable[0].password);
-            if(result){
-                console.log("SIGNIN SUCCESS")
-                console.log(rowsOfTable[0].firstname)
-                console.log(rowsOfTable[0].lastname)
-                console.log(rowsOfTable[0].mongo_userid)
-                console.log(rowsOfTable[0].select_topics)
-                callback(null,{
-                    signinSuccess:true,
-                    user_name: rowsOfTable[0].user_name,
-                    firstname: rowsOfTable[0].firstname,
-                    lastname: rowsOfTable[0].lastname,
-                    userid: rowsOfTable[0].mongo_userid,
-                    select_topics: rowsOfTable[0].select_topics
+        mysqlconnection.query('SELECT * FROM Users WHERE user_name=?',[msg.body.user_name], 
+        function(err, rowsOfTable){ 
+            if(err){
+                mysqlconnection.rollback(function(err) {
+                    if(err)
+                        console.log(err)
                 });
-            } else{
                 callback(null,{
                     signinSuccess:false,
-                    signinMessage:"Password Incorrect!"
+                    signinMessage:"Sign In Failed"
                 })
             }
-        } else {
-            callback(null,{
-                signinSuccess:false,
-                signinMessage:"User does not Exist!"
-            })
-        }
+            if(rowsOfTable.length == 1){
+                var result = bcrypt.compareSync(msg.body.password, rowsOfTable[0].password);
+                if(result){
+                    console.log("SIGNIN SUCCESS")
+                    console.log(rowsOfTable[0].firstname)
+                    console.log(rowsOfTable[0].lastname)
+                    console.log(rowsOfTable[0].mongo_userid)
+                    console.log(rowsOfTable[0].select_topics)
+                    users.findOne({_id: rowsOfTable[0].mongo_userid}, function(err, result){
+                        if(err){
+                            mysqlconnection.rollback(function(err) {
+                                if(err)
+                                    console.log(err)
+                            });
+                            callback(null,{
+                                signinSuccess:false,
+                                signinMessage:"Sign In Failed"
+                            })
+                        }
+                        let topics = result.topics_followed;
+                        let isTopicSelected;
+                        if(topics.length > 0){
+                            isTopicSelected = true;
+                        } else {
+                            isTopicSelected = false;
+                        }
+                        console.log("topics : ", topics);
+                        callback(null,{
+                            signinSuccess:true,
+                            user_name: rowsOfTable[0].user_name,
+                            firstname: rowsOfTable[0].firstname,
+                            lastname: rowsOfTable[0].lastname,
+                            userid: rowsOfTable[0].mongo_userid,
+                            topics: topics,
+                            isTopicSelected: isTopicSelected,
+                            signinMessage:"Success!"
+                        });
+                    })
+                } else{
+                    mysqlconnection.rollback(function(err) {
+                        if(err)
+                            console.log(err)
+                    });
+                    callback(null,{
+                        signinSuccess:false,
+                        signinMessage:"Password Incorrect!"
+                    })
+                }
+            } else {
+                callback(null,{
+                    signinSuccess:false,
+                    signinMessage:"User does not Exist!"
+                })
+            }
+        })
     })
 }
 
@@ -139,7 +181,10 @@ function selectedTopics(msg, callback){
     mysqlconnection.beginTransaction(function(err) {
         if (err) { 
             callback(null,{
-                selectTopicsSuccess:false
+                selectTopicsSuccess:false,
+                select_topics: false,
+                isTopicSelected: false,
+                topics: []
             })
         }
         console.log("msg.body.user_name ",msg.body.user_name)
@@ -147,30 +192,45 @@ function selectedTopics(msg, callback){
         mysqlconnection.query(query,[1,msg.body.user_name],(err,result)=>{
             if(err){
                 console.log(err)
-                mysqlconnection.rollback(function() {});
+                mysqlconnection.rollback(function(err) {
+                    if(err)
+                        console.log(err)
+                });
                 callback(null,{
                     selectTopicsSuccess:false,
-                    select_topics: false
+                    select_topics: false,
+                    isTopicSelected: false,
+                    topics: []
                 })
             } else {
                 users.findOneAndUpdate({_id:msg.body.userid}, { $push: { topics_followed: { $each: msg.body.topics }}}, function(err, result){
                     if (err){
                         console.log(err)
-                        mysqlconnection.rollback(function() {});
+                        mysqlconnection.rollback(function(err) {
+                            if(err)
+                                console.log(err)
+                        });
                         callback(null,{
                             selectTopicsSuccess:false,
-                            select_topics: false
+                            select_topics: false,
+                            isTopicSelected: false,
+                            topics: []
                         })
                     } else {
                         mysqlconnection.commit(function(err) {
                             if (err) { 
-                                mysqlconnection.rollback(function() {
+                                mysqlconnection.rollback(function(err) {
+                                    if(err)
+                                        console.log(err)
                                 });
                             }
                         });
+                        console.log("IN SELECTED_TOPICS, TOPICS :::;;; : ", msg.body.topics)
                         callback(null,{
                             selectTopicsSuccess:true,
-                            select_topics: true
+                            select_topics: true,
+                            topics: msg.body.topics,
+                            isTopicSelected: true
                         })
                     }
                 })

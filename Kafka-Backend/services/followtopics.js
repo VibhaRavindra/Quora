@@ -46,14 +46,13 @@ function getnotifications(msg, callback){
         } else {  for(i in result){
                            questionsfollowed.push(result[i]._id)
                       }
-                      console.log(questionsfollowed) 
+                     console.log("hello",questionsfollowed)
                       Notifications.notifications.find( {qid:{$in:questionsfollowed}} , function(err,result){
                         if (err) {
                             console.log(err);
                             console.log("unable to read the database");
                             callback(err, "unable to read the database");
-                        } else 
-                                   { console.log("yippeee got notification",result)
+                        } else    { 
                                        callback(null, {status: 200, result});}
                                 
                     })
@@ -69,28 +68,31 @@ function getnotifications(msg, callback){
 function followquestion(msg, callback){
 
     console.log("In listing property topic service. Msg: ", msg)
-
+console.log("hooray",msg.body.qid)
+Users.users.update( {"user_name":msg.body.follower_username},{$push:{questions_followed:msg.body.qid}}, function (error,result) {
+    redisClient.del("applicantProfile_" + msg.body.follower_username); 
+})
   Questions.questions.update( {"_id":msg.body.qid},{$push:{followers:msg.body.follower_username}},function (error,result) {
         if (error) {
             console.log(error.message)
             callback(null, {status:400,error});
         } else {
-                  
+               
             callback(null, {status: 200, result});
         }
     })
-   
+
 }
 function followtopic(msg, callback){
 
     console.log("In listing property topic service. Msg: ", msg)
 
-  Users.users.update( {"user_name":msg.body.username},{$push:{topics_followed:msg.body.topicname}}, function (error,result) {
+  Users.users.update( {"user_name":msg.body.user_name},{$push:{topics_followed:msg.body.topicname}}, function (error,result) {
         if (error) {
             console.log(error.message)
             callback(null, {status:400,error});
         } else {
-           
+            redisClient.del("applicantProfile_" + msg.body.user_name);
             callback(null, {status: 200, result});
         }
     })
@@ -98,14 +100,16 @@ function followtopic(msg, callback){
 }
 
 function followuser(msg, callback){
+    Users.users.update( {"user_name":msg.body.follow_user_name},{$push:{users_followers:msg.body.user_name}}, function (error,result) {
+        redisClient.del("applicantProfile_" + msg.body.follow_user_name);
+    })
 
-
-  Users.users.update( {"user_name":msg.body.user_name},{$push:{users_followers:msg.body.follow_user_name}}, function (error,result) {
+  Users.users.update( {"user_name":msg.body.user_name},{$push:{users_following:msg.body.follow_user_name}}, function (error,result) {
         if (error) {
             console.log(error.message)
             callback(null, {status:400,error});
         } else {
-           
+            redisClient.del("applicantProfile_" + msg.body.user_name);
             callback(null, {status: 200, result});
         }
     })
@@ -118,7 +122,7 @@ function getusersquestions(msg, callback){
     Users.users.find({user_name:msg.body.user_name},{"users_followers":1,"_id":0}, function(err,result){
         if (err) {
             console.log("unable to read the database questions");
-        } else { 
+        } else {        
                       console.log(result[0].users_followers)
                       usersfollowed=result[0].users_followers
                       Users.users.find( {user_name:{$in:usersfollowed}} , function(err,result){
@@ -157,14 +161,17 @@ function getusersquestions(msg, callback){
 }
 
 function unfollowuser(msg, callback){
+    console.log(msg.body.unfollow_user_name)
+    Users.users.update( {"user_name":msg.body.unfollow_user_name},{$pull:{users_followers:msg.body.user_name}}, function (error,result) {
+        redisClient.del("applicantProfile_" + msg.body.unfollow_user_name);
+    })
 
-
-    Users.users.update( {"user_name":msg.body.user_name},{$pull:{users_followers:msg.body.unfollow_user_name}}, function (error,result) {
+    Users.users.update( {"user_name":msg.body.user_name},{$pull:{users_following:msg.body.unfollow_user_name}}, function (error,result) {
           if (error) {
               console.log(error.message)
               callback(null, {status:400,error});
           } else {
-             
+            redisClient.del("applicantProfile_" + msg.body.follow_user_name);
               callback(null, {status: 200, result});
           }
       })
@@ -174,7 +181,9 @@ function unfollowuser(msg, callback){
   function unfollowquestion(msg, callback){
 
     console.log("In listing property topic service. Msg: ", msg)
-
+    Users.users.update( {"user_name":msg.body.follower_username},{$pull:{questions_followed:msg.body.qid}}, function (error,result) {
+        redisClient.del("applicantProfile_" + msg.body.follower_username); 
+    })
   Questions.questions.update( {"_id":msg.body.qid},{$pull:{followers:msg.body.follower_username}},function (error,result) {
         if (error) {
             console.log(error.message)
@@ -191,12 +200,12 @@ function unfollowtopic(msg, callback){
 
     console.log("In listing property topic service. Msg: ", msg)
 
-  Users.users.update( {"user_name":msg.body.username},{$pull:{topics_followed:msg.body.topicname}}, function (error,result) {
+  Users.users.update( {"user_name":msg.body.user_name},{$pull:{topics_followed:msg.body.topicname}}, function (error,result) {
         if (error) {
             console.log(error.message)
             callback(null, {status:400,error});
         } else {
-           
+            redisClient.del("applicantProfile_" + msg.body.user_name);
             callback(null, {status: 200, result});
         }
     })

@@ -14,7 +14,7 @@ router.route('/question/followquestion').post( function (req, res) {
   console.log(req.body);
   //follower_username
   //qid
-
+    console.log(req.body.qid)
   kafka.make_request('follow_topics',{"path":"followquestion", "body": req.body}, function(error,result){
     if (error) {
       console.log(error);
@@ -28,11 +28,11 @@ router.route('/question/followquestion').post( function (req, res) {
     }
   })
 });
-router.route('/question/followtopic').post( function (req, res) {
+router.route('/followtopic').post( function (req, res) {
 
   console.log("In Follow Topic Route");
   console.log(req.body);
-  //username
+  //user_name
   //topicname
 
   kafka.make_request('follow_topics',{"path":"followtopic", "body": req.body}, function(error,result){
@@ -150,7 +150,7 @@ router.route('/question/unfollowquestion').post( function (req, res) {
     }
   })
 });
-router.route('/question/unfollowtopic').post( function (req, res) {
+router.route('/unfollowtopic').post( function (req, res) {
 
   console.log("In Follow Topic Route");
   console.log(req.body);

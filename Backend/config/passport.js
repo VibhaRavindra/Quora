@@ -24,7 +24,9 @@ var opts = {
 };
 passport.use(new JwtStrategy(opts, function(jwt_payload, callback) {
     console.log("JWT Payload:", jwt_payload);
-    // connect to mysql directly - in future redis cache
+    //redis key = requireAuth_ + jwt_payload.user_name
+    // If it is in redis, return. 
+    // Else, 1. go to MYSQL 2. insert into redis, 3. return
     mysqlconnection.query("SELECT user_name from Users WHERE user_name=? AND active=1", [jwt_payload.user_name], function(err, rowsOfTable){
         if(err || rowsOfTable.length != 1) {
             console.log("UnAuthorized User")

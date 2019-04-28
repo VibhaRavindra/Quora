@@ -10,11 +10,12 @@ import SignUp from './Account/SignUp';
 import ChooseTopics from './Account/ChooseTopics';
 import SeeAllNotifications from './Notifications/SeeAllNotifications';
 import Profile from './Profile/Profile';
-import displayprofile from './Profile/displayprofile'
+import displayprofile from './Profile/displayprofile';
+import Topic from './Topic/Topic';
 
 class Main extends Component {
   render() {
-    if ("jwtToken" in localStorage) {
+    if (localStorage.getItem("jwtToken")!== null) {
       return (
         <div>
           <Route path="/header" component={Header} />
@@ -23,17 +24,18 @@ class Main extends Component {
           <Route path="/answer/question/:questionId" component={QuestionAnswers} />
           <Route path="/answer/create" component={AnswerForm} />
           <Route exact path="/quora/home" component={Home} />
-          <Route path="/profile" component={Profile} />
-          <Route exact path="/SeeAllNotifications" component={SeeAllNotifications} />
-          <Route exact path="/YourContent" component={YourContent} />
+          <Route exact path="/quora/topic/:topicName" component={Topic} />
+              <Route path="/quora/myprofile" component={Profile} />
+         <Route path = "/quora/profile/:user_id" component = {displayprofile} />
+          <Route exact path="/quora/SeeAllNotifications" component={SeeAllNotifications} />
         </div>
-     );
+    );
     } else {
       return (
         <div>
-          <Route path="/quora" component={SignUp} />
+          <Route path="/" component={SignUp} />
         </div>
-      )
+     )
     }
   }
 }

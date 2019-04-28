@@ -6,6 +6,10 @@ const AnswerSchema = new Schema({
       type: String,
       required: true
     },
+    question_id: {
+      type: String,
+      required: true
+    },
     owner_username: {
         type: String,
         required: true

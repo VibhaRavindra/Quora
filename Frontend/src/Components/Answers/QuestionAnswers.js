@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import Header from '../Navigation/Header';
 import { Nav, Tab, Col, Row } from 'react-bootstrap';
 import '../../Styles/QuestionAnswers.css';
-import feedImg from '../../Images/feed.png';
 import axios from 'axios'
 import AnswerDetails from "./AnswerDetails"
 import AnswerForm from "./AnswerForm"
+import CommentForm from "./CommentForm"
+import CommentList from "./CommentList"
 
 class QuestionAnswers extends Component {
     constructor(props) {
@@ -13,16 +14,32 @@ class QuestionAnswers extends Component {
         this.state = {
             defaultImg: false,
             question: {},
-            openAnswer: ''
-        }
+            openAnswer: '',
+            commentOpen: false
+        };
+
+        this.comments = this.comments.bind(this)
         this.CreateAnswer = this.CreateAnswer.bind(this);
+        this.closeFormAndReload = this.closeFormAndReload.bind(this);
+    }
+
+    closeFormAndReload = () => {
+        axios.defaults.withCredentials = true;
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+        axios.get('/answer/' + this.props.match.params.questionId)
+            .then((response) => {
+                if (response !== undefined)
+                    if (response.status === 200) {
+                        console.log(response);
+                        this.setState({ question: response.data.question, openAnswer: '' });
+                    }
+            })
     }
 
     componentWillMount() {
         let topicsArr = [];
         topicsArr = ["Technology", "Science"];
-        localStorage.setItem("topics", topicsArr);
-        localStorage.setItem("name", "Akhila");
+
         if (localStorage.getItem("image") === null) {
             this.setState({ defaultImg: true });
         }
@@ -30,21 +47,43 @@ class QuestionAnswers extends Component {
         axios.defaults.withCredentials = true;
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
         axios.get('/answer/' + this.props.match.params.questionId)
-        .then((response) => {
-          if (response !== undefined)
-            if (response.status === 200) {
-              console.log(response);
-              this.setState({ question: response.data.question });
-            }
-        })
+            .then((response) => {
+                if (response !== undefined)
+                    if (response.status === 200) {
+                        console.log(response);
+                        this.setState({ question: response.data.question });
+                    }
+            })
     }
 
     CreateAnswer = (questionId) => {
         console.log(questionId);
         this.setState({
-            openAnswer: <AnswerForm question_id = {questionId} />
+            openAnswer: <AnswerForm question_id={questionId} closeAnswerFormAndReload={this.closeFormAndReload} />
         })
-    }; 
+    };
+
+    comments(answer) {
+        var comments = answer.comments;
+        if (comments.length === 0) {
+            return (<div className="qa-comments">
+                <CommentForm answer={answer}  closeCommentFormAndReload={this.closeFormAndReload} />
+            </div>);
+        } else {
+            if (this.state.commentOpen) {
+                return (<div className="qa-comments">
+                    <CommentForm  answer={answer}  closeCommentFormAndReload={this.closeFormAndReload}/>
+                    <CommentList comments={comments} />
+                </div>);
+            } else {
+                return (<div className="qa-comments">
+                <CommentForm  answer={answer}  closeCommentFormAndReload={this.closeFormAndReload}/>
+
+                    <CommentList comments={comments} minimal="true" />
+                </div>);
+            }
+        }
+    }
 
     render() {
         let redirectVar = '';
@@ -74,59 +113,70 @@ class QuestionAnswers extends Component {
 
         questionDiv = (() => {
             let record = this.state.question
-            console.log(JSON.stringify(record))
+            console.log("Debug question div")
             let ansdiv = null;
-            
-            if (record.answers) {
-                
-                ansdiv = record.answers.map((answer, index) => {
-                    if(index < 3) return null;
-                    console.log(JSON.stringify(answer))
 
-                   return( <AnswerDetails answer={answer} /> )
-               
+            if (record.answers) {
+                console.log("Debug record.answers")
+                let answersList = record.answers;
+                answersList.sort((a, b) => (b.upvote_count - a.upvote_count !== 0) ? (b.upvote_count - a.upvote_count) : (a.downvote_count - b.downvote_count))
+
+                ansdiv = answersList.map((answer, index) => {
+                    console.log("Debug answer div")
+                    console.log("Debug upvote count: " + answer.upvote_count)
+                    console.log(JSON.stringify(answer))
+                    console.log(answer)
+
+                    return (
+                        <div>
+                            <AnswerDetails answer={answer} />
+                            {this.comments(answer)}
+                        </div>
+                    )
+
                 });
             } else {
+                console.log("Debug no answers")
                 return null;
             }
 
             let questionFooterDiv = null;
             questionFooterDiv = (
-            <div>
-            <div>
-            <div className="row" style={{marginTop:"0.3em"}}>
-                <div className="question-footer-elem" style={{marginLeft:"0.3em"}}>
-                <div className="answer-icon answer-icon-label" onClick = {() => {this.CreateAnswer(this.props.match.params.questionId)}}>Answer</div>
-                </div>
-                <div className="question-footer-elem" >
-                <div className="follow-icon answer-icon-label">Follow</div>
-                </div>
-                <div className="question-footer-elem-share-icons" style={{marginLeft:"20em"}}>
-                <div className="fb-icon answer-icon-hide">a</div>
-                </div>
-                <div className="question-footer-elem-share-icons">
-                <div className="twitter-icon answer-icon-hide">a</div>
-                </div>
-                <div className="question-footer-elem-share-icons">
-                <div className="share-icon answer-icon-hide">a</div>
-                </div>
-                <div className="question-footer-elem-share-icons">
-                <div className="dots-icon answer-icon-hide">a</div>
-                </div>
+                <div>
+                    <div>
+                        <div className="row" style={{ marginTop: "0.3em" }}>
+                            <div className="question-footer-elem" style={{ marginLeft: "0.3em" }}>
+                                <div className="answer-icon answer-icon-label" onClick={() => { this.CreateAnswer(this.props.match.params.questionId) }}>Answer</div>
+                            </div>
+                            <div className="question-footer-elem" >
+                                <div className="follow-icon answer-icon-label">Follow</div>
+                            </div>
+                            <div className="question-footer-elem-share-icons" style={{ marginLeft: "20em" }}>
+                                <div className="fb-icon answer-icon-hide">a</div>
+                            </div>
+                            <div className="question-footer-elem-share-icons">
+                                <div className="twitter-icon answer-icon-hide">a</div>
+                            </div>
+                            <div className="question-footer-elem-share-icons">
+                                <div className="share-icon answer-icon-hide">a</div>
+                            </div>
+                            <div className="question-footer-elem-share-icons">
+                                <div className="dots-icon answer-icon-hide">a</div>
+                            </div>
 
-            </div>
-            </div>
-            </div>
+                        </div>
+                    </div>
+                </div>
             );
 
-
             return (
-                <div className="card question-card">
-                    <div className="card-body question-card-body">
-                            <span className="card-title question-card">{record.question}</span>
-                            {questionFooterDiv}
-                            {this.state.openAnswer}
-                            {ansdiv}
+                <div className="card question-answer-card">
+                    <div className="card-body question-answer-card-body">
+                        <span className="card-title question-answer-card">{record.question}</span>
+                        {questionFooterDiv}
+                        {this.state.openAnswer}
+                        <h5> {record.answers.length} Answers </h5>
+                        {ansdiv}
                     </div>
                 </div>
             )
@@ -143,21 +193,8 @@ class QuestionAnswers extends Component {
                             <div className="col-12">
                                 <Tab.Container id="left-tabs-example" defaultActiveKey="first" onSelect={this.handleSelect}>
                                     <Row>
-                                        <Col sm={2}>
-                                            <Nav variant="pills" className="flex-column feed-nav">
-                                                <Nav.Item style={{marginBottom: "-1em"}}>
-                                                    <Nav.Link eventKey="first">
-                                                        <div className="row">
-                                                            <img className="left-nav-feed-img" src={feedImg} alt="Feed" />
-                                                            <div className="label feed-label">  Feed
-                                                              </div>
-                                                        </div>
-                                                    </Nav.Link>
-                                                </Nav.Item>
-                                                {topicsDiv}
-                                            </Nav>
-                                        </Col>
-                                        <Col sm={9}>
+                                        <Col sm={1} />
+                                        <Col sm={8}>
                                             <Tab.Content>
                                                 <Tab.Pane eventKey="first">
                                                     <div id="accordion">

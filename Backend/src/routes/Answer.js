@@ -32,6 +32,30 @@ router.post('/:question_id', requireAuth, (req, res) => {
     });
 })
 
+router.post('/:question_id/:answer_id/comment', requireAuth, (req, res) => {
+    kafka.make_request('answer', {
+        "path": "submit-comment", "req": {
+            "body": req.body,
+            "params": req.params,
+            "query": req.query
+        }
+    }, function (err, result) {
+        console.log('in result');
+        console.log(result);
+        if (err) {
+            res.send({
+                submitCommentSuccess: false,
+                submitCommentMessage: "Submit Comment Failed"
+            })
+        } else {
+            res.send({
+                submitCommentSuccess: true,
+                submitCommentMessage: "Success"
+            });
+        }
+    });
+})
+
 router.get('/:question_id', requireAuth, (req, res) => {
     console.log("Inside Quora Backend: Get One Answer");
     kafka.make_request('answer', {

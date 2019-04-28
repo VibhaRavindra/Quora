@@ -10,8 +10,7 @@ function mapStateToProps(store) {
         signupSuccess:store.account.signupSuccess,
         signupMessage:store.account.signupMessage,
         signinSuccess:store.account.signinSuccess,
-        signinMessage:store.account.signinMessage,
-        select_topics:store.account.select_topics
+        signinMessage:store.account.signinMessage
     }
 }
 
@@ -39,15 +38,10 @@ class SignUp extends Component {
         this.props.signin(data);
     }
     render() {
-        console.log("signupSuccess", this.props.signupSuccess)
-        console.log("signupMessage", this.props.signupMessage)
-        console.log("signinSuccess", this.props.signinSuccess)
-        console.log("signinMessage", this.props.signinMessage)
-        console.log("select_topics", this.props.select_topics)
         let message;
-        if(this.props.signinSuccess && this.props.select_topics!= null && !this.props.select_topics){
+        if(localStorage.getItem("jwtToken")!== null && localStorage.getItem("isTopicSelected") === "false"){
             return(<Redirect to="/quora/topics"/>)
-        } else if(this.props.signinSuccess && this.props.select_topics != null && this.props.select_topics){
+        } else if(localStorage.getItem("jwtToken")!== null && localStorage.getItem("isTopicSelected") === "true"){
             return(<Redirect to="/quora/home"/>)
         }
         if(this.props.signupSuccess != null && this.props.signupSuccess){
@@ -61,64 +55,64 @@ class SignUp extends Component {
         } 
         return (
         <div className="account-parent-container">
-        <div className="account-container">
-            <div className="account-logo-container">
-                <img className="quora-logo-account" src={Logo} alt="Quora"/>
-            </div>          
-            <p className="account-tag">A place to share knowledge and better understand the world</p>
-            <div className="account-sub-container">
-                {message}
-                <div className="signup">
-                    <p className="signup-text">Sign Up</p>
-                    <form className="form" onSubmit={this.submitSignUp}>
-                        <div className="row">
-                            <div className="first-half">
-                                <label className="account-labels first-name-label">FIRST NAME</label>
-                                <div className="input-firstName">
-                                    <input className="first-name account-input" type="text" name="firstname" required></input>
+            <div className="account-container">
+                <div className="account-logo-container">
+                    <img className="quora-logo-account" src={Logo} alt="Quora"/>
+                </div>          
+                <p className="account-tag">A place to share knowledge and better understand the world</p>
+                <div className="account-sub-container">
+                    {message}
+                    <div className="signup">
+                        <p className="signup-text">Sign Up</p>
+                        <form className="form" onSubmit={this.submitSignUp}>
+                            <div className="row">
+                                <div className="first-half">
+                                    <label className="account-labels first-name-label">FIRST NAME</label>
+                                    <div className="input-firstName">
+                                        <input className="first-name account-input" type="text" name="firstname" required></input>
+                                    </div>
+                                </div>
+                                <div className="second-half">
+                                    <label className="account-labels last-name-label">LAST NAME</label>
+                                    <div className="input-lastName">
+                                        <input className="last-name account-input" type="text" name="lastname" required></input>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="second-half">
-                                <label className="account-labels last-name-label">LAST NAME</label>
-                                <div className="input-lastName">
-                                    <input className="last-name account-input" type="text" name="lastname" required></input>
+                            <div className="email-div">
+                                <label className="account-labels email-label">EMAIL</label>
+                                <div className="input-email">
+                                    <input className="email account-input" type="email" name="user_name" required></input>
                                 </div>
                             </div>
-                        </div>
-                        <div className="email-div">
-                            <label className="account-labels email-label">EMAIL</label>
+                            <div className="pw">
+                                <label className="account-labels email-label">PASSWORD</label>
+                                <div className="input-email">
+                                    <input className="email account-input" type="password" name="password" required></input>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <button type="submit" className="account-btn">Sign Up</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div className="login">
+                        <p className="signup-text">Login</p>
+                        <form className="form" onSubmit={this.submitSignIn}>
                             <div className="input-email">
                                 <input className="email account-input" type="email" name="user_name" required></input>
                             </div>
-                        </div>
-                        <div className="pw">
-                            <label className="account-labels email-label">PASSWORD</label>
                             <div className="input-email">
-                                <input className="email account-input" type="password" name="password" required></input>
+                                <input className="email account-input email-top" type="password" name="password" required></input>
                             </div>
-                        </div>
-                        <div className="row">
-                            <button type="submit" className="account-btn">Sign Up</button>
-                        </div>
-                    </form>
-                </div>
-                <div className="login">
-                    <p className="signup-text">Login</p>
-                    <form className="form" onSubmit={this.submitSignIn}>
-                        <div className="input-email">
-                            <input className="email account-input" type="email" name="user_name" required></input>
-                        </div>
-                        <div className="input-email">
-                            <input className="email account-input email-top" type="password" name="password" required></input>
-                        </div>
-                        <div className="row">
-                            <button type="submit" className="account-btn-login">Login</button>
-                        </div>
-                    </form>
+                            <div className="row">
+                                <button type="submit" className="account-btn-login">Login</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-      </div>
-      </div>
+         </div>
     );
   }
 }

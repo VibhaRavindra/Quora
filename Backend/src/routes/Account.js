@@ -61,7 +61,7 @@ router.post('/signin', FormData.none(), (req,res,next) => {
         }
     });
 })
-router.post('/selectedTopics', (req,res,next) => {
+router.post('/selectedTopics', requireAuth, (req,res,next) => {
     let body = {
       topics: req.body.topics,
       userid: req.body.userid,
@@ -72,6 +72,9 @@ router.post('/selectedTopics', (req,res,next) => {
         if (err){
             res.send({
                 selectTopicsSuccess:false,
+                select_topics: false,
+                isTopicSelected: false,
+                topics: []
             })
         }else{
             res.send(result);

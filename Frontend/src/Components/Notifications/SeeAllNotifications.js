@@ -6,6 +6,7 @@ import feedImg from '../../Images/feed.png';
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import abc from './abc.png';
+import {rooturl} from '../../Config/settings'
 
 
 
@@ -19,11 +20,11 @@ class SeeAllNotifications extends Component {
     }
     componentDidMount(){
         var data={
-          "user_name":"kavya.chennoju@sjsu.edu"
+          "user_name":localStorage.getItem("user_name")
         }
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post("http://localhost:3001/quora/notifications",data, localStorage.getItem('jwtToken'))
+        axios.post("http://"+rooturl+":3001/quora/notifications",data, localStorage.getItem('jwtToken'))
                 .then(response => {
                 
           console.log("Status Code : ",response.status);
@@ -33,7 +34,6 @@ class SeeAllNotifications extends Component {
                   rows : response.data,
               })
           }
-         console.log("No. of courses= "+this.state.rows[0].question) 
       })
         .catch()
     }
