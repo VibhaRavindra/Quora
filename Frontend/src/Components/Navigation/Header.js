@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom'
 import abc from './abc.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios'
+import {rooturl} from '../../Config/settings'
 class Header extends Component {
   constructor(props){
     super(props);
@@ -24,7 +25,7 @@ class Header extends Component {
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://localhost:3001/quora/notifications",data, localStorage.getItem('jwtToken'))
+      axios.post("http://"+rooturl+":3001/quora/notifications",data, localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);
