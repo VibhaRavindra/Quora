@@ -16,9 +16,7 @@ class AskQuestion extends Component {
 
     componentWillMount(){
         //need to be removed after integration
-        localStorage.setItem("userid","5cc1e222858bcd8be319ed49");
-        localStorage.setItem("username","vibhashree.ravindra@sjsu.edu");
-        localStorage.setItem("fullname","Vibha Ravindra");
+      
     }
 
     handleQuestionTextChange = (e) => {
@@ -35,8 +33,8 @@ class AskQuestion extends Component {
                      "topic_name": this.state.selectValue, 
                      "owner_id": localStorage.getItem("userid"),
                      "owner_name": localStorage.getItem("fullname"),
-                     "owner_username":localStorage.getItem("username"),
-                     "owner_profile_pic": localStorage.getItem("image"),
+                     "owner_username":localStorage.getItem("user_name"),
+                     "owner_profile_pic": localStorage.getItem("b64"),
                      "owner_tagline": localStorage.getItem("tagline")
                     };
         await this.props.addQuestion(data);

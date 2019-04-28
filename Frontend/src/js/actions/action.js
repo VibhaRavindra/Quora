@@ -75,7 +75,7 @@ export function selectTopics(selectedTopics){
 }
 function selectTopicsUpdate(returndata) {
   if(returndata.selectTopicsSuccess) {
-    localStorage.setItem("selected_topics",returndata.selected_topics)
+    localStorage.setItem("topics",returndata.selected_topics)
   }
   return { type: SELECTED_TOPICS, payload:returndata}
 }

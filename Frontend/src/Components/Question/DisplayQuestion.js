@@ -38,9 +38,7 @@ class DisplayQuestion extends Component {
 
     render(){
 
-        let topicsArr = ["Technology", "Science"];
-        localStorage.setItem("topics", topicsArr);
-
+      
         let record = this.props.question;
         let index = this.props.questionIndex;
         let ansdiv = null;
@@ -71,7 +69,8 @@ class DisplayQuestion extends Component {
                         </div>
                         <div className="col-9">
                             <div className="row">
-                                <Link className="question-link" to={"/profile/" + record.user_id}>
+                                <Link className="question-link" to={"/quora/profile/" + record.owner_username}>
+                                {console.log(record.answers[0])}
                                     <div className="answer-user-profile">{record.answers[0].owner_name},</div>
                                 </Link>
                                 <div className="answer-user-profile">&nbsp;{record.answers[0].owner_tagline}</div>
