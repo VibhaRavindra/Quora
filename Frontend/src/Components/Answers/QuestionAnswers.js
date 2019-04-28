@@ -152,16 +152,16 @@ class QuestionAnswers extends Component {
                                 <div className="follow-icon answer-icon-label">Follow</div>
                             </div>
                             <div className="question-footer-elem-share-icons" style={{ marginLeft: "20em" }}>
-                                <div className="fb-icon answer-icon-hide">a</div>
+                                <div className="fb-icon answer-icon-hide">&nbsp;</div>
                             </div>
                             <div className="question-footer-elem-share-icons">
-                                <div className="twitter-icon answer-icon-hide">a</div>
+                                <div className="twitter-icon answer-icon-hide">&nbsp;</div>
                             </div>
                             <div className="question-footer-elem-share-icons">
-                                <div className="share-icon answer-icon-hide">a</div>
+                                <div className="share-icon answer-icon-hide">&nbsp;</div>
                             </div>
                             <div className="question-footer-elem-share-icons">
-                                <div className="dots-icon answer-icon-hide">a</div>
+                                <div className="dots-icon answer-icon-hide">&nbsp;</div>
                             </div>
 
                         </div>
@@ -183,12 +183,12 @@ class QuestionAnswers extends Component {
         });
 
         return (
-            <div className="question-answers" style={{ background: "#fafafa", height: "100vh" }}>
+            <div className="question-answers">
                 {redirectVar}
                 <Header />
                 <div className="row">
                     <div className="container" style={{ marginTop: "5em" }}>
-                        <div className="row justify-content-center align-items-center" style={{ height: '10vh' }}>
+                        <div className="row justify-content-center align-items-center">
 
                             <div className="col-12">
                                 <Tab.Container id="left-tabs-example" defaultActiveKey="first" onSelect={this.handleSelect}>

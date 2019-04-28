@@ -15,6 +15,12 @@ exports.answerService = function answerService(msg, callback) {
         case "submit-comment":
             submitComment(msg.req, callback);
             break;
+        case "submit-upvote":
+            submitUpvote(msg.req, callback);
+            break;
+        case "submit-downvote":
+            submitDownvote(msg.req, callback);
+            break;
         case "get-one":
             getAllAnswers(msg.req, callback);
             break;
@@ -81,6 +87,158 @@ async function submitComment(message, callback) {
 
         callback(null, { updateStatus: "Success", question: questionUpdated })
 
+    } catch (error) {
+        console.log("Submit Comment Failed: " + error)
+        callback(null, {
+            status: 400,
+            submitCommentMessage: "Submit Comment Failed"
+        })
+    }
+
+}
+async function submitComment(message, callback) {
+    console.log(message.params.question_id);
+    try {
+        var newComment = new comments({
+            comment: message.body.comment,
+            owner_username: message.body.user_username,
+            owner_name: message.body.user_name,
+            owner_profile_pic: message.body.user_profile_pic
+        });
+
+        var comment = await newComment.save();
+        console.log(JSON.stringify(comment))
+        var questionUpdated = await questions.update({ "_id": message.params.question_id, "answers._id": message.params.answer_id}, {
+            $push: {
+                "answers.$.comments": comment
+            }
+        });
+
+        var answerUpdated = await answers.update({ "_id": message.params.answer_id }, {
+            $push: {
+                comments: comment
+            }
+        }); 
+
+        callback(null, { updateStatus: "Success", question: questionUpdated })
+
+    } catch (error) {
+        console.log("Submit Comment Failed: " + error)
+        callback(null, {
+            status: 400,
+            submitCommentMessage: "Submit Comment Failed"
+        })
+    }
+
+}
+async function submitUpvote(message, callback) {
+    console.log(message.params.question_id);
+    try {
+        var upvoteState = message.query.upvote;
+        console.log(JSON.stringify(upvoteState))
+
+        if(upvoteState === "true") {
+        var questionUpdated = await questions.update({ "_id": message.params.question_id, "answers._id": message.params.answer_id}, {
+            $push: {
+                "answers.$.upvotes": message.body.user_username
+            },
+            $inc: {
+                "answers.$.upvote_count": 1
+            }
+        });
+
+        var answerUpdated = await answers.update({ "_id": message.params.answer_id }, {
+            $push: {
+                upvotes: message.body.user_username
+            },
+            $inc: {
+                upvote_count: 1
+            }
+        }); 
+
+        callback(null, { updateStatus: "Success", question: questionUpdated })
+    } else if(upvoteState === "false") {
+        var questionUpdated = await questions.update({ "_id": message.params.question_id, "answers._id": message.params.answer_id}, {
+            $pull: {
+                "answers.$.upvotes": message.body.user_username
+            },
+            $inc: {
+                "answers.$.upvote_count": -1
+            }
+        });
+
+        var answerUpdated = await answers.update({ "_id": message.params.answer_id }, {
+            $pull: {
+                upvotes: message.body.user_username
+            },
+            $inc: {
+                upvote_count: -1
+            }
+        }); 
+
+        callback(null, { updateStatus: "Success", question: questionUpdated })
+    } else {
+        throw "invalid upvote state"
+    }
+    } catch (error) {
+        console.log("Submit Comment Failed: " + error)
+        callback(null, {
+            status: 400,
+            submitCommentMessage: "Submit Comment Failed"
+        })
+    }
+
+}
+
+async function submitDownvote(message, callback) {
+    console.log(message.params.question_id);
+    try {
+        var downvoteState = message.query.downvote;
+        console.log(JSON.stringify(downvoteState))
+
+        if(downvoteState === "true") {
+        var questionUpdated = await questions.update({ "_id": message.params.question_id, "answers._id": message.params.answer_id}, {
+            $push: {
+                "answers.$.downvotes": message.body.user_username
+            },
+            $inc: {
+                "answers.$.downvote_count": 1
+            }
+        });
+
+        var answerUpdated = await answers.update({ "_id": message.params.answer_id }, {
+            $push: {
+                downvotes: message.body.user_usernamezx
+            },
+            $inc: {
+                downvote_count: 1
+            }
+        }); 
+
+        callback(null, { updateStatus: "Success", question: questionUpdated })
+    } else if(downvoteState === "false") {
+        var questionUpdated = await questions.update({ "_id": message.params.question_id, "answers._id": message.params.answer_id}, {
+            $pull: {
+                "answers.$.downvotes": message.body.user_username
+            },
+            $inc: {
+                "answers.$.downvote_count": -1
+            }
+        });
+
+        var answerUpdated = await answers.update({ "_id": message.params.answer_id }, {
+            $pull: {
+                downvotes: message.body.user_username
+            },
+            $inc: {
+                downvote_count: 1
+            }
+        }); 
+
+        callback(null, { updateStatus: "Success", question: questionUpdated })
+    } else {
+        throw "invalid downvote state"
+    }
     } catch (error) {
         console.log("Submit Comment Failed: " + error)
         callback(null, {

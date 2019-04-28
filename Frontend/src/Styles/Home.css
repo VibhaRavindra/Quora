@@ -46,6 +46,13 @@ font-weight: 500;
     font-family: 'q_serif',Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif;
 }
 
+.home-container {
+  background: #fafafa;
+  overflow-y: scroll;
+  height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
 .home-profie-name{
     font-size: 15px;
     color: #949494;
@@ -72,6 +79,8 @@ font-weight: 500;
 .question-card{
     margin-bottom: 0.5em;
 }
+
+
 
 .question-card-subtitle{
     font-size: 13px;
