@@ -22,10 +22,6 @@ class Home extends Component {
 
     async componentDidMount() {
         console.log(localStorage.getItem("tagline"))
-        
-        let topicsArr = [];
-        topicsArr = ["Technology", "Science"];
-     
         //if (localStorage.getItem("image") === null) {
             this.setState({ defaultImg: true });
         //}
