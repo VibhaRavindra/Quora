@@ -44,8 +44,8 @@ class AnswerForm extends React.Component {
 
    let data = {
     answer: JSON.stringify(this.state.delta),
-    user_username: "swetha.suresh@sjsu.edu",
-    user_name: "swetha suresh",
+    user_username: localStorage.user_name,
+    user_name: localStorage.fullname,
     user_profile_pic: "swe.jpg",
     user_tagline: "Software Engineer",
   }

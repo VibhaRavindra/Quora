@@ -3,13 +3,29 @@ import '../../Styles/Home.css';
 import { Link } from "react-router-dom";
 import unfollow from '../../Images/unfollow.png';
 import axios from 'axios';
+import AnswerDetails from '../Answers/AnswerDetails';
+import AnswerForm from "../Answers/AnswerForm";
+import swal from 'sweetalert';
 
 class DisplayQuestion extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            followedquestions:[]
+            followedquestions:[],
+            openAnswer: ''
         }
+    }
+
+    CreateAnswer = (questionId) => {
+        console.log(questionId);
+        this.setState({
+            openAnswer: <AnswerForm question_id={questionId} closeAnswerFormAndReload={this.closeFormAndReload} />
+        })
+    };
+
+    closeFormAndReload = () => {
+            swal("Saved answer");
+            this.setState({ openAnswer: '' });
     }
 
     followquestion=(e,x)=>{
@@ -41,53 +57,12 @@ class DisplayQuestion extends Component {
       
         let record = this.props.question;
         let index = this.props.questionIndex;
-        let ansdiv = null;
+        let answerDiv = null;
+        
         if (record.answers.length>0) {
-            let imgdiv = null;
-            //if (record.answers.owner_profile_pic == null) {
-                imgdiv = <div className="questions-default-logo"></div>;
-            //}
-
-            if (record.answers[0].timestamp) {
-                /* let timestamp = new Date(record.answer.timestamp);
-                 var date = timestamp.getDate();
-                 var month = timestamp.getMonth(); 
-                 var year = timestamp.getFullYear();
-                 var time = timestamp.getTime();
- 
-                 var dateTime = date + "/" +(month + 1) + "/" + year;*/
-
-                var dateTime = record.answers[0].timestamp.replace("T", " ");
-                dateTime = dateTime.substring(0, dateTime.indexOf('.'));
-            }
-
-            ansdiv = (
-                <div style={{ marginTop: "0.3em" }}>
-                    <div className="row">
-                        <div className="col-1 answer-user-pic">
-                            {imgdiv}
-                        </div>
-                        <div className="col-9">
-                            <div className="row">
-                                <Link className="question-link" to={"/quora/profile/" + record.owner_username}>
-                                {console.log(record.answers[0])}
-                                    <div className="answer-user-profile">{record.answers[0].owner_name},</div>
-                                </Link>
-                                <div className="answer-user-profile">&nbsp;{record.answers[0].owner_tagline}</div>
-                            </div>
-                            <div className="row">
-                                <div className="answer-timestamp"><span>Answered&nbsp;</span>{dateTime}</div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                    <div className="row answer-to-question">
-                        {record.answers[0].answer}
-                    </div>
-
-                </div>
-            );
+            let answer = record.answers[0];
+            console.log(answer);
+            answerDiv = <AnswerDetails answer={answer}/>;
         }
 
         let questionFooterDiv = null;
@@ -95,7 +70,7 @@ class DisplayQuestion extends Component {
             <div>
                 <div className="row" style={{ marginTop: "0.3em" }}>
                     <div className="question-footer-elem" style={{ marginLeft: "0.3em" }}>
-                        <div className="answer-icon answer-icon-label">Answer</div>
+                        <div className="answer-icon answer-icon-label" onClick={() => { this.CreateAnswer(record._id) }}>Answer</div>
                     </div>
                     <div className="question-footer-elem">
                         <div className="pass-icon answer-icon-label">Pass</div>
@@ -135,8 +110,10 @@ class DisplayQuestion extends Component {
                         <Link className="question-link" to={"/question/" + record._id}>
                             <span className="card-title question-card">{record.question}</span>
                         </Link>
-                        {ansdiv}
+                        
                         {questionFooterDiv}
+                        {this.state.openAnswer}
+                        {answerDiv}
                     </div>
                 </div>
         )
