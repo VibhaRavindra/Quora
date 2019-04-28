@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Header from '../Navigation/Header';
 import { Nav, Tab, Col, Row } from 'react-bootstrap';
 import '../../Styles/QuestionAnswers.css';
-import feedImg from '../../Images/feed.png';
 import axios from 'axios'
 import AnswerDetails from "./AnswerDetails"
 import AnswerForm from "./AnswerForm"
@@ -126,6 +125,7 @@ class QuestionAnswers extends Component {
                     console.log("Debug answer div")
                     console.log("Debug upvote count: " + answer.upvote_count)
                     console.log(JSON.stringify(answer))
+                    console.log(answer)
 
                     return (
                         <div>
