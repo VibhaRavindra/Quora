@@ -15,7 +15,7 @@ class AddEducation extends Component {
         console.log(this.state.education)
         this.props.triggereducation(this.state.education)
         var data={
-            "user_name":"kavya.chennoju@sjsu.edu",
+            "user_name":localStorage.getItem("user_name"),
             "education":this.state.education
           }
           axios.defaults.withCredentials = true;

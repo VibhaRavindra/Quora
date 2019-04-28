@@ -19,7 +19,8 @@ const UserSchema = new Schema({
       type: String
   },
   b64:{
-    type: String
+    type: String,
+    default:""
 },
   firstname: {
     type: String,
@@ -82,8 +83,8 @@ const UserSchema = new Schema({
     default:"Activated"
   },
 questions_followed:{
-    type:[Question.QuestionSchema],
-    required:true
+    type:Array,
+  
 },
 });
     

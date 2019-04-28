@@ -32,7 +32,10 @@ class Profile extends Component {
              followersrows:"",
              followerstab:false,
              followingtab:false,
-             followingrows:""
+             profiletab:true,
+             followingrows:"",
+             followerscount:"",
+             followingcount:""
         }
         this.showfollowers=this.showfollowers.bind(this);
         this.updatetaglinevalue=this.updatetaglinevalue.bind(this);
@@ -40,6 +43,7 @@ class Profile extends Component {
         this.updateeducationvalue=this.updateeducationvalue.bind(this);
         this.showfollowing=this.showfollowing.bind(this);
         this.updatelocationvalue=this.updatelocationvalue.bind(this);
+        this.showprofile=this.showprofile.bind(this);
       
     }
 
@@ -51,18 +55,12 @@ class Profile extends Component {
       }
 
 
-    closeDiv = (event, index) => {
-        console.log(index);
-
-        let questionsArr = this.state.questions;
-        console.log(questionsArr[index].question);
-        questionsArr.splice(index, 1);
-        this.setState({ questions: questionsArr });
-    }
+  
 
 componentWillMount=()=>{
+console.log("username from localstorage is",localStorage.getItem("user_name"))
     var data={
-        "user_name":"kavya.chennoju@sjsu.edu"
+        "user_name":localStorage.getItem("user_name")
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
@@ -77,17 +75,29 @@ componentWillMount=()=>{
             })
         }
         this.setState({tagline:this.state.rows.user_tagline,employment:this.state.rows.career,education:this.state.rows.education,followers:this.state.rows.users_followers,following:this.state.rows.users_following,profilepic:this.state.rows.b64})
-    console.log(this.state.profilepic)
+    if(this.state.profilepic==="" || this.state.profilepic===null || this.state.profilepic==="undefined")
+    {
+        this.setState({profilepic:abc})
+    }
     })
       .catch()
+
+      if(this.state.followers!=null){
+        this.setState({followerscount:this.state.followers.length})}
+               
+       if(this.state.following!=null){
+        this.setState({followingcount:this.state.following.length})}
+
+
+
   }
 
 handleUpload = () => {
-    localStorage.setItem("user_name","kavya.chennoju@sjsu.edu")
+ 
     console.log(localStorage.getItem("user_name"))
    
     const data = new FormData()
-    data.append("user_name","kavya.chennoju@sjsu.edu" );
+    data.append("user_name",localStorage.getItem("user_name") );
     data.append('selectedFile', this.state.selectedFile, this.state.selectedFile.name)
     console.log(this.state.selectedFile)
   data.set("user_name",localStorage.getItem("user_name"))
@@ -123,9 +133,9 @@ updatelocationvalue(x){
 
 }
 showfollowers(){
-    this.setState({followerstab:true,followingtab:false})
+    this.setState({followerstab:true,followingtab:false,profiletab:false})
     var data={
-      "user_name":"kavya.chennoju@sjsu.edu"
+      "user_name":localStorage.getItem("user_name")
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
@@ -145,9 +155,9 @@ showfollowers(){
 
 }
 showfollowing(){
-    this.setState({followingtab:true,followerstab:false})
+    this.setState({followingtab:true,followerstab:false,profiletab:false})
     var data={
-        "user_name":"kavya.chennoju@sjsu.edu"
+        "user_name":localStorage.getItem("user_name")
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
@@ -166,7 +176,9 @@ showfollowing(){
       .catch()
 
 }
- 
+showprofile(){
+    this.setState({followingtab:false,followerstab:false,profiletab:true})
+}
     render() {
     
   
@@ -195,9 +207,14 @@ showfollowing(){
                 <Header />
               
 <div className="profile-pic" >
-           <img src={this.state.profilepic} width="120" height="120" /> <div className="upload-propic">
-           <input type="file" name="" id="p" onChange={this.handleselectedFile} />
-        <button onClick={this.handleUpload}>Upload</button>
+          
+<div className="upload-propic">
+           <input type="file" name="" id="p" onChange={this.handleselectedFile} style={{ height: "0px", width: "0px" }}/>
+         
+         {localStorage.setItem("b64",this.state.profilepic)}
+           <img src={this.state.profilepic} width="120" height="120" /><br />
+
+               <button onClick={this.handleUpload}>Upload</button>
         <div> {Math.round(this.state.loaded, 2)} %</div></div>
         <br />
         <span className="info">
@@ -209,6 +226,7 @@ showfollowing(){
         </span>
         :
         <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
+        {localStorage.setItem("tagline",this.state.tagline)}
         {
             console.log(this.state.tagline)}{this.state.tagline}
         </span>
@@ -257,16 +275,16 @@ showfollowing(){
                                             <Nav variant="pills" className="flex-column feed-nav">
                                               
                                       
-Feeds<br />
-Profile<br />
+<b>Feeds</b>
+<div onClick={this.showprofile}>Profile<br /></div>
 Answers<br />
 Questions<br />
 Shares<br />
 Spaces<br />
 Posts<br />
 Blogs<br />
-<div onClick={this.showfollowers}>Followers {this.state.followers.length}</div>
-<div onClick={this.showfollowing}>Following {this.state.following.length}</div>
+<div onClick={this.showfollowers}>Followers {this.state.followerscount}</div>
+<div onClick={this.showfollowing}>Following {this.state.followingcount}</div>
 Edits<br />
 Activity<br />
                                             </Nav>

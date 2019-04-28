@@ -11,7 +11,7 @@ function mapStateToProps(store) {
         signupMessage:store.account.signupMessage,
         signinSuccess:store.account.signinSuccess,
         signinMessage:store.account.signinMessage,
-        isTopicSelected:store.account.isTopicSelected
+        // isTopicSelected:store.account.isTopicSelected
     }
 }
 
@@ -39,16 +39,11 @@ class SignUp extends Component {
         this.props.signin(data);
     }
     render() {
-        console.log("signupSuccess", this.props.signupSuccess)
-        console.log("signupMessage", this.props.signupMessage)
-        console.log("signinSuccess", this.props.signinSuccess)
-        console.log("signinMessage", this.props.signinMessage)
-        console.log("isTopicSelected", this.props.isTopicSelected)
         let message;
-        if(localStorage.getItem("jwtToken")!=null && localStorage.getItem("isTopicSelected")== null){
-            console.log("inside 1st if condition");
+
+        if(localStorage.getItem("jwtToken")!== null && localStorage.getItem("isTopicSelected") === "false"){
             return(<Redirect to="/quora/topics"/>)
-        } else if(localStorage.getItem("jwtToken")!=null && localStorage.getItem("isTopicSelected")!= null){
+        } else if(localStorage.getItem("jwtToken")!== null && localStorage.getItem("isTopicSelected") === "true"){
             return(<Redirect to="/quora/home"/>)
         }
         if(this.props.signupSuccess != null && this.props.signupSuccess){

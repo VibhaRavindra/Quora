@@ -69,12 +69,15 @@ function followquestion(msg, callback){
 
     console.log("In listing property topic service. Msg: ", msg)
 console.log("hooray",msg.body.qid)
+Users.users.update( {"user_name":msg.body.follower_username},{$push:{questions_followed:msg.body.qid}}, function (error,result) {
+    redisClient.del("applicantProfile_" + msg.body.follower_username); 
+})
   Questions.questions.update( {"_id":msg.body.qid},{$push:{followers:msg.body.follower_username}},function (error,result) {
         if (error) {
             console.log(error.message)
             callback(null, {status:400,error});
         } else {
-                  
+               
             callback(null, {status: 200, result});
         }
     })
@@ -84,12 +87,12 @@ function followtopic(msg, callback){
 
     console.log("In listing property topic service. Msg: ", msg)
 
-  Users.users.update( {"user_name":msg.body.username},{$push:{topics_followed:msg.body.topicname}}, function (error,result) {
+  Users.users.update( {"user_name":msg.body.user_name},{$push:{topics_followed:msg.body.topicname}}, function (error,result) {
         if (error) {
             console.log(error.message)
             callback(null, {status:400,error});
         } else {
-           
+            redisClient.del("applicantProfile_" + msg.body.user_name);
             callback(null, {status: 200, result});
         }
     })
@@ -178,7 +181,9 @@ function unfollowuser(msg, callback){
   function unfollowquestion(msg, callback){
 
     console.log("In listing property topic service. Msg: ", msg)
-
+    Users.users.update( {"user_name":msg.body.follower_username},{$pull:{questions_followed:msg.body.qid}}, function (error,result) {
+        redisClient.del("applicantProfile_" + msg.body.follower_username); 
+    })
   Questions.questions.update( {"_id":msg.body.qid},{$pull:{followers:msg.body.follower_username}},function (error,result) {
         if (error) {
             console.log(error.message)
@@ -195,12 +200,12 @@ function unfollowtopic(msg, callback){
 
     console.log("In listing property topic service. Msg: ", msg)
 
-  Users.users.update( {"user_name":msg.body.username},{$pull:{topics_followed:msg.body.topicname}}, function (error,result) {
+  Users.users.update( {"user_name":msg.body.user_name},{$pull:{topics_followed:msg.body.topicname}}, function (error,result) {
         if (error) {
             console.log(error.message)
             callback(null, {status:400,error});
         } else {
-           
+            redisClient.del("applicantProfile_" + msg.body.user_name);
             callback(null, {status: 200, result});
         }
     })

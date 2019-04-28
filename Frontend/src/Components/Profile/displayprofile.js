@@ -28,6 +28,7 @@ class displayprofile extends Component {
              followersrows:"",
              followerstab:false,
              followingtab:false,
+             profiletab:true,
              followingrows:"",
              followerscount:0,
              followingcount:0,
@@ -36,11 +37,12 @@ class displayprofile extends Component {
         this.showfollowers=this.showfollowers.bind(this);
         this.showfollowing=this.showfollowing.bind(this);
         this.followuser=this.followuser.bind(this);
+        this.showprofile=this.showprofile.bind(this);
     }
 
 componentWillMount=()=>{
     var data={
-        "user_name":"vibhashree.ravindra@sjsu.edu"
+        "user_name":this.props.match.params.user_id
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
@@ -59,20 +61,25 @@ componentWillMount=()=>{
         console.log(this.state.profilepic)
         this.setState({followers:this.state.rows.users_followers})
         
-        if(this.state.followers.length>0){
+        if(this.state.followers!=null){
         this.setState({followerscount:this.state.followers.length})
-       if(this.state.followers.includes("kavya.chennoju@sjsu.edu"))
+        
+       if(this.state.followers.includes(localStorage.getItem("user_name")))
        this.setState({isfollowing:true})
+
+       
+       if(this.state.following!=null){
+        this.setState({followingcount:this.state.following.length})}
     }
     })
       .catch()
   }
 followuser=()=>{
-    localStorage.setItem("user_name","kavya.chennoju@sjsu.edu")
+   
     this.setState({followerscount:this.state.followerscount+1,isfollowing:true})
     var data={
         "user_name":localStorage.getItem("user_name"),
-        "follow_user_name":"vibhashree.ravindra@sjsu.edu"
+        "follow_user_name":this.props.match.params.user_id
     }
 
     axios.defaults.withCredentials = true;
@@ -89,11 +96,11 @@ followuser=()=>{
 }
 
 unfollowuser=()=>{
-    localStorage.setItem("user_name","kavya.chennoju@sjsu.edu")
+
     this.setState({followerscount:this.state.followerscount-1,isfollowing:false})
     var data={
         "user_name":localStorage.getItem("user_name"),
-        "unfollow_user_name":"vibhashree.ravindra@sjsu.edu"
+        "unfollow_user_name":this.props.match.params.user_id
     }
 
     axios.defaults.withCredentials = true;
@@ -109,9 +116,9 @@ unfollowuser=()=>{
     .catch()
 }
 showfollowers(){
-    this.setState({followerstab:true,followingtab:false})
+    this.setState({followerstab:true,followingtab:false,profiletab:false})
     var data={
-      "user_name":"vibhashree.ravindra@sjsu.edu"
+      "user_name":this.props.match.params.user_id
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
@@ -131,9 +138,9 @@ showfollowers(){
 
 }
 showfollowing(){
-    this.setState({followingtab:true,followerstab:false})
+    this.setState({followingtab:true,followerstab:false,profiletab:false})
     var data={
-        "user_name":"vibhashree.ravindra@sjsu.edu"
+        "user_name":this.props.match.params.user_id
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
@@ -152,7 +159,9 @@ showfollowing(){
       .catch()
 
 }
- 
+ showprofile(){
+    this.setState({followingtab:false,followerstab:false,profiletab:true})
+ }
     render() {
     
      console.log("tagline now is"+this.state.tagline)
@@ -203,10 +212,8 @@ showfollowing(){
                 {this.state.education}
                
                 <br />
- <span data-toggle="modal" data-target="#location">
- Add a location credential
- </span>
- <AddLocation/></span><br />
+{this.state.state}
+ </span><br />
               
                 <hr />
                 <br />
@@ -221,8 +228,8 @@ showfollowing(){
                                             <Nav variant="pills" className="flex-column feed-nav">
                                               
                                       
-Feeds<br />
-Profile<br />
+<b>Feeds</b>
+<div onClick={this.showprofile}>Profile</div>
 Answers<br />
 Questions<br />
 Shares<br />
@@ -230,7 +237,7 @@ Spaces<br />
 Posts<br />
 Blogs<br />
 <div onClick={this.showfollowers}>Followers {this.state.followerscount}</div>
-<div onClick={this.showfollowing}>Following {this.state.following.length}</div>
+<div onClick={this.showfollowing}>Following {this.state.followingcount}</div>
 Edits<br />
 Activity<br />
                                             </Nav>

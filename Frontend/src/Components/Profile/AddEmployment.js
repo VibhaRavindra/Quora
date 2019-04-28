@@ -15,7 +15,7 @@ class AddEmployment extends Component {
         console.log(this.state.employment)
         this.props.triggeremployment(this.state.employment)
         var data={
-            "user_name":"kavya.chennoju@sjsu.edu",
+            "user_name":localStorage.getItem("user_name"),
             "career":this.state.employment
           }
           axios.defaults.withCredentials = true;

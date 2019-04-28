@@ -5,7 +5,7 @@ const initialState = {
     signupMessage: null,
     signinSuccess: null,
     signinMessage: null,
-    selectTopicsSuccess: null,
+    selectTopicsSuccess: false,
     isTopicSelected: false
   };
 export default function accountReducer(state = initialState, action) {

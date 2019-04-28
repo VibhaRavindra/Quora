@@ -23,8 +23,8 @@ this.openNotification=this.openNotification.bind(this);
         value : (x),
     })
    
-    var arr=JSON.parse(this.state.value)
-    arr.map(member=>{this.setState({names:this.state.questions.push({"questions":member.question,"answeredby":member.answeredby,"answeredby_tagline":member.answeredby_tagline,"answeredby_profile_pic":member.answeredby_profile_pic,"timestamp":member.timestamp_answer})})})
+    //  var arr=JSON.parse(this.state.value)
+    //  arr.map(member=>{this.setState({names:this.state.questions.push({"questions":member.question,"answeredby":member.answeredby,"answeredby_tagline":member.answeredby_tagline,"answeredby_profile_pic":member.answeredby_profile_pic,"timestamp":member.timestamp_answer})})})
     
 
 
@@ -59,18 +59,19 @@ this.openNotification=this.openNotification.bind(this);
               </div>
              
               <div className="header-elem notifications">
-                <div className="header-logo-text notifications-elem" onClick={this.openNotification}>Notifications</div>
-                <Notifications triggerupdate={this.updatevalue} />
+                <div className="header-logo-text notifications-elem" onClick={this.openNotification}>Notifications<span class="notifications-elem__badge">{this.state.questions.length}</span>
+                <Notifications triggerupdate={this.updatevalue} /></div>
                 <div>
               </div>
-                <div>  <span class="notifications-elem__badge">{this.state.questions.length}</span> </div>
+                <div>   </div>
                 <div className="notifications-box">
                 {this.state.open && (
             <div className="notifications-elem_dropdowncontents">
-            <div className="head_notification_dropdown"><Link to='/SeeAllNotifications' className="Link-color">See all notifications</Link> <span className="read-notifications"> Mark these as read</span></div>
-            <ul id="navbar">  {
+            <div className="head_notification_dropdown"><Link to='/quora/SeeAllNotifications' className="Link-color">See all notifications</Link> <span className="read-notifications"> Mark these as read</span></div>
+            {/* <ul id="navbar">  {
               this.state.questions.map(member=><li>  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.questions}</span><span className="timestamp-notification">  {member.timestamp}</span></li>)} 
-              </ul>
+              </ul> */}
+
             </div>
           )}
           </div>

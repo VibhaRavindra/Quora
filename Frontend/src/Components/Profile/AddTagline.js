@@ -15,7 +15,7 @@ class AddTagline extends Component {
         console.log(this.state.tagline)
         this.props.triggertagline(this.state.tagline)
         var data={
-            "user_name":"kavya.chennoju@sjsu.edu",
+            "user_name":localStorage.getItem("user_name"),
             "tagline":this.state.tagline
           }
           axios.defaults.withCredentials = true;

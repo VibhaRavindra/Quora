@@ -21,10 +21,11 @@ class Home extends Component {
     }
 
     async componentDidMount() {
+        console.log(localStorage.getItem("tagline"))
+        
         let topicsArr = [];
         topicsArr = ["Technology", "Science"];
-        localStorage.setItem("topics", topicsArr);
-        localStorage.setItem("name", "Akhila");
+     
         //if (localStorage.getItem("image") === null) {
             this.setState({ defaultImg: true });
         //}
@@ -33,6 +34,7 @@ class Home extends Component {
         questions = this.props.questions.questions;
         console.log(this.props.questions.questions);
         this.setState({ questions: questions});
+        
 
     }
 
