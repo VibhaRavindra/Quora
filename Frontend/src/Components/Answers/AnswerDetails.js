@@ -16,11 +16,7 @@ class AnswerDetails extends Component {
     this.state = {
       commentOpen: false
     };
-     this.props = {
-      question_id: '5cbddb2ca8bd2772b4f4545b',
-      answer_id: '5cbebde585cadf9f186f3f79'
-    }
-
+     
     // this.comments = this.comments.bind(this)
   }
 
@@ -36,6 +32,7 @@ class AnswerDetails extends Component {
     //let answerBody;
     console.log("==================================================================")
     console.log(JSON.stringify(this.props.answer))
+    console.log(this.props);
     console.log("==================================================================")
     let deltaOps = JSON.parse(this.props.answer.answer).ops
     var htmlText = new QuillDeltaToHtmlConverter(deltaOps, {}).convert();
