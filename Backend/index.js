@@ -82,6 +82,7 @@ app.use(basePath, profileRoutes);
 app.use(basePath, questionRoutes);
 app.use(answer_basepath, Answer);
 app.use(search_basepath, Search);
+app.use(basePath,yourcontent);
 
 app.use('/uploads', express.static(path.join(__dirname, '/uploads/')));
 
