@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../../Styles/AskQuestion.css';
 import axios from 'axios'
+import {rooturl} from '../../Config/settings'
 class AddEducation extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +21,7 @@ class AddEducation extends Component {
           }
           axios.defaults.withCredentials = true;
           //make a post request with the user data
-          axios.post("http://localhost:3001/quora/addeducation",data, localStorage.getItem('jwtToken'))
+          axios.post("http://"+rooturl+":3001/quora/addeducation",data, localStorage.getItem('jwtToken'))
                   .then(
         )
           .catch()
