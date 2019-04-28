@@ -10,6 +10,7 @@ import AddTagline from './AddTagline'
 import AddEmployment from './AddEmployment';
 import AddLocation from './AddLocation';
 import AddEducation from './AddEducation';
+import {rooturl} from '../../Config/settings'
 var hex64 = require('hex64');
 class Profile extends Component {
     constructor(props) {
@@ -64,7 +65,7 @@ console.log("username from localstorage is",localStorage.getItem("user_name"))
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://localhost:3001/quora/getprofileinfo",data, localStorage.getItem('jwtToken'))
+      axios.post("http://"+rooturl+":3001/quora/getprofileinfo",data, localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);
@@ -102,7 +103,7 @@ handleUpload = () => {
     console.log(this.state.selectedFile)
   data.set("user_name",localStorage.getItem("user_name"))
     axios
-      .post('http://localhost:3001/quora/addprofilepic', data)
+      .post('http://'+rooturl+':3001/quora/addprofilepic', data)
       .then(res => {
         
         this.setState({profilepic:"data:image/jpg;base64,"+res.data})
@@ -141,7 +142,7 @@ showfollowers(){
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://localhost:3001/quora/getfollowersinfo",data, localStorage.getItem('jwtToken'))
+      axios.post("http://"+rooturl+":3001/quora/getfollowersinfo",data, localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);
@@ -163,7 +164,7 @@ showfollowing(){
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://localhost:3001/quora/getfollowinginfo",data, localStorage.getItem('jwtToken'))
+      axios.post("http://"+rooturl+":3001/quora/getfollowinginfo",data, localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);
