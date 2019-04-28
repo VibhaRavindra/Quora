@@ -1,4 +1,3 @@
-    
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import Header from './Navigation/Header';
@@ -15,7 +14,7 @@ import Topic from './Topic/Topic';
 
 class Main extends Component {
   render() {
-    if ("jwtToken" in localStorage) {
+    if (localStorage.getItem("jwtToken")!== null) {
       return (
         <div>
           <Route path="/header" component={Header} />
