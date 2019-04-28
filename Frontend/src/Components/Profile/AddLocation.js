@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../../Styles/AskQuestion.css';
 import axios from 'axios';
+import {rooturl} from '../../Config/settings'
 
 class AddLocation extends Component {
     constructor(props) {
@@ -30,7 +31,7 @@ class AddLocation extends Component {
           }
           axios.defaults.withCredentials = true;
           //make a post request with the user data
-          axios.post("http://localhost:3001/quora/addlocation",data, localStorage.getItem('jwtToken'))
+          axios.post("http://"+rooturl+":3001/quora/addlocation",data, localStorage.getItem('jwtToken'))
           this.setState({error:""})
                }
           else{

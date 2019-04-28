@@ -6,6 +6,7 @@ import axios from 'axios';
 import AnswerDetails from '../Answers/AnswerDetails';
 import AnswerForm from "../Answers/AnswerForm";
 import swal from 'sweetalert';
+import {rooturl} from '../../Config/settings'
 
 class DisplayQuestion extends Component {
     constructor(props) {
@@ -36,7 +37,7 @@ class DisplayQuestion extends Component {
             follower_username:localStorage.getItem("user_name"),
             qid:x
         }
-        axios.post("http://localhost:3001/quora/question/followquestion",data, localStorage.getItem('jwtToken'))
+        axios.post("http://"+rooturl+":3001/quora/question/followquestion",data, localStorage.getItem('jwtToken'))
  
     }
     unfollowquestion=(e,x)=>{
@@ -47,7 +48,7 @@ class DisplayQuestion extends Component {
          follower_username:localStorage.getItem("user_name"),
          qid:x
      }
-     axios.post("http://localhost:3001/quora/question/unfollowquestion",data, localStorage.getItem('jwtToken'))
+     axios.post("http://"+rooturl+":3001/quora/question/unfollowquestion",data, localStorage.getItem('jwtToken'))
  
  }
         

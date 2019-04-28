@@ -12,6 +12,7 @@ import AddLocation from './AddLocation';
 import AddEducation from './AddEducation';
 import a from './a.png'
 import b from './b.png'
+import {rooturl} from '../../Config/settings'
 class displayprofile extends Component {
     constructor(props) {
         super(props);
@@ -46,7 +47,7 @@ componentWillMount=()=>{
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://localhost:3001/quora/getprofileinfo",data, localStorage.getItem('jwtToken'))
+      axios.post("http://"+rooturl+":3001/quora/getprofileinfo",data, localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);
@@ -84,7 +85,7 @@ followuser=()=>{
 
     axios.defaults.withCredentials = true;
     //make a post request with the user data
-    axios.post("http://localhost:3001/quora/followuser",data, localStorage.getItem('jwtToken'))
+    axios.post("http://"+rooturl+":3001/quora/followuser",data, localStorage.getItem('jwtToken'))
             .then(response => {
             
       console.log("Status Code : ",response.status);
@@ -105,7 +106,7 @@ unfollowuser=()=>{
 
     axios.defaults.withCredentials = true;
     //make a post request with the user data
-    axios.post("http://localhost:3001/quora/unfollowuser",data, localStorage.getItem('jwtToken'))
+    axios.post("http://"+rooturl+":3001/quora/unfollowuser",data, localStorage.getItem('jwtToken'))
             .then(response => {
             
       console.log("Status Code : ",response.status);
@@ -122,7 +123,7 @@ showfollowers(){
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://localhost:3001/quora/getfollowersinfo",data, localStorage.getItem('jwtToken'))
+      axios.post("http://"+rooturl+":3001/quora/getfollowersinfo",data, localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);
@@ -144,7 +145,7 @@ showfollowing(){
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://localhost:3001/quora/getfollowinginfo",data, localStorage.getItem('jwtToken'))
+      axios.post("http://"+rooturl+":3001/quora/getfollowinginfo",data, localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);
