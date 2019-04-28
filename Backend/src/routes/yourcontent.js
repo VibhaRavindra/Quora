@@ -1,46 +1,69 @@
 var express = require('express');
 var router = express.Router();
 var kafka = require('../routes/kafka/client');
-const User = require('../models/UserSchema');
+
+
 
 //route GET routes/answers
 
-router.route('/yourcontent').get(function (req, res) {
-    console.log("Inside question post request");
-    console.log("Request Body:");
-    console.log(req.body);
-    kafka.make_request('question_topics',{"path":"get_all_questions", "body": req.body}, function(err,result){
-      if (err) {
-        console.log(err);
-        res.status(500).json({ responseMessage: 'Database not responding' });
-      }
-      else if (result.status === 200)
-      {
-        console.log("Results found");
-        for(var i=0;i<result.questions.length;i++){
-          if(result.questions[i].answers.length>0){
-          let ansArray = result.questions[i].answers;
-          ansArray.sort(function (a, b) {
-            if (a.upvote_count == b.upvote_count) {
-              return a.timestamp - b.timestamp
-            }
-            return a.upvote_count - b.upvote_count
-          });
-          var maxUpvotesAnswer = ansArray[ansArray.length-1];
-         
-          let maxAnsObj = [];
-          maxAnsObj.push(maxUpvotesAnswer);
-          result.questions[i].answers = maxAnsObj;
-          console.log(result.questions[i]);
-        }
-      }
-        res.status(200).json({ questions : result.questions });
+router.route('/getquestionsasked').get( function (req, res) {
+
+    console.log("In get questions asked");
+    console.log(req.query);
+    //user_name
+  
+    kafka.make_request('yourcontent',{"path":"getquestionsasked", "body": req.query}, function(error,result){
+      if (error) {
+        console.log(error);
+        console.log("Question not found");
+        res.status(400).json({responseMessage: 'Question not found'});
+      } else {
+        console.log(result.questions);
         
-      } else if (result.status === 204){
-        console.log("No results found");
-        res.status(200).json({ responseMessage: 'No results found' });
+        res.writeHead(200, {'content-type':'application/json'});
+        res.end(JSON.stringify(result.questions));
       }
-    });
+    })
+  });
+  router.route('/getquestionsfollowed').get( function (req, res) {
+
+    console.log("In get questions followed");
+    console.log(req.query);
+    //user_name
+  
+    kafka.make_request('yourcontent',{"path":"getquestionsfollowed", "body": req.query}, function(error,result){
+      if (error) {
+        console.log(error);
+        console.log("Questions followed not found");
+        res.status(400).json({responseMessage: 'Question not found'});
+      } else {
+        console.log(result.questions);
+        
+        res.writeHead(200, {'content-type':'application/json'});
+        res.end(JSON.stringify(result.questions));
+      }
+    })
+  });
+
+  router.route('/getuseranswers').get( function (req, res) {
+
+    console.log("In get user answers");
+    console.log(req.query);
+    //follower_username
+    //qid
+  
+    kafka.make_request('yourcontent',{"path":"getuseranswers", "body": req.query}, function(error,result){
+      if (error) {
+        console.log(error);
+        console.log("Question not found");
+        res.status(400).json({responseMessage: 'Answers not found'});
+      } else {
+        console.log("Answers Found");
+        console.log(result.answers);
+        res.writeHead(200, {'content-type':'application/json'});
+        res.end(JSON.stringify(result.answers));
+      }
+    })
   });
       
     
