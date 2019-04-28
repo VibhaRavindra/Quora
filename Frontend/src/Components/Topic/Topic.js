@@ -13,6 +13,7 @@ import sportsImage from '../../Images/topic_sports.png';
 import musicImage from '../../Images/topic_music.png';
 import scienceImage from '../../Images/topic_science.png';
 import axios from 'axios'
+import {rooturl} from '../../Config/settings'
 
 class Topic extends Component {
     constructor(props) {
@@ -91,7 +92,7 @@ if (index > -1) {
            user_name:localStorage.getItem("user_name"),
            topicname:x
        }
-       axios.post("http://localhost:3001/quora/unfollowtopic",data, localStorage.getItem('jwtToken'))
+       axios.post("http://"+rooturl+":3001/quora/unfollowtopic",data, localStorage.getItem('jwtToken'))
     }
     followtopic=(e,x)=>{
      
@@ -107,7 +108,7 @@ if (index > -1) {
            user_name:localStorage.getItem("user_name"),
            topicname:x
        }
-       axios.post("http://localhost:3001/quora/followtopic",data, localStorage.getItem('jwtToken'))
+       axios.post("http://"+rooturl+":3001/quora/followtopic",data, localStorage.getItem('jwtToken'))
     }
 
     render() {

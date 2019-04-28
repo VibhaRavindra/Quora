@@ -57,7 +57,10 @@ function signup(msg, callback){
             if(err){
                 console.log(err)
                 console.log("INSIDE ERROR 2")
-                mysqlconnection.rollback(function() {});
+                mysqlconnection.rollback(function(err) {
+                    if(err)
+                        console.log(err)
+                });
                 callback(null,{
                     signupSuccess:false,
                     signupMessage:"User already Exists!"
@@ -66,8 +69,9 @@ function signup(msg, callback){
                 newUser.save(function (err, result) {
                     if (err) {
                         console.log("err newUser save")
-                        mysqlconnection.rollback(function() {
-                            // throw err;
+                        mysqlconnection.rollback(function(err) {
+                            if(err)
+                                console.log(err)
                         });
                         callback(null,{
                             signupSuccess:false,
@@ -76,8 +80,9 @@ function signup(msg, callback){
                     }else{
                         mysqlconnection.commit(function(err) {
                             if (err) { 
-                                mysqlconnection.rollback(function() {
-                                // throw err;
+                                mysqlconnection.rollback(function(err) {
+                                    if(err)
+                                        console.log(err)
                                 });
                             }
                         });
@@ -103,17 +108,17 @@ function signin(msg, callback){
             // throw err; 
         }
         mysqlconnection.query('SELECT * FROM Users WHERE user_name=?',[msg.body.user_name], 
-        function(err, rowsOfTable, fieldsOfTable){ 
+        function(err, rowsOfTable){ 
             if(err){
-                mysqlconnection.rollback(function() {
-                    // throw err;
+                mysqlconnection.rollback(function(err) {
+                    if(err)
+                        console.log(err)
                 });
                 callback(null,{
                     signinSuccess:false,
                     signinMessage:"Sign In Failed"
                 })
             }
-            var UserArray = [];
             if(rowsOfTable.length == 1){
                 var result = bcrypt.compareSync(msg.body.password, rowsOfTable[0].password);
                 if(result){
@@ -124,8 +129,9 @@ function signin(msg, callback){
                     console.log(rowsOfTable[0].select_topics)
                     users.findOne({_id: rowsOfTable[0].mongo_userid}, function(err, result){
                         if(err){
-                            mysqlconnection.rollback(function() {
-                                // throw err;
+                            mysqlconnection.rollback(function(err) {
+                                if(err)
+                                    console.log(err)
                             });
                             callback(null,{
                                 signinSuccess:false,
@@ -134,7 +140,6 @@ function signin(msg, callback){
                         }
                         let topics = result.topics_followed;
                         let isTopicSelected;
-                        let select_topics
                         if(topics.length > 0){
                             isTopicSelected = true;
                         } else {
@@ -148,12 +153,14 @@ function signin(msg, callback){
                             lastname: rowsOfTable[0].lastname,
                             userid: rowsOfTable[0].mongo_userid,
                             topics: topics,
-                            isTopicSelected: isTopicSelected
+                            isTopicSelected: isTopicSelected,
+                            signinMessage:"Success!"
                         });
                     })
                 } else{
-                    mysqlconnection.rollback(function() {
-                        // throw err;
+                    mysqlconnection.rollback(function(err) {
+                        if(err)
+                            console.log(err)
                     });
                     callback(null,{
                         signinSuccess:false,
@@ -174,7 +181,10 @@ function selectedTopics(msg, callback){
     mysqlconnection.beginTransaction(function(err) {
         if (err) { 
             callback(null,{
-                selectTopicsSuccess:false
+                selectTopicsSuccess:false,
+                select_topics: false,
+                isTopicSelected: false,
+                topics: []
             })
         }
         console.log("msg.body.user_name ",msg.body.user_name)
@@ -182,24 +192,36 @@ function selectedTopics(msg, callback){
         mysqlconnection.query(query,[1,msg.body.user_name],(err,result)=>{
             if(err){
                 console.log(err)
-                mysqlconnection.rollback(function() {});
+                mysqlconnection.rollback(function(err) {
+                    if(err)
+                        console.log(err)
+                });
                 callback(null,{
                     selectTopicsSuccess:false,
-                    select_topics: false
+                    select_topics: false,
+                    isTopicSelected: false,
+                    topics: []
                 })
             } else {
                 users.findOneAndUpdate({_id:msg.body.userid}, { $push: { topics_followed: { $each: msg.body.topics }}}, function(err, result){
                     if (err){
                         console.log(err)
-                        mysqlconnection.rollback(function() {});
+                        mysqlconnection.rollback(function(err) {
+                            if(err)
+                                console.log(err)
+                        });
                         callback(null,{
                             selectTopicsSuccess:false,
-                            select_topics: false
+                            select_topics: false,
+                            isTopicSelected: false,
+                            topics: []
                         })
                     } else {
                         mysqlconnection.commit(function(err) {
                             if (err) { 
-                                mysqlconnection.rollback(function() {
+                                mysqlconnection.rollback(function(err) {
+                                    if(err)
+                                        console.log(err)
                                 });
                             }
                         });
@@ -207,8 +229,8 @@ function selectedTopics(msg, callback){
                         callback(null,{
                             selectTopicsSuccess:true,
                             select_topics: true,
-                            topics: msg.body.topics
-                            // selected_topics: msg.body.topics
+                            topics: msg.body.topics,
+                            isTopicSelected: true
                         })
                     }
                 })

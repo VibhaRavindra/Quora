@@ -9,10 +9,7 @@ const initialState = {
     isTopicSelected: false
   };
 export default function accountReducer(state = initialState, action) {
-    console.log("in account reducer")
     if(action.type === SIGN_UP) {
-        console.log("Inside Reducer signup : ",action.payload.signupSuccess);
-        console.log(action.payload.signupMessage)
         return Object.assign({}, state, {
             signupSuccess:action.payload.signupSuccess,
             signupMessage:action.payload.signupMessage,
@@ -30,8 +27,6 @@ export default function accountReducer(state = initialState, action) {
     } else if(action.type === SIGN_OUT) {
         return initialState;
     } else if(action.type === SELECTED_TOPICS) {
-        console.log("Inside Reducer");
-        console.log("selectTopicsSuccess : "+ action.payload.selectTopicsSuccess);
         return Object.assign({}, state, {
             selectTopicsSuccess:action.payload.selectTopicsSuccess,
             select_topics:action.payload.select_topics

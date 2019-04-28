@@ -1,46 +1,53 @@
 import React, { Component } from 'react';
 import '../../Styles/Navigation.css';
 import Logo from '../../Images/quora.svg';
-import Notifications from '../Notifications/Notifications';
 import {Link} from 'react-router-dom'
 import abc from './abc.png'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios'
+import {rooturl} from '../../Config/settings'
 class Header extends Component {
   constructor(props){
     super(props);
     this.state={
         value:[],
         open:false,
-        questions:[],
+        rows:[],
 
        
     }
-this.updatevalue=this.updatevalue.bind(this);
-this.openNotification=this.openNotification.bind(this);
+
+
     }
-    updatevalue(x){
-      console.log("updating")
-      this.setState({
-        value : (x),
+    componentDidMount(){
+      var data={
+        "user_name":localStorage.getItem("user_name")
+      }
+      axios.defaults.withCredentials = true;
+      //make a post request with the user data
+      axios.post("http://"+rooturl+":3001/quora/notifications",data, localStorage.getItem('jwtToken'))
+              .then(response => {
+              
+        console.log("Status Code : ",response.status);
+        if(response.status === 200){
+            console.log(response.data);
+            this.setState({
+                rows : response.data,
+            })
+          
+        
+        }
+      
     })
-   
-    //  var arr=JSON.parse(this.state.value)
-    //  arr.map(member=>{this.setState({names:this.state.questions.push({"questions":member.question,"answeredby":member.answeredby,"answeredby_tagline":member.answeredby_tagline,"answeredby_profile_pic":member.answeredby_profile_pic,"timestamp":member.timestamp_answer})})})
-    
-
-
-    }
-   
-
-    openNotification = () => {
-      this.setState(state => {
-        return {
-          open: !state.open,
-        };
-      });
-    };
+      .catch()
+  }
 
   render() {
-     
+     let noti=[];
+       noti.push(<ul> <a href="/quora/SeeAllNotifications">See all Notifications</a>{
+        this.state.rows.map(member=><li>  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>)} 
+       </ul>  )
+      
     return (
      
       <div className="row">
@@ -57,32 +64,41 @@ this.openNotification=this.openNotification.bind(this);
               <div className="header-elem spaces">
                 <div className="header-logo-text spaces-elem">Spaces</div>
               </div>
+           
+              <div className="header-elem notifications" >
+            
+                <div className="header-logo-text notifications-elem" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Notifications<span class="notifications-elem__badge">{this.state.rows.length}</span>
              
-              <div className="header-elem notifications">
-                <div className="header-logo-text notifications-elem" onClick={this.openNotification}>Notifications<span class="notifications-elem__badge">{this.state.questions.length}</span>
-                <Notifications triggerupdate={this.updatevalue} /></div>
-                <div>
-              </div>
-                <div>   </div>
-                <div className="notifications-box">
-                {this.state.open && (
-            <div className="notifications-elem_dropdowncontents">
-            <div className="head_notification_dropdown"><Link to='/quora/SeeAllNotifications' className="Link-color">See all notifications</Link> <span className="read-notifications"> Mark these as read</span></div>
-            {/* <ul id="navbar">  {
-              this.state.questions.map(member=><li>  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.questions}</span><span className="timestamp-notification">  {member.timestamp}</span></li>)} 
-              </ul> */}
-
-            </div>
-          )}
-          </div>
-  
+                <span class="sr-only">Toggle Dropdown</span>
+                </div>
+    
+                <div class="dropdown-menu">
               
-              </div>
+                   
+                    {noti}
+                    
+                </div>
+           
+                </div>
+              
+          
+                      
+          
               <div>
                 <input className="search-box" placeholder="Search Quora"></input>
               </div>
               <div className="profile">
-                <div className="profile-logo"></div>
+              <div className="profile-logo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">Toggle Dropdown</span>
+                </div>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/profile">Profile</a>
+                    <a class="dropdown-item" href="/messages">Messages</a>
+                    <a class="dropdown-item" href="/yourcontent">Your Content</a>
+                    <a class="dropdown-item" href="settings">Settings</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Logout</a>
+                </div>
               </div>
               <div>
                 <div className="add-question">Add Question or Link</div>
