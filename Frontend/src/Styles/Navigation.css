@@ -8,7 +8,8 @@
   display: -ms-flexbox!important;
   display: flex!important;
   justify-content: center;
-  position: fixed;
+  z-index: 99;
+  background-color: #fff;
 }
 .header-nav{
   width: 914px;
