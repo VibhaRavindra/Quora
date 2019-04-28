@@ -151,3 +151,23 @@
   .Link-color{
     color: black;
   }
+li{
+  border-bottom: 1px solid black;
+  margin-top: 10px;
+  padding-bottom:10px; 
+  width: 400px;
+ 
+}
+ul{
+  width: 600px;
+}
+.dropdown-menu{
+  margin-top: 20px;
+  width: 400px;
+  margin-left:10px;
+  height: 500px;
+  padding-left:10px; 
+  overflow: auto; 
+  
+
+}

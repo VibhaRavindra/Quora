@@ -14,7 +14,7 @@ import Topic from './Topic/Topic';
 
 class Main extends Component {
   render() {
-    if ("jwtToken" in localStorage) {
+    // if ("jwtToken" in localStorage) {
       return (
         <div>
           <Route path="/header" component={Header} />
@@ -27,15 +27,11 @@ class Main extends Component {
               <Route path="/quora/myprofile" component={Profile} />
          <Route path = "/quora/profile/:user_id" component = {displayprofile} />
           <Route exact path="/quora/SeeAllNotifications" component={SeeAllNotifications} />
-        </div>
-    );
-    } else {
-      return (
-        <div>
+   
           <Route path="/" component={SignUp} />
         </div>
      )
-    }
+
   }
 }
 
