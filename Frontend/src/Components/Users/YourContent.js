@@ -1,99 +1,69 @@
 import React from 'react'
 import axios from 'axios'
+import {getquestionsasked,getquestionsfollowed,getuseranswers} from '../../js/actions/yourcontent'
 import Header from '../Navigation/Header'
 import "../../Styles/YourContent.css"
+import { connect } from 'react-redux';
+import propTypes from 'prop-types'
 class YourContent extends React.Component{
     constructor(){
         super();
  this.state ={
-     questionsasked:'',
-     questionsfollowed:'',
-     useranswers:'',
+     getquestionsasked:'',
+     getquestionsfollowed:'',
+     getuseranswers:'',
      questionsasked1:[
-   "what is the value of pi?",
-     ],
+                 "what is the value of pi?",
+                     ],
      questionsfollowed1:[
-       "what if earth has no oceans?"  
-     ],
-     
+                 "what if earth has no oceans?"  
+                     ],
       searchString: '',
-      users: []
+      users: [],
+      isDefaultTopic : true,
  }
- this.questionsasked=this.questionsasked.bind(this);
- this.questionsasked1=this.questionsasked1.bind(this);
- this.questionsfollowed=this.questionsfollowed.bind(this);
- this.questionsfollowed1=this.questionsfollowed1.bind(this);
- this.useranswers=this.useranswers.bind(this);
+ this.getquestionsasked=this.getquestionsasked.bind(this);
+ 
+ this.getquestionsfollowed=this.getquestionsfollowed.bind(this);
+ 
+ this.getuseranswers=this.getuseranswers.bind(this);
  this.handleChange = this.handleChange.bind(this);
 }    
- questionsasked= (e) => {
-            var headers = new Headers();
-            e.preventDefault();
+ 
+           getquestionsasked = async() => {
+               this.setState({isDefaultTopic : false});
+               let userid = localStorage.getItem("userid");
+               console.log(userid);
+               await this.props.getquestionsasked(userid);
+             console.log(this.props.questionsasked);
+            //  let questions = null;
+            //  questions=this.props.questions;
+            //  console.log(this.props.questions);
+            //  this.setState({questions: questions});
             
-            axios.defaults.withCredentials = true;
-             axios.get('/getuserquestions')
-            .then((response) => {
-                this.setState({
-                    questionsasked: this.state.questionsasked.concat(response.data)
-                });
-                console.log(response.data)
-            });
-        }
-        questionsasked1= (e) => {
-            var headers = new Headers();
-            e.preventDefault();
-            
-        
-                this.setState({
-                    questionsaskedd1: this.state.questionsasked1,
-                });
-                
-        
-        }
-        questionsfollowed1= (e) => {
-            var headers = new Headers();
-            e.preventDefault();
-            
-        
-                this.setState({
-                    questionsfollowedd1: this.state.questionsfollowed1,
-                });
-                
-        
-        }
-        questionsfollowed= (e) => {
-            var headers = new Headers();
-            e.preventDefault();
-            
-            axios.defaults.withCredentials = true;
-             axios.get('/getfollowedquestions')
-            .then((response) => {
-                this.setState({
-                    questionsfollowed: this.state.questionsfollowed.concat(response.data)
-                });
-                console.log(response.data)
-            });
-        }
-        useranswers= (e) => {
-            var headers = new Headers();
-            e.preventDefault();
-            
-            axios.defaults.withCredentials = true;
-             axios.get('/getuseranswers')
-            .then((response) => {
-                this.setState({
-                    useranswers: this.state.useranswers.concat(response.data)
-                });
-                console.log(response.data)
-            });
-        }
+         } 
+         getquestionsfollowed = async() => {
+          this.setState({isDefaultTopic : false});
+          let userid = localStorage.getItem("userid");
+          console.log(userid);
+          await this.props.getquestionsfollowed(userid);
+        console.log(this.props.questionsfollowed); 
+         }
+
+         getuseranswers = async() => {
+          this.setState({isDefaultTopic : false});
+          let owner_name = localStorage.getItem("username");
+          console.log(owner_name);
+          await this.props.getuseranswers(owner_name);
+        console.log(this.props.useranswers);
+         }
         //search
-        componentDidMount() {
-            this.setState({
-              users: users
-            });
-            this.refs.search.focus();
-          }
+        // componentDidMount() {
+        //     this.setState({
+        //       users: users
+        //     });
+        //     this.refs.search.focus();
+        //   }
           handleChange(e) {
               e.preventDefault();
               const obj={
@@ -105,9 +75,17 @@ class YourContent extends React.Component{
               searchString: this.refs.search.value
             });
           }
-    
+        
     render(){
         
+        const questionsasked = this.props.questionsasked;
+        console.log(questionsasked);
+       const questionsfollowed=this.props.questionsfollowed;
+       console.log(questionsfollowed);
+         const useranswers =this.props.useranswers;
+         console.log(useranswers);
+
+
         let _users = this.state.users;
         let search = this.state.searchString.trim().toLowerCase();
     
@@ -116,9 +94,6 @@ class YourContent extends React.Component{
             return user.name.toLowerCase().match(search);
           });
         }
-
-        let q=this.state.questionsasked1;
-        let f=this.state.questionsfollowed1
             
         return(
             <div>
@@ -134,12 +109,12 @@ class YourContent extends React.Component{
                     <h6>By Content Type</h6>
                             <label>All Types</label>
                                   <br></br>
-                            <label onClick={this.questionsasked1}>Question Asked</label>
+                            <label defaultActiveKey="test" onClick={this.getquestionsasked}>Question Asked</label>
                                   <br></br>
-                            <label onClick={this.questionsfollowed1}>Questions Followed</label>
+                            <label onClick={this.getquestionsfollowed}>Questions Followed</label>
                                   <br></br>
               
-                             <label onClick={this.useranswers}>Answers</label>
+                             <label onClick={this.getuseranswers}>Answers</label>
                                   <br></br>
                                   <br></br>
                     <h6>By Topic</h6>
@@ -158,7 +133,7 @@ class YourContent extends React.Component{
                     <h6>By Year</h6>
                     
              </ul>
-                       <div class="yourcontent">
+                       
             {/* <ul>
              {_users.map(l => {
               return (
@@ -167,37 +142,24 @@ class YourContent extends React.Component{
                 </li>
               );
             })}
-            </ul> */}
-            
-               {this.state.questionsaskedd1}
-            
-            <br></br>
-              {this.state.questionsfollowedd1}
-                      </div>
-                     
-              <br></br>
+            </ul>  */}
+            <div class="yourcontent">
+{/* content to be displayed */}
+</div>
+
+
+
 
         </div>
         )
     }  
 }
-var users = [
 
-    { name: 'Backbone.js', url: 'https://documentcloud.github.io/backbone/'},
-    { name: 'AngularJS', url: 'https://angularjs.org/'},
-    { name: 'jQuery', url: 'https://jquery.com/'},
-    { name: 'Prototype', url: 'http://www.prototypejs.org/'},
-    { name: 'React', url: 'https://facebook.github.io/react/'},
-    { name: 'Ember', url: 'http://emberjs.com/'},
-    { name: 'Knockout.js', url: 'https://knockoutjs.com/'},
-    { name: 'Dojo', url: 'http://dojotoolkit.org/'},
-    { name: 'Mootools', url: 'http://mootools.net/'},
-    { name: 'Underscore', url: 'https://documentcloud.github.io/underscore/'},
-    { name: 'Lodash', url: 'http://lodash.com/'},
-    { name: 'Moment', url: 'https://momentjs.com/'},
-    { name: 'Express', url: 'http://expressjs.com/'},
-    { name: 'Koa', url: 'http://koajs.com/'},
-
-];
-
-export default YourContent
+const mapStateToProps =(state)=>(
+  {
+ questionsasked: state.yourcontent.payload,
+ questionsfollowed: state.yourcontent.payload,
+ useranswers: state.yourcontent.payload,
+  }
+)
+export default connect(mapStateToProps,{getquestionsasked,getquestionsfollowed,getuseranswers})(YourContent)
