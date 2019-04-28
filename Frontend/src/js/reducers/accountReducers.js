@@ -5,8 +5,8 @@ const initialState = {
     signupMessage: null,
     signinSuccess: null,
     signinMessage: null,
-    selectTopicsSuccess: null,
-    select_topics: null
+    selectTopicsSuccess: false,
+    isTopicSelected: false
   };
 export default function accountReducer(state = initialState, action) {
     console.log("in account reducer")
@@ -25,7 +25,7 @@ export default function accountReducer(state = initialState, action) {
             signinMessage:action.payload.signinMessage,
             signupSuccess:null,
             signupMessage:null,
-            select_topics:action.payload.select_topics
+            isTopicSelected:action.payload.isTopicSelected
         });
     } else if(action.type === SIGN_OUT) {
         return initialState;

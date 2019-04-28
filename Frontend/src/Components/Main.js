@@ -1,4 +1,3 @@
-    
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import Header from './Navigation/Header';
@@ -15,7 +14,7 @@ import Topic from './Topic/Topic';
 
 class Main extends Component {
   render() {
-  
+    if ("jwtToken" in localStorage) {
       return (
         <div>
           <Route path="/header" component={Header} />
@@ -25,14 +24,18 @@ class Main extends Component {
           <Route path="/answer/create" component={AnswerForm} />
           <Route exact path="/quora/home" component={Home} />
           <Route exact path="/quora/topic/:topicName" component={Topic} />
-          <Route path="/quora/myprofile" component={Profile} />
+              <Route path="/quora/myprofile" component={Profile} />
          <Route path = "/quora/profile/:user_id" component = {displayprofile} />
           <Route exact path="/quora/SeeAllNotifications" component={SeeAllNotifications} />
-    
-         <Route path="/quora" component={SignUp} />
+        </div>
+    );
+    } else {
+      return (
+        <div>
+          <Route path="/" component={SignUp} />
         </div>
      )
-   
+    }
   }
 }
 

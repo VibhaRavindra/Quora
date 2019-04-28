@@ -3,7 +3,12 @@ import ReactHtmlParser from 'react-html-parser';
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 import '../../Styles/Answer.css' 
 import '../../Styles/AnswerButtons.css'
+import defaultProfilePic from '../../Images/profile_logo.png'
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
 
+TimeAgo.addLocale(en)
+const timeAgo = new TimeAgo('en-US')
 
 class AnswerDetails extends Component {
   constructor(props) {
@@ -36,19 +41,23 @@ class AnswerDetails extends Component {
     var htmlText = new QuillDeltaToHtmlConverter(deltaOps, {}).convert();
     console.log(deltaOps)
     console.log(htmlText)
+    var imgdiv = ''
+    console.log()
+    if (!this.props.answer.owner_profile_pic || !this.props.answer.owner_profile_pic.startsWith("http")) {
+      imgdiv = <img src={defaultProfilePic} className="answerer-pro-pic" />
+    } else {
+      imgdiv = <img src={this.props.answer.owner_profile_pic} className="answerer-pro-pic" />
+    }
     return (
       <li className="answer-item">
         <div className="answer-header">
-          <img src="https://centrik.in/wp-content/uploads/2017/02/user-image-.png" alt="author.name's picture" className="answerer-pro-pic" />
+        {imgdiv}
           <div className="answer-details">
-            <h1>author.name</h1>
-            <h2>Answered time_posted_ago</h2>
+            <h1>{this.props.answer.owner_name}, {this.props.answer.owner_tagline}</h1>
+            <h2>Answered {timeAgo.format(new Date(this.props.answer.timestamp))}</h2>
           </div>
         </div>
         <div className="answer-body">{ReactHtmlParser(htmlText)}</div>
-        <div className="answer-buttons">
-          <button className="comments-button" onClick={() => this.setState({ commentOpen: !this.state.commentOpen })}>Comments </button>
-        </div>
       </li>
     );
   }

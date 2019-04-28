@@ -120,12 +120,13 @@ class DisplayQuestion extends Component {
             </div>
         );
 
-
+            //console.log(this.props);
 
         return(
+            
             <div className="card question-card">
                     <div className="card-body question-card-body">
-                        <span className="pull-right clickable close-icon" data-effect="fadeOut" onClick={(event) => this.closeDiv(event, index)}><i class="fa fa-times"></i></span>
+                        <span className="pull-right clickable close-icon" data-effect="fadeOut" onClick={(event) => this.props.closeCardMethod(event, index)}><i class="fa fa-times"></i></span>
                         {this.props.isDefaultTopic ?
                         <p className="question-card-subtitle"> Answer . Topic you might like</p>
                         :

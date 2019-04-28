@@ -69,7 +69,7 @@ class Home extends Component {
        
         questionsDiv = this.state.questions.map((record, index) => {
             return (
-            <DisplayQuestion question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic}/>
+            <DisplayQuestion question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} closeCardMethod={this.closeDiv}/>
             )
         });
 

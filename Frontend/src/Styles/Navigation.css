@@ -8,7 +8,8 @@
   display: -ms-flexbox!important;
   display: flex!important;
   justify-content: center;
-  position: fixed;
+  z-index: 99;
+  background-color: #fff;
 }
 .header-nav{
   width: 914px;
@@ -106,26 +107,6 @@
   top: 0;
   right: 0;
 }
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin-top:20px; 
-
-
-}
-li {
-  padding: 8px 0px;
-  width: 410px;
-  height: 80px;
-  border-bottom: solid 0.25px rgb(136, 135, 135);
-  border-left: solid 0.25px rgb(136, 135, 135);
-  border-right: solid 0.25px rgb(136, 135, 135);
-  padding-top:20px;
-padding-left: 10px;
-padding-right:5px;  
-
-}
 .head_notification_dropdown {
   width: 410px;
   height: 40px;
@@ -140,13 +121,6 @@ padding-right:5px;
     border-left: solid 0.25px rgb(136, 135, 135);
     border-right: solid 0.25px rgb(136, 135, 135);
     position: absolute;
-
-  }
-
-
-li:hover {
-  background-color: rgba(0, 0, 0, 0.14);
-  cursor: pointer;
 }
 .notifications-elem_dropdowncontents {
   color:black;

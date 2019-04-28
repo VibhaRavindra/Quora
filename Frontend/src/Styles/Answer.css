@@ -56,7 +56,6 @@
 .answer-header {
   border-top: 1px solid #e2e2e2;
   padding-top: 20px;
-  margin-top: 20px;
 }
  .answer-header {
 	 display: flex;
@@ -86,8 +85,14 @@
   vertical-align: baseline;
 }
 
+ .answer-details h1 {
+	 font-size: 16px;
+}
+
  .answer-details h2 {
-	 font-size: 13px;
+	 font-size: 14px;
+	 color: #949494;
+	 margin-top: 3px;
 }
  .answer-body {
 	 font-family: 'q_serif', Georgia, Times, "Times New Roman", "Hiragino Kaku Gothic Pro", "Meiryo", serif;
