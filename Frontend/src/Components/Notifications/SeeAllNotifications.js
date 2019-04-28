@@ -19,7 +19,7 @@ class SeeAllNotifications extends Component {
     }
     componentDidMount(){
         var data={
-          "user_name":"kavya.chennoju@sjsu.edu"
+          "user_name":localStorage.getItem("user_name")
         }
         axios.defaults.withCredentials = true;
         //make a post request with the user data

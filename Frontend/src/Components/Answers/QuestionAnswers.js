@@ -40,8 +40,7 @@ class QuestionAnswers extends Component {
     componentWillMount() {
         let topicsArr = [];
         topicsArr = ["Technology", "Science"];
-        localStorage.setItem("topics", topicsArr);
-        localStorage.setItem("name", "Akhila");
+
         if (localStorage.getItem("image") === null) {
             this.setState({ defaultImg: true });
         }

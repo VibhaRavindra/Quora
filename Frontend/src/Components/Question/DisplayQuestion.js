@@ -54,9 +54,7 @@ class DisplayQuestion extends Component {
 
     render(){
 
-        let topicsArr = ["Technology", "Science"];
-        localStorage.setItem("topics", topicsArr);
-
+      
         let record = this.props.question;
         let index = this.props.questionIndex;
         let answerDiv = null;
