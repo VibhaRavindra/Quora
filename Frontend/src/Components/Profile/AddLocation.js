@@ -7,7 +7,8 @@ class AddLocation extends Component {
         super(props);
         this.state = {
         zip:"",
-        states:""
+        states:"",
+        error:""
         }
     }
     zipchange=(e)=>{
@@ -18,18 +19,24 @@ class AddLocation extends Component {
     }
     addlocation=()=>{
         console.log(this.state.states)
-        this.props.triggerlocation(this.state.states)
+       
+        if(/^[0-9]{5}(?:-[0-9]{4})?$/.test(this.state.zip)){
+            this.props.triggerlocation(this.state.states)
+            console.log(this.state.zip)
         var data={
-            "user_name":"kavya.chennoju@sjsu.edu",
+            "user_name":localStorage.getItem("user_name"),
             "zipcode":this.state.zip,
             "state":this.state.states
           }
           axios.defaults.withCredentials = true;
           //make a post request with the user data
           axios.post("http://localhost:3001/quora/addlocation",data, localStorage.getItem('jwtToken'))
-                  .then(
-        )
-          .catch()
+          this.setState({error:""})
+               }
+          else{
+            this.setState({error:"NOT VALID ZIP"})
+            console.log("NOT VALID ZIP")
+          }
     }
     render() {
         let states=["Alabama - AL",
@@ -98,7 +105,9 @@ class AddLocation extends Component {
                             <form  method="post">
                                 <div className="form-group row">
                                     <div className="col-sm-12">
-                                        <input className="form-control" id="questionNew" name="newQuestion" rows="5" placeholder='ZIP CODE' required onChange={this.zipchange}></input>
+                                    {this.state.error}<br />
+                                    <input id="quetsionNew"  placeholder='ZIPCODE'  onChange={this.zipchange} /><br />
+                                       
                                         <select className="form-control" id="questionNew" name="newQuestion" rows="5" placeholder='STATE' required onChange={this.statechange}>
           
              
