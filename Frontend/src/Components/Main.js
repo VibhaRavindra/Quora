@@ -21,7 +21,7 @@ class Main extends Component {
           <Route path="/header" component={Header} />
           <Route path="/signup" component={SignUp} />
           <Route path="/quora/topics" component={ChooseTopics} />
-          <Route path="/answer/question/:questionId" component={QuestionAnswers} />
+          <Route path="/quora/question/:questionId" component={QuestionAnswers} />
           <Route path="/answer/create" component={AnswerForm} />
           <Route exact path="/quora/home" component={Home} />
           <Route exact path="/quora/topic/:topicName" component={Topic} />

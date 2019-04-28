@@ -70,11 +70,11 @@ class Home extends Component {
         });
 
         return (
-            <div style={{ background: "#fafafa", height: "100vh" }}>
+            <div className="home-container">
                 <Header />
                 <div className="row">
                     <div className="container" style={{ marginTop: "5em" }}>
-                        <div className="row justify-content-center align-items-center" style={{ height: '10vh' }}>
+                        <div className="row justify-content-center align-items-center">
 
                             <div className="col-12">
                                 <Tab.Container id="left-tabs-example" defaultActiveKey="first" onSelect={this.handleTopicSelect}>

@@ -111,3 +111,33 @@
     padding: 3px, 7px, 4px, 7px;
     box-shadow: 0 1px 1px 0 rgba(200, 200, 200, 0.2);
 }
+
+.answer-upvote-unselected-icon{
+    background: url('../Images/upvote-unselected.svg') no-repeat 3px center;
+  }
+.answer-downvote-unselected-icon{
+    background: url('../Images/downvote-unselected.svg') no-repeat 3px center;
+  }
+.answer-downvote-selected-icon{
+    background: url('../Images/downvote-selected.svg') no-repeat 3px center;
+  }
+
+  .answer-upvote-unselected-icon-label{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    margin-left: 5px!important;
+    font-weight: 500!important;
+    font-size: 14px!important;
+    color: #666!important;
+  }
+
+  .answer-upvote-selected-icon{
+    background: url('../Images/upvote-selected.svg') no-repeat 3px center;
+  }
+
+  .answer-upvote-selected-icon-label{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    margin-left: 5px!important;
+    font-weight: 500!important;
+    font-size: 14px!important;
+    color: #329bff!important;
+  }

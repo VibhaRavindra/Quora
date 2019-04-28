@@ -88,7 +88,6 @@ class AnswerForm extends React.Component {
             <div className="answer-form-footer">
             <button className="submit-button" onClick={this.submitAnswer}>Submit</button>
             </div>
-            {JSON.stringify(this.state.delta)}
           </div>
         </div>
 

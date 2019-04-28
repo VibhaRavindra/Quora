@@ -108,8 +108,8 @@ class DisplayQuestion extends Component {
                         :
                         <p className="question-card-subtitle"> Answer . Topic you like</p>
                         }
-                        <Link className="question-link" to={"/question/" + record._id}>
-                            <span className="card-title question-card">{record.question}</span>
+                        <Link className="question-link" to={"/quora/question/" + record._id}>
+                            <span className="card-title question-card  question-card-title">{record.question}</span>
                         </Link>
                         
                         {questionFooterDiv}
