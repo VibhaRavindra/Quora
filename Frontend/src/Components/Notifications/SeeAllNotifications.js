@@ -82,7 +82,14 @@ Others      <br />
                                                            
                                                         <hr />
 
-                                                        {this.state.rows.map(member=><li id="notification-single-elem">  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>)} 
+                                                        {this.state.rows.map(member=>
+                                                        
+                                                        
+                                        member.answeredby_profile_pic===null || member.answeredby_profile_pic===undefined || member.answeredby_profile_pic===""|| member.answeredby_profile_pic==="default"     ? 
+                                        <li id="notification-single-elem">  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>
+                                        :
+                                        <li id="notification-single-elem">  <img src={member.answeredby_profile_pic} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>
+                                        )} 
           
         
                                                     </div>

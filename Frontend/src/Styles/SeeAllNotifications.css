@@ -215,6 +215,7 @@ font-weight: 500;
     position: relative; 
     float: left;
  z-index: 2;
+ margin-bottom: 20px;
  border-bottom: solid 0.25px #ccc ;
  font-family: 'q_serif',Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif;
 }
@@ -226,4 +227,15 @@ font-weight: 500;
 .read-notifications-elem2{
   right: 20px;
   position: absolute;
+}
+.liclass{
+  border-bottom: 1px solid black;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  padding-bottom:10px; 
+  width: 400px;
+ 
+}
+.ulclass{
+  width: 600px;
 }

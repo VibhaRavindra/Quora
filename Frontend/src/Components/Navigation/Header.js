@@ -14,8 +14,7 @@ class Header extends Component {
             value:[],
             open:false,
             rows:[],
-            searchValue: null,
-            contentClick: false
+            searchValue: null
         }
         this.onSearchEnter = this.onSearchEnter.bind(this);
     }
@@ -43,7 +42,7 @@ class Header extends Component {
         })
       .catch()
     }
-
+    
     render() {
         let noti=[];
         noti.push(<ul> <a href="/quora/SeeAllNotifications">See all Notifications</a>{

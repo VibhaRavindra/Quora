@@ -24,7 +24,7 @@ const NotificationSchema = new Schema({
     answeredby_profile_pic: {
         type: String,
         default: '',
-        required: true
+       
     },
     timestamp_answer:{
         type:String,
