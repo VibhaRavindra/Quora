@@ -11,6 +11,7 @@ import SeeAllNotifications from './Notifications/SeeAllNotifications';
 import Profile from './Profile/Profile';
 import displayprofile from './Profile/displayprofile';
 import Topic from './Topic/Topic';
+import Messages from './Messages/Messages';
 
 class Main extends Component {
   render() {
@@ -27,6 +28,7 @@ class Main extends Component {
               <Route path="/quora/myprofile" component={Profile} />
          <Route path = "/quora/profile/:user_id" component = {displayprofile} />
           <Route exact path="/quora/SeeAllNotifications" component={SeeAllNotifications} />
+          <Route exact path="/quora/messages" component={Messages} />
         </div>
     );
     } else {

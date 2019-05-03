@@ -60,6 +60,7 @@ var followRoutes = require('./src/routes/followRoutes');
 var Account = require('./src/routes/Account');
 var profileRoutes = require('./src/routes/profile');
 var questionRoutes = require('./src/routes/questionRoutes');
+var messageRoutes = require('./src/routes/messageRoutes');
 var Answer = require('./src/routes/Answer');
 var Search = require('./src/routes/Search')
 
@@ -82,6 +83,7 @@ app.use(basePath, profileRoutes);
 app.use(basePath, questionRoutes);
 app.use(answer_basepath, Answer);
 app.use(search_basepath, Search);
+app.use(basePath, messageRoutes);
 
 app.use('/uploads', express.static(path.join(__dirname, '/uploads/')));
 

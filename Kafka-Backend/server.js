@@ -7,6 +7,7 @@ var profile = require('./services/profile.js');
 var questiontopics = require('./services/questiontopics');
 var answer = require('./services/answer.js');
 var search = require('./services/search.js');
+var messagetopics = require('./services/messagetopics');
 
 // Set up Database connection
 const mongoose = require('mongoose')
@@ -70,6 +71,12 @@ function handleTopicRequest(topic_name, fname) {
                         return;
                     })
                     break;
+            case 'message_topics':
+                    messagetopics.messageService(data.data, function(err, res){
+                    response(data, res, producer);
+                    return;
+                })
+                break;
         }
     })
 };
@@ -101,3 +108,4 @@ handleTopicRequest("profile", profile)
 handleTopicRequest("answer",answer);
 handleTopicRequest("search",search);
 handleTopicRequest("question_topics", questiontopics);
+handleTopicRequest("message_topics", messagetopics);
