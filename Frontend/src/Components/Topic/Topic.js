@@ -200,6 +200,17 @@ if (index > -1) {
                                                     </Nav.Item>
                                                 </Link>
                                                 {topicsNavDiv}
+                                                <Link className="bookmark-home-nav" to="/quora/bookmark">
+                                                    <Nav.Item>
+                                                        <div className="row">
+                                                            <img className="left-nav-feed-img" src={feedImg} alt="Feed" />
+                                                            <div className="label feed-label">  Bookmark
+                                                              </div>
+                                                        </div>
+
+                                                    </Nav.Item>
+                                                </Link>
+
                                             </Nav>
                                         </Col>
                                         <Col sm={9}>

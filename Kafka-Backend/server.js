@@ -7,6 +7,7 @@ var profile = require('./services/profile.js');
 var questiontopics = require('./services/questiontopics');
 var answer = require('./services/answer.js');
 var search = require('./services/search.js');
+var bookmarks = require('./services/bookmarks.js');
 
 // Set up Database connection
 const mongoose = require('mongoose')
@@ -64,12 +65,18 @@ function handleTopicRequest(topic_name, fname) {
                     return;
                 })
                 break;
-                case 'question_topics' :
-                questiontopics.questionService(data.data, function(err, res){
-                        response(data, res, producer);
-                        return;
-                    })
-                    break;
+            case 'question_topics':
+                questiontopics.questionService(data.data, function (err, res) {
+                    response(data, res, producer);
+                    return;
+                })
+                break;
+            case 'bookmarks':
+                bookmarks.bookmarksService(data.data, function (err, res) {
+                    response(data, res, producer);
+                    return;
+                })
+                break;
         }
     })
 };
@@ -98,6 +105,7 @@ function response(data, res, producer) {
 handleTopicRequest("account", account)
 handleTopicRequest("follow_topics", followtopics);
 handleTopicRequest("profile", profile)
-handleTopicRequest("answer",answer);
-handleTopicRequest("search",search);
+handleTopicRequest("answer", answer);
+handleTopicRequest("search", search);
+handleTopicRequest("bookmarks", bookmarks);
 handleTopicRequest("question_topics", questiontopics);

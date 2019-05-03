@@ -14,6 +14,10 @@ const AnswerSchema = new Schema({
         type: String,
         required: true
     },
+    owner_userid: {
+      type: String,
+      required: true
+  },
     owner_name: {
         type: String,
         required: true
@@ -36,7 +40,8 @@ const AnswerSchema = new Schema({
      downvote_count: {
         type: Number
       },
-     timestamp: {
+      bookmarked_by: [ String ],
+      timestamp: {
        type: Date, 
          default: Date.now,
          required: true

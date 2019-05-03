@@ -7,10 +7,12 @@ import bookmarkImg from '../../Images/bookmark.png';
 import AskQuestion from "../Question/AskQuestion";
 import { connect } from 'react-redux';
 import { getAllQuestions } from '../../js/actions/question_actions';
-import DisplayQuestion from '../Question/DisplayQuestion';
+import DisplayBookmark from './DisplayBookmark';
 import { Link } from "react-router-dom";
+import axios from 'axios'
 
-class Home extends Component {
+
+class Bookmarks extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,16 +28,25 @@ class Home extends Component {
         //if (localStorage.getItem("image") === null) {
             this.setState({ defaultImg: true });
         //}
-        await this.props.getAllQuestions();
-        let questions = null;
-        questions = this.props.questions.questions;
-        console.log(this.props.questions.questions);
-        this.setState({ questions: questions});
-        
 
+        var data = {
+            user_id : localStorage.getItem('userid')
+        }
+        console.log(data)
+       axios.defaults.withCredentials = true;
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+        axios.post('/bookmarks', data)
+            .then((response) => {
+                console.log(response)
+                if (response !== undefined)
+                    if (response.status === 200) {
+                        console.log(response);
+                        this.setState({ questions: response.data.bookmarks });
+                    }
+            })
     }
 
-    closeDiv = (event, index) => {
+    closeDiv = (index) => {
         console.log(index);
         let questionsArr = this.state.questions;
         console.log(questionsArr[index].question);
@@ -66,7 +77,7 @@ class Home extends Component {
        
         questionsDiv = this.state.questions.map((record, index) => {
             return (
-            <DisplayQuestion question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} closeCardMethod={this.closeDiv}/>
+            <DisplayBookmark question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} reloadBookmarks={() => {this.closeDiv(index)}}/>
             )
         });
 
@@ -83,7 +94,7 @@ class Home extends Component {
                                         <Col sm={2}>
                                             <Nav variant="pills" className="flex-column feed-nav">
                                                 <Nav.Item style={{ marginBottom: "-0.4em" }}>
-                                                    <Nav.Link eventKey="first">
+                                                    <Nav.Link href="/quora/home" eventKey="second">
                                                         <div className="row">
                                                             <img className="left-nav-feed-img" src={feedImg} alt="Feed" />
                                                             <div className="label feed-label">  Feed
@@ -93,7 +104,7 @@ class Home extends Component {
                                                 </Nav.Item>
                                                 {topicsNavDiv}
                                                 <Nav.Item style={{ marginBottom: "-0.4em" }}>
-                                                    <Nav.Link href="/quora/bookmarks" eventKey="second">
+                                                    <Nav.Link href="/quora/bookmarks" eventKey="first">
                                                         <div className="row">
                                                             <img className="left-nav-feed-img" src={bookmarkImg} alt="Feed" />
                                                             <div className="label bookmark-label">  Bookmarks
@@ -106,24 +117,7 @@ class Home extends Component {
                                         <Col sm={9}>
                                             <Tab.Content>
                                                 <Tab.Pane eventKey="first">
-                                                    <div id="accordion">
-                                                        <div className="card profile-card">
-                                                            <div className="card-body profile-card-body">
-                                                                {this.state.defaultImg &&
-                                                                    <div className="row">
-                                                                        <div className="profile-logo-home"></div>
-                                                                        <div className="home-profie-name">{localStorage.getItem("name")}</div>
-                                                                    </div>
-                                                                }
-                                                                <button className="btn" data-toggle="modal" data-target="#askQuestion">
-
-                                                                    <span className="card-title profile-question-card">What is your question or link?</span>
-                                                                </button>
-                                                                <AskQuestion/>
-                                                            </div>
-                                                        </div>
                                                         {questionsDiv}
-                                                    </div>
                                                 </Tab.Pane>
                                             </Tab.Content>
                                         </Col>
@@ -139,8 +133,4 @@ class Home extends Component {
     }
 }
 
-const mapStateToProps = state => ({
-    questions : state.question.payload
-});
-
-export default connect(mapStateToProps, { getAllQuestions })(Home);
+export default Bookmarks;
