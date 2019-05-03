@@ -125,3 +125,7 @@
     height: 350px;
     overflow-y: auto;
 }
+
+.modal-backdrop {
+  z-index: 0;
+}
