@@ -5,6 +5,13 @@
     color: #666;
 }
 
+#left-tabs-example-tab-second {
+  padding: 0.3em;
+  width: 85%;
+  height: 50%;
+  color: #666;
+}
+
 
 .left-tabs-feed{
     padding: 0.3em;
@@ -19,6 +26,14 @@
     height: 50%;
     color: #666;
     background-color: #e6e6e6;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+  padding: 0.3em;
+  width: 85%;
+  height: 50%;
+  color: #666;
+  background-color: #e6e6e6;
 }
 
 .left-nav-feed-img{
@@ -36,6 +51,12 @@ font-weight: 500;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 13px;
 }
+
+.bookmark-label{
+  font-weight: 500;
+      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-size: 13px;
+  }
 
 .profile-question-card{
     margin-top:.3em;
@@ -208,6 +229,11 @@ font-weight: 500;
   }
 
   .feed-home-nav{
+    color: #666;
+  padding-bottom: 0.7em;
+  }   
+  
+  .bookmark-home-nav{
     color: #666;
   padding-bottom: 0.7em;
   }   

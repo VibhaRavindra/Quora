@@ -111,6 +111,38 @@ router.post('/:question_id/:answer_id', (req, res) => {
     }
 })
 
+router.post('/:question_id/:answer_id/bookmark', (req, res) => {
+    if (req.query.bookmarkState) {
+        console.log("Bookmark State: " + req.query.bookmarkState)
+        kafka.make_request('answer', {
+            "path": "submit-bookmark", "req": {
+                "body": req.body,
+                "params": req.params,
+                "query": req.query
+            }
+        }, function (err, result) {
+            console.log('in result');
+            console.log(result);
+            if (err) {
+                res.send({
+                    submitBookmarkSuccess: false,
+                    submitBookmarkMessage: "Submit Bookmark Failed"
+                })
+            } else {
+                res.send({
+                    submitBookmarkSuccess: true,
+                    submitBookmarkMessage: "Success"
+                });
+            }
+        });
+    } else {
+        res.send({
+            submitBookmarkSuccess: false,
+            submitBookmarkMessage: "Submit bookmark Failed"
+        })
+    }
+})
+
 router.get('/:question_id', requireAuth, (req, res) => {
     console.log("Inside Quora Backend: Get One Answer");
     kafka.make_request('answer', {

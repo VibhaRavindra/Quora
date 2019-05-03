@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var Question = require('./QuestionSchema');
 var Answer= require('./AnswerSchema');
-var Bookmark= require('./BookmarkSchema');
 //schema
 const UserSchema = new Schema({
   user_name: {
@@ -73,7 +72,7 @@ const UserSchema = new Schema({
     type: Array    
   },
   bookmarks:{
-    type:[Bookmark.BookmarkSchema],
+    type:[Question.QuestionSchema],
   },
   profileview_count:{
     type: Number,

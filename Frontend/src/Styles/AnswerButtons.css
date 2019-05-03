@@ -121,8 +121,23 @@
 .answer-downvote-selected-icon{
     background: url('../Images/downvote-selected.svg') no-repeat 3px center;
   }
+  
+.answer-upvote-unselected-icon-label{
+      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+      margin-left: 5px!important;
+      font-weight: 500!important;
+      font-size: 14px!important;
+      color: #666!important;
+    }
+    
+.answer-upvote-selected-icon{
+        background: url('../Images/upvote-selected.svg') no-repeat 3px center;
+    }
+.answer-bookmark-unselected-icon{
+        background: url('../Images/bookmark-unselected.svg') no-repeat 3px center;
+    }
 
-  .answer-upvote-unselected-icon-label{
+  .answer-bookmark-unselected-icon-label{
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
     margin-left: 5px!important;
     font-weight: 500!important;
@@ -130,9 +145,18 @@
     color: #666!important;
   }
 
-  .answer-upvote-selected-icon{
-    background: url('../Images/upvote-selected.svg') no-repeat 3px center;
-  }
+  .answer-bookmark-selected-icon{
+    background: url('../Images/bookmark-selected.svg') no-repeat 3px center;
+}
+
+.answer-bookmark-selected-icon-label{
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+margin-left: 5px!important;
+font-weight: 500!important;
+font-size: 14px!important;
+color: #666!important;
+}
+
 
   .answer-upvote-selected-icon-label{
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
