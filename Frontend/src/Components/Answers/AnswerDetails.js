@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import ReactHtmlParser from 'react-html-parser';
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
-import '../../Styles/Answer.css' 
+import '../../Styles/Answer.css'
 import '../../Styles/AnswerButtons.css'
 import defaultProfilePic from '../../Images/profile_logo.png'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
+import axios from 'axios'
+import {rooturl} from '../../Config/settings'
+import { Link } from "react-router-dom";
+
 
 TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en-US')
@@ -14,21 +18,174 @@ class AnswerDetails extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      commentOpen: false
+      commentOpen: false,
+      upvoteText: 'Upvote',
+      upvoteCount: 0,
+      upvoteClass: "answer-upvote-unselected-icon answer-upvote-unselected-icon-label",
+      bookmarkClass: "answer-bookmark-unselected-icon answer-bookmark-unselected-icon-label",
+      downvoteClass: "answer-downvote-unselected-icon"
     };
-     this.props = {
-      question_id: '5cbddb2ca8bd2772b4f4545b',
-      answer_id: '5cbebde585cadf9f186f3f79'
-    }
-
+    this.UpvoteAnswer = this.UpvoteAnswer.bind(this);
+    this.DownvoteAnswer = this.DownvoteAnswer.bind(this);
+    this.BookmarkAnswer = this.BookmarkAnswer.bind(this);
     // this.comments = this.comments.bind(this)
   }
-
+componentDidMount(){
+  var data={
+    id:this.props.answer._id,
+    answer:this.props.answer.answer,
+    owner_username:this.props.answer.owner_username,
+    personviewed:localStorage.getItem("user_name")
+  }
+  axios.post("http://"+rooturl+":3001/quora/updateanswerview",data)
+}
   componentWillMount() {
-   //alert(this.props.answer.answer)
+    //alert(this.props.answer.answer)
     //this.props.requestAnswer(this.props.id);
+  
+    var upvotes = this.props.answer.upvotes
+    var downvotes = this.props.answer.downvotes
+    var bookmarked_by = this.props.answer.bookmarked_by
+    var upvoteText = 'Upvote'
+    var upvoteClass = "answer-upvote-unselected-icon answer-upvote-unselected-icon-label"
+    var bookmarkClass = "answer-bookmark-unselected-icon answer-bookmark-unselected-icon-label"
+    var downvoteClass = "answer-downvote-unselected-icon"
+
+    console.log("Debug answer username: " + localStorage.user_name)
+    if (upvotes.includes(localStorage.user_name)) {
+      upvoteText = 'Upvoted'
+      upvoteClass = "answer-upvote-selected-icon answer-upvote-selected-icon-label"
+    }
+    if (downvotes.includes(localStorage.user_name)) {
+      downvoteClass = "answer-downvote-selected-icon"
+    }
+    if (bookmarked_by.includes(localStorage.user_name)) {
+      bookmarkClass = "answer-bookmark-selected-icon answer-bookmark-selected-icon-label"
+    }
+    //     var found = false;
+    //   for(var i = 0; i < upvotes.length; i++) {
+    //     if (upvotes[i].username === localStorage.username) {
+    //         found = true;
+    //         break;
+    //     }
+    // }
+
+    this.setState({
+      upvoteCount: this.props.answer.upvote_count,
+      upvoteText: upvoteText,
+      upvoteClass: upvoteClass,
+      downvoteClass: downvoteClass,
+      bookmarkClass: bookmarkClass
+    })
 
   }
+  componentDidMount(){
+    console.log(this.props.answer._id,"Hello");
+   
+    
+  }
+
+
+  UpvoteAnswer = (questionId, answerId) => {
+    console.log("Debug upvote")
+
+    var upvoteState = (this.state.upvoteText === 'Upvote') ?
+      {
+        toggle: "true",
+        upvoteCount: this.state.upvoteCount + 1,
+        upvoteText: 'Upvoted',
+        upvoteClass: "answer-upvote-selected-icon answer-upvote-selected-icon-label"
+      } : {
+        toggle: "false",
+        upvoteCount: this.state.upvoteCount - 1,
+        upvoteText: 'Upvote',
+        upvoteClass: "answer-upvote-unselected-icon answer-upvote-unselected-icon-label"
+      }
+
+    let data = {
+      user_username: localStorage.user_name,
+    }
+    axios.defaults.withCredentials = true;
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+    axios.post('/answer/' + questionId + '/' + answerId + '?upvote=' + upvoteState.toggle, data)
+      .then((response) => {
+        if (response !== undefined)
+          if (response.status === 200) {
+            console.log(response);
+            console.log("Debug axios success")
+            this.setState({
+              upvoteCount: upvoteState.upvoteCount,
+              upvoteText: upvoteState.upvoteText,
+              upvoteClass: upvoteState.upvoteClass
+            })
+          }
+      });
+  };
+  
+  DownvoteAnswer = (questionId, answerId) => {
+    console.log("Debug downvote")
+
+    var downvoteState = (this.state.downvoteClass === 'answer-downvote-unselected-icon') ?
+      {
+        toggle: "true",
+        downvoteClass: "answer-downvote-selected-icon"
+      } : {
+        toggle: "false",
+        downvoteClass: "answer-downvote-unselected-icon"
+      }
+
+    let data = {
+      user_username: localStorage.user_name,
+    }
+    axios.defaults.withCredentials = true;
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+    axios.post('/answer/' + questionId + '/' + answerId + '?downvote=' + downvoteState.toggle, data)
+      .then((response) => {
+        if (response !== undefined)
+          if (response.status === 200) {
+            console.log(response);
+            console.log("Debug axios success")
+            this.setState({
+              downvoteClass: downvoteState.downvoteClass
+            })
+          }
+      });
+  };
+
+  BookmarkAnswer = (questionId, answerId) => {
+    console.log("bookmarked answer: "+questionId+" : "+answerId);
+
+    var bookmarkState = (this.state.bookmarkClass === 'answer-bookmark-unselected-icon answer-bookmark-unselected-icon-label') ?
+      {
+        toggle: "true",
+        bookmarkText: 'Bookmark',
+        bookmarkClass: "answer-bookmark-selected-icon answer-bookmark-selected-icon-label"
+      } : {
+        toggle: "false",
+        bookmarkText: '',
+        bookmarkClass: "answer-bookmark-unselected-icon answer-bookmark-unselected-icon-label"
+      }
+      let data = {
+        user_username: localStorage.user_name,
+        user_id: localStorage.userid
+      }
+      axios.defaults.withCredentials = true;
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+      axios.post('/answer/' + questionId + '/' + answerId + '/bookmark?bookmarkState=' + bookmarkState.toggle, data)
+        .then((response) => {
+          if (response !== undefined)
+            if (response.status === 200) {
+              console.log(response);
+              console.log("Debug axios success")
+              this.setState({
+                bookmarkClass: bookmarkState.bookmarkClass,
+                bookmarkText: bookmarkState.bookmarkText
+              }, this.props.reloadBookmarks)
+            }
+        });
+   
+
+  };
 
   render() {
     //const { answer } = this.props;
@@ -36,6 +193,7 @@ class AnswerDetails extends Component {
     //let answerBody;
     console.log("==================================================================")
     console.log(JSON.stringify(this.props.answer))
+    console.log(this.props.answer.question_id);
     console.log("==================================================================")
     let deltaOps = JSON.parse(this.props.answer.answer).ops
     var htmlText = new QuillDeltaToHtmlConverter(deltaOps, {}).convert();
@@ -43,6 +201,27 @@ class AnswerDetails extends Component {
     console.log(htmlText)
     var imgdiv = ''
     console.log()
+
+    let answerFooterDiv = null;
+    answerFooterDiv = (
+      <div>
+        <div>
+          <div className="row" style={{ marginTop: "0.3em" }}>
+            <div className="question-footer-elem" style={{ marginLeft: "0.3em" }}>
+              <div className={this.state.upvoteClass} onClick={() => { this.UpvoteAnswer(this.props.answer.question_id, this.props.answer._id) }}>{this.state.upvoteText} <span class="bullet"> · </span> {this.state.upvoteCount}</div>
+            </div>
+            <div className="question-footer-elem-share-icons answer-icon-hide" style={{ marginLeft: "25.5em" }}>
+              <div className={this.state.downvoteClass} onClick={() => { this.DownvoteAnswer(this.props.answer.question_id, this.props.answer._id) }}>&nbsp;</div>
+            </div>
+            <div className="question-footer-elem-share-icons answer-icon-hide">
+              <div className={this.state.bookmarkClass} onClick={() => { this.BookmarkAnswer(this.props.answer.question_id,this.props.answer._id) }}>&nbsp;</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    );
+
     if (!this.props.answer.owner_profile_pic || !this.props.answer.owner_profile_pic.startsWith("http")) {
       imgdiv = <img src={defaultProfilePic} className="answerer-pro-pic" />
     } else {
@@ -51,13 +230,14 @@ class AnswerDetails extends Component {
     return (
       <li className="answer-item">
         <div className="answer-header">
-        {imgdiv}
+          {imgdiv}
           <div className="answer-details">
-            <h1>{this.props.answer.owner_name}, {this.props.answer.owner_tagline}</h1>
+            <h1><Link className="question-link" to={"/quora/profile/" + this.props.answer.owner_userid}>{this.props.answer.owner_name},</Link> {this.props.answer.owner_tagline}</h1>
             <h2>Answered {timeAgo.format(new Date(this.props.answer.timestamp))}</h2>
           </div>
         </div>
         <div className="answer-body">{ReactHtmlParser(htmlText)}</div>
+        {answerFooterDiv}
       </li>
     );
   }

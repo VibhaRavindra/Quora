@@ -44,8 +44,9 @@ class AnswerForm extends React.Component {
 
    let data = {
     answer: JSON.stringify(this.state.delta),
-    user_username: "swetha.suresh@sjsu.edu",
-    user_name: "swetha suresh",
+    user_username: localStorage.user_name,
+    user_id: localStorage.userid,
+    user_name: localStorage.fullname,
     user_profile_pic: "swe.jpg",
     user_tagline: "Software Engineer",
   }
@@ -88,7 +89,6 @@ class AnswerForm extends React.Component {
             <div className="answer-form-footer">
             <button className="submit-button" onClick={this.submitAnswer}>Submit</button>
             </div>
-            {JSON.stringify(this.state.delta)}
           </div>
         </div>
 

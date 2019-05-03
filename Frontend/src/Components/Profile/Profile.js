@@ -10,12 +10,14 @@ import AddTagline from './AddTagline'
 import AddEmployment from './AddEmployment';
 import AddLocation from './AddLocation';
 import AddEducation from './AddEducation';
+import AddDescription from './AddDescription';
+import {rooturl} from '../../Config/settings'
 var hex64 = require('hex64');
 class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            defaultImg: false,
+    
             questions: [],
             taglinepop:[],
             selectedFile: null,
@@ -35,7 +37,8 @@ class Profile extends Component {
              profiletab:true,
              followingrows:"",
              followerscount:"",
-             followingcount:""
+             followingcount:"",
+             aboutme:""
         }
         this.showfollowers=this.showfollowers.bind(this);
         this.updatetaglinevalue=this.updatetaglinevalue.bind(this);
@@ -43,6 +46,7 @@ class Profile extends Component {
         this.updateeducationvalue=this.updateeducationvalue.bind(this);
         this.showfollowing=this.showfollowing.bind(this);
         this.updatelocationvalue=this.updatelocationvalue.bind(this);
+        this.updatedescriptionvalue=this.updatedescriptionvalue.bind(this);
         this.showprofile=this.showprofile.bind(this);
       
     }
@@ -58,13 +62,14 @@ class Profile extends Component {
   
 
 componentWillMount=()=>{
+    localStorage.setItem("fullname","Vibha Ravindra")
 console.log("username from localstorage is",localStorage.getItem("user_name"))
     var data={
         "user_name":localStorage.getItem("user_name")
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://localhost:3001/quora/getprofileinfo",data, localStorage.getItem('jwtToken'))
+      axios.post("http://"+rooturl+":3001/quora/getprofileinfo",data, localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);
@@ -74,7 +79,7 @@ console.log("username from localstorage is",localStorage.getItem("user_name"))
                 rows : response.data,
             })
         }
-        this.setState({tagline:this.state.rows.user_tagline,employment:this.state.rows.career,education:this.state.rows.education,followers:this.state.rows.users_followers,following:this.state.rows.users_following,profilepic:this.state.rows.b64})
+        this.setState({tagline:this.state.rows.user_tagline,employment:this.state.rows.career,education:this.state.rows.education,followers:this.state.rows.users_followers,following:this.state.rows.users_following,profilepic:this.state.rows.b64,location:this.state.rows.state,aboutme:this.state.rows.aboutme})
     if(this.state.profilepic==="" || this.state.profilepic===null || this.state.profilepic==="undefined")
     {
         this.setState({profilepic:abc})
@@ -102,10 +107,12 @@ handleUpload = () => {
     console.log(this.state.selectedFile)
   data.set("user_name",localStorage.getItem("user_name"))
     axios
-      .post('http://localhost:3001/quora/addprofilepic', data)
+      .post('http://'+rooturl+':3001/quora/addprofilepic', data)
       .then(res => {
+        
         this.setState({profilepic:"data:image/jpg;base64,"+res.data})
       })
+     
   }
   updatetaglinevalue(x){
   
@@ -132,6 +139,12 @@ updatelocationvalue(x){
     this.setState({location:x})
 
 }
+updatedescriptionvalue(x){
+    console.log("updating")
+    console.log(x)
+    this.setState({aboutme:x})
+
+}
 showfollowers(){
     this.setState({followerstab:true,followingtab:false,profiletab:false})
     var data={
@@ -139,7 +152,7 @@ showfollowers(){
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://localhost:3001/quora/getfollowersinfo",data, localStorage.getItem('jwtToken'))
+      axios.post("http://"+rooturl+":3001/quora/getfollowersinfo",data, localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);
@@ -161,7 +174,7 @@ showfollowing(){
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://localhost:3001/quora/getfollowinginfo",data, localStorage.getItem('jwtToken'))
+      axios.post("http://"+rooturl+":3001/quora/getfollowinginfo",data, localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);
@@ -180,9 +193,24 @@ showprofile(){
     this.setState({followingtab:false,followerstab:false,profiletab:true})
 }
     render() {
-    
+     
+    let defaultprofilepic=[],actualprofilepic=[];
+    defaultprofilepic.push(<div>
+         <img src={abc} width="120" height="120" /><br />
+           <input type="file" name="" id="p" onChange={this.handleselectedFile} />
+               <button onClick={this.handleUpload}>Upload</button>
+        <div> {Math.round(this.state.loaded, 2)} %</div></div>
+    );
+    actualprofilepic.push(
+        <div>
+        {localStorage.setItem("b64",this.state.profilepic)}
+         <img src={this.state.profilepic} width="120" height="120" /><br />
+           <input type="file" name="" id="p" onChange={this.handleselectedFile} />
+               <button onClick={this.handleUpload}>Upload</button>
+        <div> {Math.round(this.state.loaded, 2)} %</div></div>        
+    )
   
-        console.log("tagline now is"+this.state.tagline)
+        console.log("tagline now is"+this.state.employment)
         let followersdisplay=[],x="",followingdisplay=[],y="";
         if(this.state.followerstab===true && this.state.followingtab===false)
         for(x in this.state.followersrows)
@@ -209,38 +237,69 @@ showprofile(){
 <div className="profile-pic" >
           
 <div className="upload-propic">
-           <input type="file" name="" id="p" onChange={this.handleselectedFile} style={{ height: "0px", width: "0px" }}/>
-         
-         {localStorage.setItem("b64",this.state.profilepic)}
-           <img src={this.state.profilepic} width="120" height="120" /><br />
+                
+   {this.state.profilepic===null || this.state.profilepic ===undefined || this.state.profilepic === "" ?
+   defaultprofilepic:actualprofilepic}
 
-               <button onClick={this.handleUpload}>Upload</button>
-        <div> {Math.round(this.state.loaded, 2)} %</div></div>
+        
+        
+        </div>
         <br />
         <span className="info">
-        <b>{this.state.rows.firstname}{"  "}{this.state.rows.lastname}</b>
+        <b>{localStorage.getItem("fullname")}</b>
         </span><br />
-        {this.state.tagline==="" ? 
+        {this.state.tagline==="" || this.state.tagline===null || this.state.tagline===undefined ? 
         <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
         Add Profile Credential
+        Add Description
         </span>
         :
         <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
         {localStorage.setItem("tagline",this.state.tagline)}
         {
             console.log(this.state.tagline)}{this.state.tagline}
+            <br />
         </span>
         }<AddTagline triggertagline={this.updatetaglinevalue}/> <br />
+
+
+      
+       
+
+        {this.state.aboutme==="" || this.state.aboutme===null || this.state.aboutme===undefined  ? 
+                <span className="description-profile" data-toggle="modal" data-target="#description">
+                
+                Add Description
+                </span> :  <span  className="description-profile" data-toggle="modal" data-target="#description">
+                
+                {this.state.aboutme}
+                </span>}
+                
+                <AddDescription triggerdescription={this.updatedescriptionvalue}/><br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             
         </div>
     <span className="credentials-profile">Credentials & Highlights</span>
     <hr className="credential-hr"/> 
     <span className="credentials-profile-add">
-    {this.state.employment==="" ? <span data-toggle="modal" data-target="#employment">
+    {this.state.employment==="" || this.state.employment===null || this.state.employment===undefined ? <span data-toggle="modal" data-target="#employment">
     Add employment credential</span>:
     <span data-toggle="modal" data-target="#employment">{console.log(this.state.employment)}{this.state.employment}</span>}
     <AddEmployment triggeremployment={this.updateemploymentvalue}/><br />
-    {this.state.education==="" ? 
+    {this.state.education==="" || this.state.education===null || this.state.education===undefined  ? 
                 <span data-toggle="modal" data-target="#education">
                 
                 Add education credential
@@ -251,7 +310,7 @@ showprofile(){
                 
                 <AddEducation triggereducation={this.updateeducationvalue}/><br />
                 
-                {this.state.location==="" ? 
+                {this.state.location==="" || this.state.location===null || this.state.location===undefined  ? 
                 <span data-toggle="modal" data-target="#location">
                 
                 Add location credential
@@ -283,8 +342,8 @@ Shares<br />
 Spaces<br />
 Posts<br />
 Blogs<br />
-<div onClick={this.showfollowers}>Followers {this.state.followerscount}</div>
-<div onClick={this.showfollowing}>Following {this.state.followingcount}</div>
+<div onClick={this.showfollowers}>Followers {this.state.followers.length}</div>
+<div onClick={this.showfollowing}>Following {this.state.following.length}</div>
 Edits<br />
 Activity<br />
                                             </Nav>

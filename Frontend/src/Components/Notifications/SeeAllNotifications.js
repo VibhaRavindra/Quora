@@ -6,6 +6,7 @@ import feedImg from '../../Images/feed.png';
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import abc from './abc.png';
+import {rooturl} from '../../Config/settings'
 
 
 
@@ -23,7 +24,7 @@ class SeeAllNotifications extends Component {
         }
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post("http://localhost:3001/quora/notifications",data, localStorage.getItem('jwtToken'))
+        axios.post("http://"+rooturl+":3001/quora/notifications",data, localStorage.getItem('jwtToken'))
                 .then(response => {
                 
           console.log("Status Code : ",response.status);
@@ -81,7 +82,14 @@ Others      <br />
                                                            
                                                         <hr />
 
-                                                        {this.state.rows.map(member=><li id="notification-single-elem">  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>)} 
+                                                        {this.state.rows.map(member=>
+                                                        
+                                                        
+                                        member.answeredby_profile_pic===null || member.answeredby_profile_pic===undefined || member.answeredby_profile_pic===""|| member.answeredby_profile_pic==="default"     ? 
+                                        <li id="notification-single-elem">  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>
+                                        :
+                                        <li id="notification-single-elem">  <img src={member.answeredby_profile_pic} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>
+                                        )} 
           
         
                                                     </div>

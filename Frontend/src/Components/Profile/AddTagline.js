@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../../Styles/AskQuestion.css';
 import axios from 'axios'
+import {rooturl} from '../../Config/settings'
 class AddTagline extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +21,7 @@ class AddTagline extends Component {
           }
           axios.defaults.withCredentials = true;
           //make a post request with the user data
-          axios.post("http://localhost:3001/quora/addtagline",data, localStorage.getItem('jwtToken'))
+          axios.post("http://"+rooturl+":3001/quora/addtagline",data, localStorage.getItem('jwtToken'))
                   .then(
         )
           .catch()

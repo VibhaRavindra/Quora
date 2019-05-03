@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import '../../Styles/AskQuestion.css';
 import axios from 'axios'
+import {rooturl} from '../../Config/settings'
+import swal from 'sweetalert';
 class AddEmployment extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +22,7 @@ class AddEmployment extends Component {
           }
           axios.defaults.withCredentials = true;
           //make a post request with the user data
-          axios.post("http://localhost:3001/quora/addemployment",data, localStorage.getItem('jwtToken'))
+          axios.post("http://"+rooturl+":3001/quora/addemployment",data, localStorage.getItem('jwtToken'))
                   .then(
         )
           .catch()

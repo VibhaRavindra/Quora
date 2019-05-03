@@ -29,7 +29,7 @@ class CommentForm extends React.Component {
   let data = {
    comment: this.state.text,
    user_username: localStorage.user_name,
-   user_name: localStorage.firstname + " " + localStorage.lastname,
+   user_name: localStorage.fullname,
    user_profile_pic: "swe.jpg",
  }
 
