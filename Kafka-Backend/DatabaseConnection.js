@@ -21,7 +21,7 @@ mongoose.connect('mongodb+srv://kavya:kavya@cluster0-33gdb.mongodb.net/test?retr
     {  
              console.log("sending information to",data.fullDocument.followers.slice(-1).pop(),data.fullDocument.question)
   console.log(data);
-  Notifications.notifications.create({qid:data.fullDocument._id,question:data.fullDocument.question,answeredby:data.fullDocument.answers.slice(-1).pop().owner_name,answeredby_tagline:data.fullDocument.answers.slice(-1).pop().owner_tagline,answeredby_profile_pic:data.fullDocument.answers.slice(-1).pop().owner_profile_pic,timestap_answer:"",state:"unread"})
+  Notifications.notifications.create({qid:data.fullDocument._id,question:data.fullDocument.question,answeredby:data.fullDocument.answers.slice(-1).pop().owner_name,answeredby_tagline:data.fullDocument.answers.slice(-1).pop().owner_tagline,answeredby_profile_pic:data.fullDocument.answers.slice(-1).pop().owner_profile_pic,timestamp_answer:data.fullDocument.answers.slice(-1).pop().timestamp,state:"unread"})
            
     
     
