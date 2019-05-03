@@ -13,7 +13,8 @@ class DisplayQuestion extends Component {
         super(props);
         this.state = {
             followedquestions:[],
-            openAnswer: ''
+            openAnswer: '',
+            follow:false
         }
     }
 
@@ -31,8 +32,8 @@ class DisplayQuestion extends Component {
 
     followquestion=(e,x)=>{
         console.log(localStorage.getItem("user_name"));
-        
- 
+        this.setState({follow:true})
+        swal("followed question");
         var data={
             follower_username:localStorage.getItem("user_name"),
             qid:x
@@ -43,7 +44,8 @@ class DisplayQuestion extends Component {
     unfollowquestion=(e,x)=>{
      console.log(localStorage.getItem("user_name"));
      console.log("hophop",x);
- 
+     swal("unfollowed question");
+     this.setState({follow:false})
      var data={
          follower_username:localStorage.getItem("user_name"),
          qid:x
@@ -59,13 +61,26 @@ class DisplayQuestion extends Component {
         let record = this.props.question;
         let index = this.props.questionIndex;
         let answerDiv = null;
+        let followDiv=null;
         
         if (record.answers.length>0) {
             let answer = record.answers[0];
             console.log(answer);
             answerDiv = <AnswerDetails answer={answer}/>;
         }
+        if(!record.followers.includes(localStorage.getItem("user_name")))
+        {
+            followDiv=<div className="follow-icon answer-icon-label" onClick={e=>this.followquestion(e,record._id)}>
+            Follow {(record.followers.length == 0)? "": record.followers.length}</div>
+        }
+        else 
+        {
+            followDiv= <div id="unfollow-ques answer-icon-label" onClick={e=>this.unfollowquestion(e,record._id)}>
+            <img src={unfollow} width="60" height="40" />{"  "}{(record.followers.length == 0)? ""
+            :record.followers.length}</div>
+        }
 
+    
         let questionFooterDiv = null;
         questionFooterDiv = (
             <div>
@@ -77,7 +92,7 @@ class DisplayQuestion extends Component {
                         <div className="pass-icon answer-icon-label">Pass</div>
                     </div>
                     <div className="question-footer-elem" >
-                    {record.followers.includes(localStorage.getItem("user_name")) ? <div id="unfollow-ques answer-icon-label" onClick={e=>this.unfollowquestion(e,record._id)}> <img src={unfollow} width="60" height="40" />{"  "}{(record.followers.length == 0)? "": record.followers.length}</div>:<div className="follow-icon answer-icon-label" onClick={e=>this.followquestion(e,record._id)}>Follow {(record.followers.length == 0)? "": record.followers.length}</div>}
+                       {followDiv}
                     </div>
                     <div className="question-footer-elem-share-icons" style={{ marginLeft: "18em" }}>
                         <div className="fb-icon answer-icon-hide">a</div>

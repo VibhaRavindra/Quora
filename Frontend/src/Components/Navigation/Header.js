@@ -20,32 +20,32 @@ class Header extends Component {
 
     }
     componentDidMount(){
-      var data={
-        "user_name":localStorage.getItem("user_name")
-      }
-      axios.defaults.withCredentials = true;
-      //make a post request with the user data
-      axios.post("http://"+rooturl+":3001/quora/notifications",data, localStorage.getItem('jwtToken'))
-              .then(response => {
+    //   var data={
+    //     "user_name":localStorage.getItem("user_name")
+    //   }
+    //   axios.defaults.withCredentials = true;
+    //   //make a post request with the user data
+    //   axios.post("http://"+rooturl+":3001/quora/notifications",data, localStorage.getItem('jwtToken'))
+    //           .then(response => {
               
-        console.log("Status Code : ",response.status);
-        if(response.status === 200){
-            console.log(response.data);
-            this.setState({
-                rows : response.data,
-            })
+    //     console.log("Status Code : ",response.status);
+    //     if(response.status === 200){
+    //         console.log(response.data);
+    //         this.setState({
+    //             rows : response.data,
+    //         })
           
         
-        }
+    //     }
       
-    })
-      .catch()
+    // })
+    //   .catch()
   }
 
   render() {
      let noti=[];
-       noti.push(<ul> <a href="/quora/SeeAllNotifications">See all Notifications</a>{
-        this.state.rows.map(member=><li>  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>)} 
+       noti.push(<ul className="ulclass"> <a href="/quora/SeeAllNotifications">See all Notifications</a>{
+        this.state.rows.map(member=><li className="liclass">  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>)} 
        </ul>  )
       
     return (
@@ -92,7 +92,7 @@ class Header extends Component {
                 <span class="sr-only">Toggle Dropdown</span>
                 </div>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="/profile">Profile</a>
+                    <a class="dropdown-item" href="/quora/myprofile">Profile</a>
                     <a class="dropdown-item" href="/messages">Messages</a>
                     <a class="dropdown-item" href="/yourcontent">Your Content</a>
                     <a class="dropdown-item" href="settings">Settings</a>

@@ -166,6 +166,18 @@ showfollowing(){
     render() {
     
      console.log("tagline now is"+this.state.tagline)
+
+     let defaultprofilepic=[],actualprofilepic=[];
+     defaultprofilepic.push(<div>
+          <img src={abc} width="120" height="120" /><br />
+           </div>
+     );
+     actualprofilepic.push(
+         <div>
+          <img src={this.state.profilepic} width="120" height="120" /><br />
+            </div>        
+     )
+   
    let followersdisplay=[],x="",followingdisplay=[],y="";
    if(this.state.followerstab===true && this.state.followingtab===false)
    for(x in this.state.followersrows)
@@ -189,8 +201,8 @@ showfollowing(){
          
                 <Header />
 <div className="profile-pic" >
-           <img src={this.state.profilepic} width="120" height="120" /> <div className="upload-propic">
-          </div>
+{this.state.profilepic===null || this.state.profilepic ===undefined || this.state.profilepic === "" ?
+   defaultprofilepic:actualprofilepic}
         <br />
         <span className="info">
         <b>{this.state.name}</b>

@@ -7,7 +7,7 @@ import defaultProfilePic from '../../Images/profile_logo.png'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import axios from 'axios'
-
+import {rooturl} from '../../Config/settings'
 
 TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en-US')
@@ -26,10 +26,19 @@ class AnswerDetails extends Component {
     this.DownvoteAnswer = this.DownvoteAnswer.bind(this);
     // this.comments = this.comments.bind(this)
   }
-
+componentDidMount(){
+  var data={
+    id:this.props.answer._id,
+    answer:this.props.answer.answer,
+    owner_username:this.props.answer.owner_username,
+    personviewed:localStorage.getItem("user_name")
+  }
+  axios.post("http://"+rooturl+":3001/quora/updateanswerview",data)
+}
   componentWillMount() {
     //alert(this.props.answer.answer)
     //this.props.requestAnswer(this.props.id);
+  
     var upvotes = this.props.answer.upvotes
     var downvotes = this.props.answer.downvotes
     var upvoteText = 'Upvote'
@@ -59,6 +68,11 @@ class AnswerDetails extends Component {
       downvoteClass: downvoteClass
     })
 
+  }
+  componentDidMount(){
+    console.log(this.props.answer._id,"Hello");
+   
+    
   }
 
 

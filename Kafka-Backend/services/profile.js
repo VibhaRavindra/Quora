@@ -19,6 +19,9 @@ exports.profileService = function profileService(msg, callback){
             case "addprofilepic":
             addprofilepic(msg,callback);
             break;
+            case "adddescription":
+            adddescription(msg,callback);
+            break;
             case "getprofileinfo":
             getprofileinfo(msg,callback);
             break;
@@ -86,6 +89,21 @@ function addlocation(msg, callback){
     console.log("In listing property topic service. Msg: ", msg)
 console.log(msg.body)
   Users.users.update( {"user_name":msg.body.user_name},{$set: { "zipcode" : msg.body.zipcode ,"state":msg.body.state}}, function (error,result) {
+        if (error) {
+            console.log(error.message)
+            callback(null, {status:400,error});
+        } else {
+            redisClient.del("applicantProfile_" + msg.body.user_name);
+            callback(null, {status: 200, result});
+        }
+    })
+   
+}
+function adddescription(msg, callback){
+
+    console.log("In listing property topic service. Msg: ", msg)
+console.log(msg.body)
+  Users.users.update( {"user_name":msg.body.user_name},{$set: { "aboutme" : msg.body.aboutme}}, function (error,result) {
         if (error) {
             console.log(error.message)
             callback(null, {status:400,error});
@@ -181,7 +199,7 @@ function getprofileinfo(msg, callback){
                 result=profile;
             } else {
                 console.log("Get applicant profile : inserting profile into cache");
-                profile = await Users.users.findOne( { user_name: msg.body.user_name },{"_id":0,"firstname":1,"lastname":"1","user_tagline":1,"user_profile_pic":1,"career":1,"education":1,"users_followers":1,"users_following":1,"zipcode":1,"state":1,"user_profile_pic":1,"b64":1});
+                profile = await Users.users.findOne( { user_name: msg.body.user_name },{"_id":0,"firstname":1,"lastname":"1","user_tagline":1,"user_profile_pic":1,"career":1,"education":1,"users_followers":1,"users_following":1,"zipcode":1,"state":1,"user_profile_pic":1,"b64":1,"aboutme":1});
                 if (profile) {
                     redisClient.set(redisKey, JSON.stringify(profile), function (error, reply) {
                         if (error) {
