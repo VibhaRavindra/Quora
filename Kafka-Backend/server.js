@@ -8,6 +8,7 @@ var questiontopics = require('./services/questiontopics');
 var answer = require('./services/answer.js');
 var search = require('./services/search.js');
 var yourcontent = require('./services/yourcontent.js');
+var messagetopics = require('./services/messagetopics');
 var bookmarks = require('./services/bookmarks.js');
 
 // Set up Database connection
@@ -70,6 +71,12 @@ function handleTopicRequest(topic_name, fname) {
                 questiontopics.questionService(data.data, function(err, res){
                         response(data, res, producer);
                         return;
+                    })
+                    break;
+            case 'message_topics':
+                    messagetopics.messageService(data.data, function(err, res){
+                    response(data, res, producer);
+                    return;
                 })
                 break;
             case 'yourcontent' :
@@ -117,3 +124,4 @@ handleTopicRequest("search", search);
 handleTopicRequest("bookmarks", bookmarks);
 handleTopicRequest("question_topics", questiontopics);
 handleTopicRequest("yourcontent", yourcontent);
+handleTopicRequest("message_topics", messagetopics);
