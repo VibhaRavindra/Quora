@@ -32,6 +32,7 @@ var basePath = '/quora';
 var account_basepath = '/account';
 var answer_basepath = '/answer';
 var search_basepath = '/search';
+var yourcontent_basepath = '/content'
 
 //use express session to maintain session data
 app.use(session({
@@ -62,6 +63,7 @@ var profileRoutes = require('./src/routes/profile');
 var questionRoutes = require('./src/routes/questionRoutes');
 var Answer = require('./src/routes/Answer');
 var Search = require('./src/routes/Search')
+var YourContent = require('./src/routes/YourContent')
 
 app.use(express.static('public'));
 
@@ -82,6 +84,7 @@ app.use(basePath, profileRoutes);
 app.use(basePath, questionRoutes);
 app.use(answer_basepath, Answer);
 app.use(search_basepath, Search);
+app.use(yourcontent_basepath, YourContent);
 
 app.use('/uploads', express.static(path.join(__dirname, '/uploads/')));
 

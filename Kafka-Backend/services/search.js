@@ -1,7 +1,6 @@
 var {users} = require('../models/UserSchema');
 var {questions} = require('../models/QuestionSchema');
-
-let topics_array = ["Technology", "Science", "Music", "Sports", "Health"]
+var {topics} = require('../models/TopicSchema');
 
 exports.followService = function followService(msg, callback){
     console.log("Inside kafka backend search.js");
@@ -9,7 +8,7 @@ exports.followService = function followService(msg, callback){
     console.log("In Property Service path:", msg.path);
     switch(msg.path){
         case "topics":
-            topics(msg,callback);
+            topics_function(msg,callback);
             break;
         case "profiles":
             profiles(msg,callback);
@@ -24,7 +23,7 @@ exports.followService = function followService(msg, callback){
 function profiles(msg, callback){
     console.log("in profiles")
     users.find({ $text: { $search: msg.body.searchText}}, 
-        { score: { $meta: "textScore" }, user_name:1,firstname:1, lastname:1, user_tagline:1, user_profile_pic:1, users_followers:1 })
+        { score: { $meta: "textScore" }, user_name:1,firstname:1, lastname:1, user_tagline:1, user_profile_pic:1, users_followers:1, career:1, aboutme:1 })
     .sort({ score : { $meta : 'textScore' } })
     .exec(function(err, results) {
         console.log("in profiles exec.")
@@ -40,15 +39,18 @@ function profiles(msg, callback){
             results.forEach((result)=>{
                 num_of_followers = result.users_followers.length;
                 profiles_array.push({
-                    userid: result._id,
+                    profile_id: result._id,
                     user_name: result.user_name,
                     firstname: result.firstname,
                     lastname: result.lastname,
+                    career: result.career,
+                    aboutme: result.aboutme,
                     user_tagline: result.user_tagline,
                     num_of_followers: num_of_followers,
                     profile_image: result.user_profile_pic
                 })
             })
+            console.log(profiles_array.career);
             callback(null, {
                 searchSuccess: true,
                 profiles_array: profiles_array
@@ -89,13 +91,32 @@ function questions_search(msg, callback){
     });
 }
 
-function topics(msg, callback){
-    console.log("in topics");
-    // let searched_topics = []
-    // topics_array.forEach((topic)=>{
-    //     if(topic.toUpperCase().includes(req.params.searchText.toUpperCase())) {
-    //         searched_topics.push(topic)
-    //     }
-    // })
-    // res.send({"topics":searched_topics})
+function topics_function(msg, callback){
+    console.log("in TOPICS");
+    topics.find({ $text: { $search: msg.body.searchText}}, 
+        { score: { $meta: "textScore" }})
+    .sort({ score : { $meta : 'textScore' } })
+    .exec(function(err, results) {
+        let topics_array = []
+        if (err){
+            console.log(err)
+            callback(null, {
+                searchSuccess: false,
+                topics_array: topics_array
+            })
+        } else {
+            results.forEach((result)=>{
+                topics_array.push({
+                    topic_id : result._id,
+                    name: result.name,
+                    num_of_followers: result.num_of_followers
+                })
+            })
+            console.log("TOPICS ARRAY : ", topics_array);
+            callback(null, {
+                searchSuccess: true,
+                topics_array: topics_array
+            });
+        }
+    })
 }

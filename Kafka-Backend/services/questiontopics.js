@@ -31,7 +31,7 @@ function createQuestion(msg, callback) {
         "owner_tagline": msg.body.owner_tagline,
         "timestamp" : timestamp
     }
-    console.log("question data:", questionData);
+    // console.log("question data:", questionData);
     Questions.questions.findOne({ "question": msg.body.question }, function (err, rows) {
         if (err) {
             console.log(err);
@@ -72,7 +72,7 @@ function createQuestion(msg, callback) {
 function getAllQuestions(msg, callback) {
 
     sort = {'timestamp': -1}
-    console.log("In get questions. Msg: ", msg);
+    // console.log("In get questions. Msg: ", msg);
     Questions.questions.find({ }, function (err, results) {
         if (err) {
             console.log(err);

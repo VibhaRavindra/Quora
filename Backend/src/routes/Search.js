@@ -16,8 +16,8 @@ router.get('/topics/:searchText',requireAuth, (req,res,next) => {
     kafka.make_request('search', {"path":"topics", body}, function(err,result){
         if (err){
             res.send({
-            //   signupSuccess:false,
-            //   signupMessage:"Sign Up Failed"
+                searchSuccess: false,
+                topics_array: []
             })
         }else{
             res.send(result);
