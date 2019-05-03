@@ -15,7 +15,6 @@ import SearchQuestions from './Search/SearchQuestions';
 import SearchProfiles from './Search/SearchProfiles';
 import SearchTopics from './Search/SearchTopics';
 import QuestionsAsked from './Content/QuestionsAsked';
-import Messages from './Messages/Messages';
 import upvotegraph from './Graph/upvotegraph';
 import downvotegraph from './Graph/downvotegraph';
 import answerviewsgraph from './Graph/answerviewsgraph';
@@ -40,7 +39,6 @@ class Main extends Component {
           <Route exact path="/quora/search/profiles/:searchValue" component={SearchProfiles} />
           <Route exact path="/quora/search/topics/:searchValue" component={SearchTopics} />
           <Route exact path="/quora/content/questions_asked" component={QuestionsAsked} />
-          <Route exact path="/quora/messages" component={Messages} />
           <Route path="/quora/AnalyticsDashboard" component={AnalyticsDashboard} />
               <Route path="/quora/upvotegraph" component={upvotegraph} />
               <Route path="/quora/downvotegraph" component={downvotegraph} />
