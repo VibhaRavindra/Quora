@@ -11,6 +11,10 @@ import SeeAllNotifications from './Notifications/SeeAllNotifications';
 import Profile from './Profile/Profile';
 import displayprofile from './Profile/displayprofile';
 import Topic from './Topic/Topic';
+import upvotegraph from './Graph/upvotegraph';
+import downvotegraph from './Graph/downvotegraph';
+import answerviewsgraph from './Graph/answerviewsgraph';
+import AnalyticsDashboard from './Graph/AnalyticsDashboard';
 
 class Main extends Component {
   render() {
@@ -27,6 +31,10 @@ class Main extends Component {
               <Route path="/quora/myprofile" component={Profile} />
          <Route path = "/quora/profile/:user_id" component = {displayprofile} />
           <Route exact path="/quora/SeeAllNotifications" component={SeeAllNotifications} />
+          <Route path="/quora/AnalyticsDashboard" component={AnalyticsDashboard} />
+              <Route path="/quora/upvotegraph" component={upvotegraph} />
+              <Route path="/quora/downvotegraph" component={downvotegraph} />
+              <Route path="/quora/answerviewsgraph" component={answerviewsgraph} />
         </div>
     );
     } else {

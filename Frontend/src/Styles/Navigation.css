@@ -151,14 +151,15 @@
   .Link-color{
     color: black;
   }
-li{
+.liclass{
   border-bottom: 1px solid black;
   margin-top: 10px;
+  margin-bottom: 10px;
   padding-bottom:10px; 
   width: 400px;
  
 }
-ul{
+.ulclass{
   width: 600px;
 }
 .dropdown-menu{

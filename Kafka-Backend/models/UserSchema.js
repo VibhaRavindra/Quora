@@ -20,7 +20,7 @@ const UserSchema = new Schema({
   },
   b64:{
     type: String,
-    default:""
+    default:"default"
 },
   firstname: {
     type: String,

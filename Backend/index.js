@@ -62,7 +62,7 @@ var profileRoutes = require('./src/routes/profile');
 var questionRoutes = require('./src/routes/questionRoutes');
 var Answer = require('./src/routes/Answer');
 var Search = require('./src/routes/Search')
-
+var graph =require('./src/routes/graph')
 app.use(express.static('public'));
 
 //use cors to allow cross origin resource sharing
@@ -77,6 +77,7 @@ app.use(bodyParser.json());
 
 
 app.use(basePath, followRoutes);
+app.use(basePath, graph);
 app.use(account_basepath, Account);
 app.use(basePath, profileRoutes);
 app.use(basePath, questionRoutes);

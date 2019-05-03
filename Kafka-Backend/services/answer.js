@@ -2,6 +2,7 @@ var { users } = require('../models/UserSchema');
 var { questions } = require('../models/QuestionSchema');
 var { answers } = require('../models/AnswerSchema');
 var { comments } = require('../models/CommentSchema');
+var {views} =require('../models/AnswerViewSchema')
 
 exports.answerService = function answerService(msg, callback) {
     console.log("Inside kafka backend answer.js");
@@ -24,6 +25,13 @@ exports.answerService = function answerService(msg, callback) {
         case "get-one":
             getAllAnswers(msg.req, callback);
             break;
+            case "graphupvote":
+            graphupvote(msg, callback);
+            break;
+            case "graphdownvote":
+            graphdownvote(msg, callback);
+            break;
+           
     }
 };
 
@@ -267,3 +275,55 @@ async function getAllAnswers(message, callback) {
     }
 
 }
+
+async function graphupvote(message, callback) {
+    
+    try {
+        
+        var answer = await answers.find({owner_username:message.body.owner_username},{"_id":1,"upvote_count":1}).sort(
+            { 
+                "upvote_count" : -1.0, 
+                "downvote_count" : 1.0
+            }
+        ).limit(10);
+        console.log(answer)
+
+        callback(null, { updateStatus: "Success", answer: answer })
+
+    } catch (error) {
+        console.log("Getting Answer Failed: " + error)
+        callback(null, {
+            status: 400,
+            submitAnswerMessage: "Getting Answer Failed"
+        })
+    }
+
+}
+
+
+
+
+async function graphdownvote(message, callback) {
+    
+    try {
+        var answer = await answers.find({owner_username:message.body.owner_username},{"_id":1,"downvote_count":1}).sort(
+            { 
+                "downvote_count" : -1.0, 
+                "upvote_count" : 1.0
+            }
+        ).limit(10);
+        console.log(answer)
+
+        callback(null, { updateStatus: "Success", answer: answer })
+
+    } catch (error) {
+        console.log("Getting Answer Failed: " + error)
+        callback(null, {
+            status: 400,
+            submitAnswerMessage: "Getting Answer Failed"
+        })
+    }
+
+}
+
+
