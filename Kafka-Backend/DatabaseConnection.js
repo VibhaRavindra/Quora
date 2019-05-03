@@ -1,4 +1,3 @@
-
 var Questions = require('./models/QuestionSchema');
 var Notifications = require('./models/NotificationSchema');
 const mongoose = require('mongoose');
@@ -28,4 +27,3 @@ mongoose.connect('mongodb+srv://kavya:kavya@cluster0-33gdb.mongodb.net/test?retr
             });   
   }
 })
-

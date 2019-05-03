@@ -1,7 +1,12 @@
 const bcrypt = require('bcrypt');
 const saltRounds = 2;
 var {users} = require('../models/UserSchema');
+var {topics} = require('../models/TopicSchema');
+var { questions } = require('../models/QuestionSchema');
+var { answers } = require('../models/AnswerSchema');
 const mysql = require('mysql');
+
+// MySQL connection without pooling.
 var mysqlconnection = mysql.createConnection({
     host: "quora273.cnqjulff3ok3.us-east-2.rds.amazonaws.com",
     user: "CMPE273_Quora",
@@ -13,6 +18,15 @@ mysqlconnection.connect(err => {
     if (err)
     throw err;
 })
+
+// MySQL connection with pooling
+// var mysqlconnection = mysql.createPool({
+//     connectionLimit: 10,
+//     host: 'quora273.cnqjulff3ok3.us-east-2.rds.amazonaws.com',
+//     user: 'CMPE273_Quora',
+//     password: 'Quora_273_project',
+//     database: 'CMPE273_Quora'
+// })
 
 exports.followService = function followService(msg, callback){
     console.log("Inside kafka backend account.js");
@@ -33,7 +47,17 @@ exports.followService = function followService(msg, callback){
 };
 
 function signup(msg, callback){
-    console.log("Inside Kafka Backend signup and msg = ",msg);
+     console.log("Inside Kafka Backend signup and msg = ",msg);
+     console.log("Inside signin");
+     questions.delete( { "owner_name" : "Test 1" }, function(err, result){
+         console.log("Inside deletemany");
+         if (err){
+             console.log(err);
+         }
+     } )
+ 
+
+
     let hashpw;
     bcrypt.hash(msg.body.password, saltRounds, function(err, hash) {
         if(err){
@@ -98,6 +122,7 @@ function signup(msg, callback){
 }
 
 function signin(msg, callback){
+    console.log("Inside signin");
     mysqlconnection.beginTransaction(function(err) {
         if (err) { 
             console.log("INSIDE ERROR 1")
@@ -178,63 +203,83 @@ function signin(msg, callback){
 }
 
 function selectedTopics(msg, callback){
-    mysqlconnection.beginTransaction(function(err) {
-        if (err) { 
+    // mysqlconnection.beginTransaction(function(err) {
+    //     if (err) { 
+    //         callback(null,{
+    //             selectTopicsSuccess:false,
+    //             select_topics: false,
+    //             isTopicSelected: false,
+    //             topics: []
+    //         })
+    //     }
+    //     console.log("msg.body.user_name ",msg.body.user_name)
+    //     const query = "UPDATE Users SET select_topics = ? WHERE user_name = ?"
+    //     mysqlconnection.query(query,[1,msg.body.user_name],(err,result)=>{
+    //         if(err){
+    //             console.log(err)
+    //             mysqlconnection.rollback(function(err) {
+    //                 if(err)
+    //                     console.log(err)
+    //             });
+    //             callback(null,{
+    //                 selectTopicsSuccess:false,
+    //                 select_topics: false,
+    //                 isTopicSelected: false,
+    //                 topics: []
+    //             })
+    //         } else {
+    users.findOneAndUpdate({_id:msg.body.userid}, { $push: { topics_followed: { $each: msg.body.topics }}}, function(err, result){
+        if (err){
+            console.log(err)
+            // mysqlconnection.rollback(function(err) {
+            //     if(err)
+            //         console.log(err)
+            // });
             callback(null,{
                 selectTopicsSuccess:false,
                 select_topics: false,
                 isTopicSelected: false,
                 topics: []
             })
-        }
-        console.log("msg.body.user_name ",msg.body.user_name)
-        const query = "UPDATE Users SET select_topics = ? WHERE user_name = ?"
-        mysqlconnection.query(query,[1,msg.body.user_name],(err,result)=>{
-            if(err){
-                console.log(err)
-                mysqlconnection.rollback(function(err) {
-                    if(err)
-                        console.log(err)
-                });
-                callback(null,{
-                    selectTopicsSuccess:false,
-                    select_topics: false,
-                    isTopicSelected: false,
-                    topics: []
-                })
-            } else {
-                users.findOneAndUpdate({_id:msg.body.userid}, { $push: { topics_followed: { $each: msg.body.topics }}}, function(err, result){
-                    if (err){
-                        console.log(err)
-                        mysqlconnection.rollback(function(err) {
-                            if(err)
-                                console.log(err)
-                        });
-                        callback(null,{
-                            selectTopicsSuccess:false,
-                            select_topics: false,
-                            isTopicSelected: false,
-                            topics: []
-                        })
-                    } else {
-                        mysqlconnection.commit(function(err) {
-                            if (err) { 
-                                mysqlconnection.rollback(function(err) {
-                                    if(err)
-                                        console.log(err)
-                                });
-                            }
-                        });
-                        console.log("IN SELECTED_TOPICS, TOPICS :::;;; : ", msg.body.topics)
-                        callback(null,{
-                            selectTopicsSuccess:true,
-                            select_topics: true,
-                            topics: msg.body.topics,
-                            isTopicSelected: true
-                        })
+        } else {
+            var criteria = {
+                name:{ $in: msg.body.topics}
+            };
+            topics.updateMany( criteria, { $inc : {num_of_followers: 1}}
+            , function(err, result){
+                if(err){
+                    console.log(err)
+                    callback(null,{
+                        selectTopicsSuccess:false,
+                        select_topics: false,
+                        isTopicSelected: false,
+                        topics: []
+                    })
+                } else {
+                    for (let i=0; i<result.length; i++){
+                        console.log("Topics name : ", result[0].name)
+                        console.log("Topics followers : ", result[0].num_of_followers)
                     }
-                })
-            }
-        })
+                    
+                    callback(null,{
+                        selectTopicsSuccess:true,
+                        select_topics: true,
+                        topics: msg.body.topics,
+                        isTopicSelected: true
+                    })
+                }
+            })
+            // mysqlconnection.commit(function(err) {
+            //     if (err) { 
+            //         mysqlconnection.rollback(function(err) {
+            //             if(err)
+            //                 console.log(err)
+            //         });
+            //     }
+            // });
+        }
     })
+    //         }
+    //     })
+    // })
 }

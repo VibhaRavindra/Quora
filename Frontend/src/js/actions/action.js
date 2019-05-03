@@ -1,4 +1,4 @@
-import { SIGN_IN,SIGN_OUT,SIGN_UP,SELECTED_TOPICS } from "../constants/action-types";
+import { SIGN_IN,SIGN_OUT,SIGN_UP,SELECTED_TOPICS,YOUR_QUESTIONS } from "../constants/action-types";
 
 // actions for sign up
 export function signup(formdata) {
@@ -79,4 +79,25 @@ function selectTopicsUpdate(returndata) {
     localStorage.setItem("isTopicSelected",returndata.isTopicSelected)
   }
   return { type: SELECTED_TOPICS, payload:returndata}
+}
+export function yourQuestions(data){
+  console.log(data);
+  return (dispatch) => {
+    fetch('/content/questions_asked?userid='+data,{
+      method: 'GET',
+      headers:{
+        'Authorization': "Bearer " + localStorage.getItem("jwtToken"),
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then((response)=>dispatch(yourQuestionsUpdate(response)))
+  }
+}
+function yourQuestionsUpdate(returndata) {
+  // if (localStorage.getItem('topics').length === 0){
+  //   localStorage.setItem("topics",returndata.topics)
+  //   localStorage.setItem("isTopicSelected",returndata.isTopicSelected)
+  // }
+  return { type: YOUR_QUESTIONS, payload:returndata}
 }
