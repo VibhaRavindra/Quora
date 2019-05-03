@@ -30,7 +30,7 @@ class CommentForm extends React.Component {
    comment: this.state.text,
    user_username: localStorage.user_name,
    user_name: localStorage.fullname,
-   user_profile_pic: "swe.jpg",
+   user_profile_pic: "default",
  }
 
  axios.defaults.withCredentials = true;

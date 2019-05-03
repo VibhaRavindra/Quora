@@ -47,7 +47,8 @@ function getnotifications(msg, callback){
                            questionsfollowed.push(result[i]._id)
                       }
                      console.log("hello",questionsfollowed)
-                      Notifications.notifications.find( {qid:{$in:questionsfollowed}} , function(err,result){
+                      Notifications.notifications.find( {qid:{$in:questionsfollowed}}).sort({timestamp_answer:-1}).exec(
+                          function(err,result){
                         if (err) {
                             console.log(err);
                             console.log("unable to read the database");
@@ -56,7 +57,7 @@ function getnotifications(msg, callback){
                                        callback(null, {status: 200, result});}
                                 
                     })
-                 
+                
            }
                 
     })

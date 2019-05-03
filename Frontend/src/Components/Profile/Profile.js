@@ -62,7 +62,7 @@ class Profile extends Component {
   
 
 componentWillMount=()=>{
-    localStorage.setItem("fullname","Vibha Ravindra")
+   
 console.log("username from localstorage is",localStorage.getItem("user_name"))
     var data={
         "user_name":localStorage.getItem("user_name")
@@ -214,12 +214,12 @@ showprofile(){
         let followersdisplay=[],x="",followingdisplay=[],y="";
         if(this.state.followerstab===true && this.state.followingtab===false)
         for(x in this.state.followersrows)
-        followersdisplay.push(<div id="followers-elem"><img src={this.state.followersrows[x].b64} width="40" height="40"/><b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b><br />{this.state.followersrows[x].user_tagline}</div>)
+        followersdisplay.push(<div id="followers-elem"><img src={this.state.followersrows[x].b64} width="40" height="40"/><Link className="question-link" to={"/quora/profile/" + this.state.followersrows[x].user_name}><b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b></Link><br />{this.state.followersrows[x].user_tagline}</div>)
         if(this.state.followerstab===false && this.state.followingtab===true){
       
          for(y in this.state.followingrows){
          console.log("hello",this.state.followingrows[y].firstname)
-         followingdisplay.push(<div id="followers-elem"><img src={this.state.followingrows[y].b64} width="40" height="40"/><b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b><br />{this.state.followingrows[y].user_tagline}</div>)
+         followingdisplay.push(<div id="followers-elem"><img src={this.state.followingrows[y].b64} width="40" height="40"/><Link className="question-link" to={"/quora/profile/" + this.state.followingrows[y].user_name}><b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b></Link><br />{this.state.followingrows[y].user_tagline}</div>)
      }
         }
       
@@ -238,7 +238,7 @@ showprofile(){
           
 <div className="upload-propic">
                 
-   {this.state.profilepic===null || this.state.profilepic ===undefined || this.state.profilepic === "" ?
+   {this.state.profilepic===null || this.state.profilepic ===undefined || this.state.profilepic === "" ||  this.state.profilepic === "default" ?
    defaultprofilepic:actualprofilepic}
 
         
@@ -251,7 +251,6 @@ showprofile(){
         {this.state.tagline==="" || this.state.tagline===null || this.state.tagline===undefined ? 
         <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
         Add Profile Credential
-        Add Description
         </span>
         :
         <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
