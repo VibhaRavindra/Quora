@@ -15,7 +15,6 @@ class MessageList extends Component {
         }
     }
     async componentWillMount(){
-        console.log(this.props.test);
         let user = localStorage.getItem("user_name")
         await this.props.getMessageConversationList(user);
         console.log("-------------------------");

@@ -19,6 +19,7 @@ import upvotegraph from './Graph/upvotegraph';
 import downvotegraph from './Graph/downvotegraph';
 import answerviewsgraph from './Graph/answerviewsgraph';
 import AnalyticsDashboard from './Graph/AnalyticsDashboard';
+import profileviewsgraph from './Graph/profilegraph';
 
 class Main extends Component {
   render() {
@@ -43,6 +44,7 @@ class Main extends Component {
               <Route path="/quora/upvotegraph" component={upvotegraph} />
               <Route path="/quora/downvotegraph" component={downvotegraph} />
               <Route path="/quora/answerviewsgraph" component={answerviewsgraph} />
+              <Route path="/quora/profileviewsgraph" component={profileviewsgraph}/>
         </div>
       );
     } else {
