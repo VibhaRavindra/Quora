@@ -61,7 +61,7 @@ router.post('/signin', FormData.none(), (req,res,next) => {
         }
     });
 })
-router.post('/selectedTopics', requireAuth, (req,res,next) => {
+router.post('/selectedTopics', (req,res,next) => {
     let body = {
       topics: req.body.topics,
       userid: req.body.userid,
