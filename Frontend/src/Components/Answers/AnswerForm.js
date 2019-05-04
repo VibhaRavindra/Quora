@@ -47,7 +47,7 @@ class AnswerForm extends React.Component {
     user_username: localStorage.user_name,
     user_id: localStorage.userid,
     user_name: localStorage.fullname,
-    user_profile_pic: "swe.jpg",
+    user_profile_pic: "default",
     user_tagline: "Software Engineer",
   }
   axios.defaults.withCredentials = true;
