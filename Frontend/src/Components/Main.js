@@ -49,16 +49,10 @@ class Main extends Component {
           <Route exact path="/quora/content/questions_followed/:year/:sortorder" component={QuestionsFollowed} />
           {/* <Route exact path="/quora/content/questions_answered" component={QuestionsAnswered} /> */}
           <Route path="/quora/AnalyticsDashboard" component={AnalyticsDashboard} />
-<<<<<<< HEAD
-          <Route path="/quora/upvotegraph" component={upvotegraph} />
-          <Route path="/quora/downvotegraph" component={downvotegraph} />
-          <Route path="/quora/answerviewsgraph" component={answerviewsgraph} />
-=======
               <Route path="/quora/upvotegraph" component={upvotegraph} />
               <Route path="/quora/downvotegraph" component={downvotegraph} />
               <Route path="/quora/answerviewsgraph" component={answerviewsgraph} />
               <Route path="/quora/profileviewsgraph" component={profileviewsgraph}/>
->>>>>>> develop
         </div>
       );
     } else {
