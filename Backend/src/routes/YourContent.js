@@ -27,6 +27,7 @@ router.get('/questions_asked', (req,res,next) => {
 });
 
 router.get('/questions_followed', (req,res,next) => {
+    console.log("Inside Backend YourContent.js")
     let body = {
         userid: req.query.userid
     }
