@@ -30,7 +30,7 @@ class CommentForm extends React.Component {
    comment: this.state.text,
    user_username: localStorage.user_name,
    user_name: localStorage.fullname,
-   user_profile_pic: "default",
+   user_profile_pic: localStorage.b64,
  }
 
  axios.defaults.withCredentials = true;
@@ -48,15 +48,13 @@ class CommentForm extends React.Component {
   }
 
   render () {
-    var imgdiv=null;
-    if (!localStorage.owner_profile_pic || !localStorage.owner_profile_pic.startsWith("http")) {
-      imgdiv = <img src={defaultProfilePic} className="answerer-pro-pic" />
-    } else {
-      imgdiv = <img src={localStorage.owner_profile_pic} className="answerer-pro-pic" />
-    }
+    var userImg = defaultProfilePic;
+    if (!this.props.answer.owner_profile_pic && !this.props.answer.owner_profile_pic === "undefined" &&!this.props.answer.owner_profile_pic === "default" && !this.props.answer.owner_profile_pic.includes(".")) {
+      userImg = "data:image/jpg;base64," + this.props.answer.owner_profile_pic
+    } 
       return (
         <div className="comment-form">
-        {imgdiv}
+        <img src={userImg} alt ="" className="answerer-pro-pic" />
           <input className="comment-input" type="text" onChange={this.handleChange} value={this.state.text} placeholder="Add a comment..."></input>
           <button className="comment-button" onClick={(e)=>this.submitComment(e)}>Add Comment</button>
         </div>

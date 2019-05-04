@@ -201,7 +201,7 @@ if (index > -1) {
                                                     </Nav.Item>
                                                 </Link>
                                                 {topicsNavDiv}
-                                                <Link className="bookmark-home-nav" to="/quora/bookmark">
+                                                <Link className="bookmark-home-nav" to="/quora/bookmarks">
                                                     <Nav.Item>
                                                         <div className="row">
                                                             <img className="left-nav-feed-img" src={feedImg} alt="Feed" />
