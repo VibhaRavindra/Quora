@@ -130,6 +130,15 @@
       color: #666!important;
     }
     
+  
+.answer-downvote-unselected-icon-label{
+      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+      margin-left: 5px!important;
+      font-weight: 500!important;
+      font-size: 14px!important;
+      color: #666!important;
+    }
+    
 .answer-upvote-selected-icon{
         background: url('../Images/upvote-selected.svg') no-repeat 3px center;
     }
@@ -164,4 +173,12 @@ color: #666!important;
     font-weight: 500!important;
     font-size: 14px!important;
     color: #329bff!important;
+  }
+ 
+  .answer-downvote-selected-icon-label{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    margin-left: 5px!important;
+    font-weight: 500!important;
+    font-size: 14px!important;
+    color: #666!important;
   }

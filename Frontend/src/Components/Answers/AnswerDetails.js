@@ -9,6 +9,7 @@ import en from 'javascript-time-ago/locale/en'
 import axios from 'axios'
 import {rooturl} from '../../Config/settings'
 import { Link } from "react-router-dom";
+import anonymousProfilePic from '../../Images/anonymous_logo.png'
 
 
 TimeAgo.addLocale(en)
@@ -20,6 +21,8 @@ class AnswerDetails extends Component {
     this.state = {
       commentOpen: false,
       upvoteText: 'Upvote',
+      downvoteText: 'Downvote',
+      bookmarkText: 'Bookmark',
       upvoteCount: 0,
       upvoteClass: "answer-upvote-unselected-icon answer-upvote-unselected-icon-label",
       bookmarkClass: "answer-bookmark-unselected-icon answer-bookmark-unselected-icon-label",
@@ -47,19 +50,23 @@ componentDidMount(){
     var downvotes = this.props.answer.downvotes
     var bookmarked_by = this.props.answer.bookmarked_by
     var upvoteText = 'Upvote'
+    var downvoteText = 'Downvote'
+    var bookmarkText = 'Bookmark'
     var upvoteClass = "answer-upvote-unselected-icon answer-upvote-unselected-icon-label"
     var bookmarkClass = "answer-bookmark-unselected-icon answer-bookmark-unselected-icon-label"
-    var downvoteClass = "answer-downvote-unselected-icon"
-
+    var downvoteClass = "answer-downvote-unselected-icon  answer-downvote-unselected-icon-label"
+    
     console.log("Debug answer username: " + localStorage.user_name)
     if (upvotes.includes(localStorage.user_name)) {
       upvoteText = 'Upvoted'
       upvoteClass = "answer-upvote-selected-icon answer-upvote-selected-icon-label"
     }
     if (downvotes.includes(localStorage.user_name)) {
-      downvoteClass = "answer-downvote-selected-icon"
+      downvoteText = 'Downvoted'
+      downvoteClass = "answer-downvote-selected-icon answer-downvote-selected-icon-label"
     }
     if (bookmarked_by.includes(localStorage.user_name)) {
+      var bookmarkText = 'Bookmarked'
       bookmarkClass = "answer-bookmark-selected-icon answer-bookmark-selected-icon-label"
     }
     //     var found = false;
@@ -73,6 +80,8 @@ componentDidMount(){
     this.setState({
       upvoteCount: this.props.answer.upvote_count,
       upvoteText: upvoteText,
+      downvoteText: downvoteText,
+      bookmarkText: bookmarkText,
       upvoteClass: upvoteClass,
       downvoteClass: downvoteClass,
       bookmarkClass: bookmarkClass
@@ -125,13 +134,15 @@ componentDidMount(){
   DownvoteAnswer = (questionId, answerId) => {
     console.log("Debug downvote")
 
-    var downvoteState = (this.state.downvoteClass === 'answer-downvote-unselected-icon') ?
+    var downvoteState = (this.state.downvoteText === 'Downvote') ?
       {
         toggle: "true",
-        downvoteClass: "answer-downvote-selected-icon"
+        downvoteText: 'Downvoted',
+        downvoteClass: "answer-downvote-selected-icon answer-downvote-selected-icon-label"
       } : {
         toggle: "false",
-        downvoteClass: "answer-downvote-unselected-icon"
+        downvoteText: 'Downvote',
+        downvoteClass: "answer-downvote-unselected-icon answer-downvote-unselected-icon-label"
       }
 
     let data = {
@@ -146,7 +157,8 @@ componentDidMount(){
             console.log(response);
             console.log("Debug axios success")
             this.setState({
-              downvoteClass: downvoteState.downvoteClass
+              downvoteClass: downvoteState.downvoteClass,
+              downvoteText: downvoteState.downvoteText
             })
           }
       });
@@ -155,14 +167,14 @@ componentDidMount(){
   BookmarkAnswer = (questionId, answerId) => {
     console.log("bookmarked answer: "+questionId+" : "+answerId);
 
-    var bookmarkState = (this.state.bookmarkClass === 'answer-bookmark-unselected-icon answer-bookmark-unselected-icon-label') ?
+    var bookmarkState = (this.state.bookmarkText === 'Bookmark') ?
       {
         toggle: "true",
-        bookmarkText: 'Bookmark',
+        bookmarkText: 'Bookmarked',
         bookmarkClass: "answer-bookmark-selected-icon answer-bookmark-selected-icon-label"
       } : {
         toggle: "false",
-        bookmarkText: '',
+        bookmarkText: 'Bookmark',
         bookmarkClass: "answer-bookmark-unselected-icon answer-bookmark-unselected-icon-label"
       }
       let data = {
@@ -210,11 +222,11 @@ componentDidMount(){
             <div className="question-footer-elem" style={{ marginLeft: "0.3em" }}>
               <div className={this.state.upvoteClass} onClick={() => { this.UpvoteAnswer(this.props.answer.question_id, this.props.answer._id) }}>{this.state.upvoteText} <span class="bullet"> · </span> {this.state.upvoteCount}</div>
             </div>
-            <div className="question-footer-elem-share-icons answer-icon-hide" style={{ marginLeft: "25.5em" }}>
-              <div className={this.state.downvoteClass} onClick={() => { this.DownvoteAnswer(this.props.answer.question_id, this.props.answer._id) }}>&nbsp;</div>
+            <div className="question-footer-elem">
+              <div className={this.state.downvoteClass} onClick={() => { this.DownvoteAnswer(this.props.answer.question_id, this.props.answer._id) }}>{this.state.downvoteText} </div>
             </div>
-            <div className="question-footer-elem-share-icons answer-icon-hide">
-              <div className={this.state.bookmarkClass} onClick={() => { this.BookmarkAnswer(this.props.answer.question_id,this.props.answer._id) }}>&nbsp;</div>
+            <div className="question-footer-elem">
+              <div className={this.state.bookmarkClass} onClick={() => { this.BookmarkAnswer(this.props.answer.question_id,this.props.answer._id) }}>{this.state.bookmarkText} </div>
             </div>
 
           </div>
@@ -222,17 +234,21 @@ componentDidMount(){
       </div>
     );
 
-    if (!this.props.answer.owner_profile_pic || !this.props.answer.owner_profile_pic.startsWith("http")) {
-      imgdiv = <img src={defaultProfilePic} className="answerer-pro-pic" />
-    } else {
-      imgdiv = <img src={this.props.answer.owner_profile_pic} className="answerer-pro-pic" />
+    var userImg = defaultProfilePic;
+    if(this.props.answer.owner_username === "anonymous@quora.com") {
+      userImg = anonymousProfilePic;
     }
+    else if (!this.props.answer.owner_profile_pic && !this.props.answer.owner_profile_pic === "undefined" && !this.props.answer.owner_profile_pic === "default" && !this.props.answer.owner_profile_pic.includes(".")) {
+      userImg = "data:image/jpg;base64," + this.props.answer.owner_profile_pic
+    } 
+
+    var tagline = (this.props.answer.owner_tagline && this.props.answer.owner_tagline !== 'undefined' && this.props.answer.owner_tagline !== '') ? ', ' + this.props.answer.owner_tagline : ''
     return (
       <li className="answer-item">
         <div className="answer-header">
-          {imgdiv}
+        <img src={userImg} className="answerer-pro-pic" />
           <div className="answer-details">
-            <h1><Link className="question-link" to={"/quora/profile/" + this.props.answer.owner_username}>{this.props.answer.owner_name},</Link> {this.props.answer.owner_tagline}</h1>
+            <h1><Link className="question-link" to={"/quora/profile/" + this.props.answer.owner_username}>{this.props.answer.owner_name}</Link>{tagline}</h1>
             <h2>Answered {timeAgo.format(new Date(this.props.answer.timestamp))}</h2>
           </div>
         </div>
