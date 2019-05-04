@@ -1,4 +1,4 @@
-import { SIGN_IN,SIGN_OUT,SIGN_UP,SELECTED_TOPICS,YOUR_QUESTIONS,YOUR_QUESTIONSFOLLOWED } from "../constants/action-types";
+import { SIGN_IN,SIGN_OUT,SIGN_UP,SELECTED_TOPICS,YOUR_QUESTIONS,YOUR_QUESTIONSFOLLOWED,YOUR_ANSWERS } from "../constants/action-types";
 
 // actions for sign up
 export function signup(formdata) {
@@ -117,4 +117,23 @@ export function yourQuestionsFollowed(data){
 }
 function yourQuestionsFollowedUpdate(returndata) {
   return { type: YOUR_QUESTIONSFOLLOWED, payload:returndata}
+}
+
+// actions for get questions answered (content page)
+export function yourAnswers(data){
+  console.log(data);
+  return (dispatch) => {
+    fetch('/content/questions_answered?userid='+data,{
+      method: 'GET',
+      headers:{
+        'Authorization': "Bearer " + localStorage.getItem("jwtToken"),
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then((response)=>dispatch(yourAnswersUpdate(response)))
+  }
+}
+function yourAnswersUpdate(returndata) {
+  return { type: YOUR_ANSWERS, payload:returndata}
 }
