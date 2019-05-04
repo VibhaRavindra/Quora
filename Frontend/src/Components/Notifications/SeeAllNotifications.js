@@ -7,8 +7,13 @@ import { Link } from "react-router-dom";
 import axios from 'axios';
 import abc from './abc.png';
 import {rooturl} from '../../Config/settings'
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
 
 
+
+TimeAgo.addLocale(en)
+const timeAgo = new TimeAgo('en-US')
 
 class SeeAllNotifications extends Component {
     constructor(props) {
@@ -86,9 +91,9 @@ Others      <br />
                                                         
                                                         
                                         member.answeredby_profile_pic===null || member.answeredby_profile_pic===undefined || member.answeredby_profile_pic===""|| member.answeredby_profile_pic==="default"     ? 
-                                        <li id="notification-single-elem">  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>
+                                        <li id="notification-single-elem">  <img src={abc} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification"> <Link  to={"/quora/question/" + member.qid}>{member.question}</Link></span><span className="timestamp-notification">Answered {timeAgo.format(new Date(member.timestamp_answer))}</span></li>
                                         :
-                                        <li id="notification-single-elem">  <img src={member.answeredby_profile_pic} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>
+                                        <li id="notification-single-elem">  <img src={member.answeredby_profile_pic} width="40" height="40" /><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification"><Link  to={"/quora/question/" + member.qid}>{member.question}</Link></span><span className="timestamp-notification"> Answered {timeAgo.format(new Date(member.timestamp_answer))} </span></li>
                                         )} 
           
         

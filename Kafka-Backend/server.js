@@ -7,7 +7,10 @@ var profile = require('./services/profile.js');
 var questiontopics = require('./services/questiontopics');
 var answer = require('./services/answer.js');
 var search = require('./services/search.js');
+var yourcontent = require('./services/yourcontent.js');
+var messagetopics = require('./services/messagetopics');
 var bookmarks = require('./services/bookmarks.js');
+var graphtopics = require('./services/graphtopics');
 
 // Set up Database connection
 const mongoose = require('mongoose')
@@ -65,18 +68,36 @@ function handleTopicRequest(topic_name, fname) {
                     return;
                 })
                 break;
-            case 'question_topics':
-                questiontopics.questionService(data.data, function (err, res) {
+            case 'question_topics' :
+                questiontopics.questionService(data.data, function(err, res){
+                        response(data, res, producer);
+                        return;
+                    })
+                    break;
+            case 'message_topics':
+                    messagetopics.messageService(data.data, function(err, res){
                     response(data, res, producer);
                     return;
                 })
                 break;
+            case 'yourcontent' :
+                yourcontent.followService(data.data, function(err, res){
+                        response(data, res, producer);
+                        return;
+                })
+            break;
             case 'bookmarks':
                 bookmarks.bookmarksService(data.data, function (err, res) {
                     response(data, res, producer);
                     return;
                 })
                 break;
+            case 'graph_topics':
+                graphtopics.graphService(data.data, function(err, res){
+                response(data, res, producer);
+                return;
+            })
+            break;
         }
     })
 };
@@ -109,3 +130,6 @@ handleTopicRequest("answer", answer);
 handleTopicRequest("search", search);
 handleTopicRequest("bookmarks", bookmarks);
 handleTopicRequest("question_topics", questiontopics);
+handleTopicRequest("yourcontent", yourcontent);
+handleTopicRequest("message_topics", messagetopics);
+handleTopicRequest("graph_topics", graphtopics);

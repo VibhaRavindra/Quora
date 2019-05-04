@@ -232,7 +232,7 @@ componentDidMount(){
         <div className="answer-header">
           {imgdiv}
           <div className="answer-details">
-            <h1><Link className="question-link" to={"/quora/profile/" + this.props.answer.owner_userid}>{this.props.answer.owner_name},</Link> {this.props.answer.owner_tagline}</h1>
+            <h1><Link className="question-link" to={"/quora/profile/" + this.props.answer.owner_username}>{this.props.answer.owner_name},</Link> {this.props.answer.owner_tagline}</h1>
             <h2>Answered {timeAgo.format(new Date(this.props.answer.timestamp))}</h2>
           </div>
         </div>

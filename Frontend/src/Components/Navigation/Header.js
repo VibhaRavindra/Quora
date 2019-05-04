@@ -4,8 +4,11 @@ import Logo from '../../Images/quora.svg';
 import {Link} from 'react-router-dom'
 import abc from './abc.png'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from 'axios'
-import {rooturl} from '../../Config/settings'
+import axios from 'axios';
+import {rooturl} from '../../Config/settings';
+import MessageList from '../Messages/MessageList';
+import AskQuestion from '../Question/AskQuestion';
+
 class Header extends Component {
   constructor(props){
     super(props);
@@ -20,26 +23,26 @@ class Header extends Component {
 
     }
     componentDidMount(){
-    //   var data={
-    //     "user_name":localStorage.getItem("user_name")
-    //   }
-    //   axios.defaults.withCredentials = true;
-    //   //make a post request with the user data
-    //   axios.post("http://"+rooturl+":3001/quora/notifications",data, localStorage.getItem('jwtToken'))
-    //           .then(response => {
+      var data={
+        "user_name":localStorage.getItem("user_name")
+      }
+      axios.defaults.withCredentials = true;
+      //make a post request with the user data
+      axios.post("http://"+rooturl+":3001/quora/notifications",data, localStorage.getItem('jwtToken'))
+              .then(response => {
               
-    //     console.log("Status Code : ",response.status);
-    //     if(response.status === 200){
-    //         console.log(response.data);
-    //         this.setState({
-    //             rows : response.data,
-    //         })
+        console.log("Status Code : ",response.status);
+        if(response.status === 200){
+            console.log(response.data);
+            this.setState({
+                rows : response.data,
+            })
           
         
-    //     }
+        }
       
-    // })
-    //   .catch()
+    })
+      .catch()
   }
 
   render() {
@@ -56,7 +59,9 @@ class Header extends Component {
                 <img className="quora-logo" src={Logo} alt="Quora"/>
               </div>
               <div className="header-elem home">
+              <Link to="/quora/home" >
                 <div className="header-logo-text home-elem">Home</div>
+                </Link>
               </div>
               <div className="header-elem answer">
                 <div className="header-logo-text answer-elem">Answer</div>
@@ -93,15 +98,17 @@ class Header extends Component {
                 </div>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="/quora/myprofile">Profile</a>
-                    <a class="dropdown-item" href="/messages">Messages</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#messageList">Messages</a>
                     <a class="dropdown-item" href="/yourcontent">Your Content</a>
                     <a class="dropdown-item" href="settings">Settings</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="#">Logout</a>
                 </div>
+                <MessageList />
               </div>
               <div>
-                <div className="add-question">Add Question or Link</div>
+                <div className="add-question" data-toggle="modal" data-target="#askQuestion">Add Question or Link</div>
+                <AskQuestion/>
               </div>
               
           </div>

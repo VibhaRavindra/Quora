@@ -8,7 +8,7 @@ const FormData = multer();
 var passport = require('passport');
 var requireAuth = passport.authenticate('jwt', { session: false });
 
-router.post('/:question_id', requireAuth, (req, res) => {
+router.post('/:question_id', (req, res) => {
     kafka.make_request('answer', {
         "path": "submit", "req": {
             "body": req.body,

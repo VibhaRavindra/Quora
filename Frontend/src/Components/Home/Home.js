@@ -112,7 +112,7 @@ class Home extends Component {
                                                                 {this.state.defaultImg &&
                                                                     <div className="row">
                                                                         <div className="profile-logo-home"></div>
-                                                                        <div className="home-profie-name">{localStorage.getItem("name")}</div>
+                                                                        <div className="home-profie-name">{localStorage.getItem("fullname")}</div>
                                                                     </div>
                                                                 }
                                                                 <button className="btn" data-toggle="modal" data-target="#askQuestion">

@@ -67,4 +67,45 @@ router.route('/updateanswerview').post( function (req, res) {
 })
 
 });
+
+
+router.post('/graphprofileview', function (req, res) {
+  console.log("Inside graphprofileview post request");
+  console.log("Request Body:");
+  console.log(req.body);
+
+  kafka.make_request('graph_topics',{"path":"increase_profile_view","body":req.body}, function(err,result){
+    if (err) {
+      console.log(err);
+      res.status(500).json({ responseMessage: 'Database not responding' });
+    }
+    else if (result.status === 200)
+    {
+      console.log("Count increased Added");
+      res.status(200).json({ responseMessage: 'Successfully Increased profile view count!' });
+    }
+  });
+
+});
+
+
+router.get('/graphprofileview', function (req, res) {
+  console.log("Inside graphprofileview post request");
+  console.log("Request Body:");
+  console.log(req.query);
+
+  kafka.make_request('graph_topics',{"path":"get_profile_views","body":req.query}, function(err,result){
+    if (err) {
+      console.log(err);
+      res.status(500).json({ responseMessage: 'Database not responding' });
+    }
+    else if (result.status === 200)
+    {
+      console.log("Count increased Added");
+      res.status(200).json({ results: result.profileviews });
+    }
+  });
+
+});
+
 module.exports = router;

@@ -14,6 +14,7 @@ import musicImage from '../../Images/topic_music.png';
 import scienceImage from '../../Images/topic_science.png';
 import axios from 'axios'
 import {rooturl} from '../../Config/settings'
+import swal from 'sweetalert';
 
 class Topic extends Component {
     constructor(props) {
@@ -74,7 +75,7 @@ class Topic extends Component {
 
 
     unfollowtopic=(e,x)=>{
-       
+       swal(x,"topic unfollowed")
 
        let topicsArr=localStorage.getItem("topics")
        
@@ -95,14 +96,14 @@ if (index > -1) {
        axios.post("http://"+rooturl+":3001/quora/unfollowtopic",data, localStorage.getItem('jwtToken'))
     }
     followtopic=(e,x)=>{
-     
+        swal(x,"topic followed")
 
        let topicsArr=localStorage.getItem("topics")
        let newtopicsArr=[];
       newtopicsArr=topicsArr.split(","); 
-      
+      newtopicsArr.push(x);
       localStorage.setItem("topics", newtopicsArr);
-       console.log(localStorage.getItem("topics"))
+       console.log(localStorage.getItem("topics"),"hello")
       this.setState({topics:newtopicsArr})
        var data={
            user_name:localStorage.getItem("user_name"),
@@ -226,7 +227,7 @@ if (index > -1) {
                                                             <div className="col-9">
                                                                 <h1 className="topic-heading">{this.state.topic}</h1>
                                                               
-                                                                { this.state.topics.includes(this.state.topic) && this.state.selectedTopic!==null ?
+                                                                { localStorage.getItem("topics").split(",").includes(this.state.topic) && this.state.selectedTopic!==null ?
                                                                     
                                                 
                                                                     <span class="following-topic-icon follow-topic" onClick={e=>this.unfollowtopic(e,this.state.topic)}>Following</span>

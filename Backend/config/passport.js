@@ -29,6 +29,7 @@ passport.use(new JwtStrategy(opts, function(jwt_payload, callback) {
     // Else, 1. go to MYSQL 2. insert into redis, 3. return
     mysqlconnection.query("SELECT user_name from Users WHERE user_name=? AND active=1", [jwt_payload.user_name], function(err, rowsOfTable){
         if(err || rowsOfTable.length != 1) {
+            console.log(err);
             console.log("UnAuthorized User")
             callback("Not valid token", false)
         } else {

@@ -14,7 +14,8 @@ class DisplayQuestion extends Component {
         this.state = {
             followedquestions:[],
             openAnswer: '',
-            follow:false
+            follow:false,
+      
         }
     }
 
@@ -39,10 +40,11 @@ class DisplayQuestion extends Component {
             qid:x
         }
         axios.post("http://"+rooturl+":3001/quora/question/followquestion",data, localStorage.getItem('jwtToken'))
- 
+        window.location.reload(true);
     }
     unfollowquestion=(e,x)=>{
      console.log(localStorage.getItem("user_name"));
+     this.setState({follow:false})
      console.log("hophop",x);
      swal("unfollowed question");
      this.setState({follow:false})
@@ -51,7 +53,7 @@ class DisplayQuestion extends Component {
          qid:x
      }
      axios.post("http://"+rooturl+":3001/quora/question/unfollowquestion",data, localStorage.getItem('jwtToken'))
- 
+     window.location.reload(true);
  }
         
 
@@ -68,16 +70,19 @@ class DisplayQuestion extends Component {
             console.log(answer);
             answerDiv = <AnswerDetails answer={answer}/>;
         }
+        console.log(this.state.follow)
         if(!record.followers.includes(localStorage.getItem("user_name")))
         {
             followDiv=<div className="follow-icon answer-icon-label" onClick={e=>this.followquestion(e,record._id)}>
             Follow {(record.followers.length == 0)? "": record.followers.length}</div>
+  
         }
         else 
         {
             followDiv= <div id="unfollow-ques answer-icon-label" onClick={e=>this.unfollowquestion(e,record._id)}>
             <img src={unfollow} width="60" height="40" />{"  "}{(record.followers.length == 0)? ""
             :record.followers.length}</div>
+              
         }
 
     

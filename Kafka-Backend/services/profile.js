@@ -143,7 +143,7 @@ function getfollowersinfo(msg, callback){
             if(result[0]!=undefined){
                       console.log(result[0])
                       usersfollowed=result[0].users_followers
-                      Users.users.find( {user_name:{$in:usersfollowed}} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1}, function(err,result){
+                      Users.users.find( {user_name:{$in:usersfollowed}} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1,"user_name":1}, function(err,result){
                         if (err) {
                             console.log(err);
                             console.log("unable to read the database");
@@ -170,7 +170,7 @@ function getfollowinginfo(msg, callback){
                       console.log(result[0])
                       usersfollowing=result[0].users_following
                     console.log(usersfollowing)
-                    Users.users.find( {user_name:{$in:usersfollowing}} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1}, function(err,result){
+                    Users.users.find( {user_name:{$in:usersfollowing}} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1,"user_name":1}, function(err,result){
                         if (err) {
                             console.log(err);
                             console.log("unable to read the database");
