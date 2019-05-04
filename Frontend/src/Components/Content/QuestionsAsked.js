@@ -43,8 +43,6 @@ class SearchQuestions extends Component {
         let questions_asked = this.props.questions_asked_array.map(question_asked => {   
             return(
                 <div className="question-container">
-                    {/* <Link to={} ></Link> */}
-
                     <div className="profile-header">
                         <Link to={"/quora/question/"+question_asked.questionid}>
                             <span className="question-text">{question_asked.question}</span>
@@ -75,12 +73,16 @@ class SearchQuestions extends Component {
                             <div className="search-questions search-div search-div-bg">
                                 <li className="search-item letter-space">Questions Asked</li>
                             </div>
-                            <div className="search-profiles search-div">
-                                <li className="search-item letter-space">Questions Followed</li>
-                            </div>
-                            <div className="search-topics search-div">
-                                <li className="search-item letter-space">Answers</li>
-                            </div>
+                            <Link to={"/quora/content/questions_followed"}>
+                                <div className="search-profiles search-div">
+                                    <li className="search-item letter-space">Questions Followed</li>
+                                </div>
+                            </Link>
+                            <Link to={"/quora/content/questions_answered"}>
+                                <div className="search-topics search-div">
+                                    <li className="search-item letter-space">Answers</li>
+                                </div>
+                            </Link>
                         </ul>
                     </div>
                     <div className="content-wrapper">

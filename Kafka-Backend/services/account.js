@@ -119,7 +119,6 @@ function signin(msg, callback){
                 signinSuccess:false,
                 signinMessage:"Sign In Failed"
             })
-            // throw err; 
         }
         mysqlconnection.query('SELECT * FROM Users WHERE user_name=?',[msg.body.user_name], 
         function(err, rowsOfTable){ 
