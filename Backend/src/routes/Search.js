@@ -12,7 +12,6 @@ router.get('/topics/:searchText',requireAuth, (req,res,next) => {
     let body = {
         searchText: req.params.searchText
     }
-    console.log("Inside Backend Search.js", req.params.searchText)
     kafka.make_request('search', {"path":"topics", body}, function(err,result){
         if (err){
             res.send({
@@ -30,7 +29,6 @@ router.get('/profiles/:searchText',requireAuth, FormData.none(), (req,res,next) 
         searchText: req.params.searchText
     }
     kafka.make_request('search', {"path":"profiles", body}, function(err,result){
-        console.log('in result');
         console.log(result);
         if (err){
             res.send({
@@ -46,7 +44,6 @@ router.get('/questions/:searchText',requireAuth, (req,res,next) => {
     let body = {
         searchText: req.params.searchText
     }
-    console.log("Inside Backend Account.js", body)
     kafka.make_request('search', {"path":"questions", body}, function(err,result){
         if (err){
             res.send({
