@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../../Styles/Search.css';
 import Header from '../Navigation/Header';
-import { yourQuestions } from "../../js/actions/action";
+import { yourQuestionsFollowed } from "../../js/actions/action";
 import { connect } from "react-redux";
 import { Redirect, Link } from "react-router-dom";
 import notify from '../../Images/profile-notify.svg';
@@ -9,18 +9,16 @@ import followPerson from '../../Images/follow-person.svg';
 
 function mapStateToProps(store) {
     return {
-        questionsAskedSuccess:store.account.questionsAskedSuccess,
-        questions_asked_array:store.account.questions_asked_array
-        // yourAnswers:store.account.yourAnswers,
-        // yourQuestionsFollowed:store.account.yourQuestionsFollowed
+        questionsFollowedSuccess:store.account.questionsAskedSuccess,
+        questions_followed_array:store.account.questions_asked_array
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        yourQuestions: (data) => dispatch(yourQuestions(data)),
+        // yourQuestions: (data) => dispatch(yourQuestions(data)),
         // yourAnswers: (data) => dispatch(yourAnswers(data)),
-        // yourQuestionsFollowed: (data) => dispatch(yourQuestionsFollowed(data))
+        yourQuestionsFollowed: (data) => dispatch(yourQuestionsFollowed(data))
     };
 }
 
@@ -28,23 +26,16 @@ function mapDispatchToProps(dispatch) {
 
 
 class SearchQuestions extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            profiles: []
-        }
-    }
+
     async componentDidMount(){
-        this.props.yourQuestions(localStorage.getItem('userid'));
+        // this.props.yourQuestions(localStorage.getItem('userid'));
         // this.props.yourAnswers(localStorage.getItem('userid'));
-        // this.props.yourQuestionsFollowed(localStorage.getItem('userid'));
+        this.props.yourQuestionsFollowed(localStorage.getItem('userid'));
     }
     render() {
         let questions_asked = this.props.questions_asked_array.map(question_asked => {   
             return(
                 <div className="question-container">
-                    {/* <Link to={} ></Link> */}
-
                     <div className="profile-header">
                         <Link to={"/quora/question/"+question_asked.questionid}>
                             <span className="question-text">{question_asked.question}</span>

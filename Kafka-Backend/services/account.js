@@ -47,17 +47,6 @@ exports.followService = function followService(msg, callback){
 };
 
 function signup(msg, callback){
-     console.log("Inside Kafka Backend signup and msg = ",msg);
-     console.log("Inside signin");
-     questions.delete( { "owner_name" : "Test 1" }, function(err, result){
-         console.log("Inside deletemany");
-         if (err){
-             console.log(err);
-         }
-     } )
- 
-
-
     let hashpw;
     bcrypt.hash(msg.body.password, saltRounds, function(err, hash) {
         if(err){

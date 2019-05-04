@@ -28,4 +28,21 @@ router.get('/questions_asked', (req,res,next) => {
     });
 });
 
+router.get('/questions_followed', (req,res,next) => {
+    console.log("Inside Backend YourContent.js")
+    let body = {
+        userid: req.query.userid
+    }
+    kafka.make_request('yourcontent', {"path":"questions_followed", body}, function(err,result){
+        if (err){
+            res.send({
+                questionsFollowedSuccess: false,
+                questions_followed_array: []
+            })
+        }else{
+            res.send(result);
+        }
+    });
+});
+
 module.exports = router;
