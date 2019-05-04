@@ -10,8 +10,8 @@ class profilegraph extends Component {
         super(props);
         this.state = {
             defaultImg: false,
-            days:[1,2,3,4,5,6,7,8,9,10],
-            profileViews: [5,6,0,2,0,0,0,0,0,0]
+            days:[],
+            profileViews: []
         }
     }
     componentDidMount = async () => {
