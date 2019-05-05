@@ -10,6 +10,7 @@ import AddTagline from './AddTagline'
 import AddEmployment from './AddEmployment';
 import AddLocation from './AddLocation';
 import AddEducation from './AddEducation';
+import AddDescription from './AddDescription';
 import {rooturl} from '../../Config/settings'
 var hex64 = require('hex64');
 class Profile extends Component {
@@ -36,7 +37,8 @@ class Profile extends Component {
              profiletab:true,
              followingrows:"",
              followerscount:"",
-             followingcount:""
+             followingcount:"",
+             aboutme:""
         }
         this.showfollowers=this.showfollowers.bind(this);
         this.updatetaglinevalue=this.updatetaglinevalue.bind(this);
@@ -44,6 +46,7 @@ class Profile extends Component {
         this.updateeducationvalue=this.updateeducationvalue.bind(this);
         this.showfollowing=this.showfollowing.bind(this);
         this.updatelocationvalue=this.updatelocationvalue.bind(this);
+        this.updatedescriptionvalue=this.updatedescriptionvalue.bind(this);
         this.showprofile=this.showprofile.bind(this);
       
     }
@@ -59,13 +62,14 @@ class Profile extends Component {
   
 
 componentWillMount=()=>{
+   
 console.log("username from localstorage is",localStorage.getItem("user_name"))
     var data={
         "user_name":localStorage.getItem("user_name")
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://"+rooturl+":3001/quora/getprofileinfo",data, localStorage.getItem('jwtToken'))
+      axios.get("http://"+rooturl+":3001/quora/getprofileinfo",{params:data}, localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);
@@ -75,7 +79,7 @@ console.log("username from localstorage is",localStorage.getItem("user_name"))
                 rows : response.data,
             })
         }
-        this.setState({tagline:this.state.rows.user_tagline,employment:this.state.rows.career,education:this.state.rows.education,followers:this.state.rows.users_followers,following:this.state.rows.users_following,profilepic:this.state.rows.b64,location:this.state.rows.state})
+        this.setState({tagline:this.state.rows.user_tagline,employment:this.state.rows.career,education:this.state.rows.education,followers:this.state.rows.users_followers,following:this.state.rows.users_following,profilepic:this.state.rows.b64,location:this.state.rows.state,aboutme:this.state.rows.aboutme})
     if(this.state.profilepic==="" || this.state.profilepic===null || this.state.profilepic==="undefined")
     {
         this.setState({profilepic:abc})
@@ -135,6 +139,12 @@ updatelocationvalue(x){
     this.setState({location:x})
 
 }
+updatedescriptionvalue(x){
+    console.log("updating")
+    console.log(x)
+    this.setState({aboutme:x})
+
+}
 showfollowers(){
     this.setState({followerstab:true,followingtab:false,profiletab:false})
     var data={
@@ -183,6 +193,7 @@ showprofile(){
     this.setState({followingtab:false,followerstab:false,profiletab:true})
 }
     render() {
+     
     let defaultprofilepic=[],actualprofilepic=[];
     defaultprofilepic.push(<div>
          <img src={abc} width="120" height="120" /><br />
@@ -192,6 +203,7 @@ showprofile(){
     );
     actualprofilepic.push(
         <div>
+        {localStorage.setItem("b64",this.state.profilepic)}
          <img src={this.state.profilepic} width="120" height="120" /><br />
            <input type="file" name="" id="p" onChange={this.handleselectedFile} />
                <button onClick={this.handleUpload}>Upload</button>
@@ -202,13 +214,57 @@ showprofile(){
         let followersdisplay=[],x="",followingdisplay=[],y="";
         if(this.state.followerstab===true && this.state.followingtab===false)
         for(x in this.state.followersrows)
-        followersdisplay.push(<div id="followers-elem"><img src={this.state.followersrows[x].b64} width="40" height="40"/><b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b><br />{this.state.followersrows[x].user_tagline}</div>)
+        followersdisplay.push(<div id="followers-elem">
+        {this.state.followersrows[x].b64==null ||this.state.followersrows[x].b64==undefined || this.state.followersrows[x].b64=="" || this.state.followersrows[x].b64=="default" ?
+        <img src={abc} width="40" height="40"/>
+        :
+        <img src={this.state.followersrows[x].b64} width="40" height="40"/>}
+
+      {this.state.followersrows[x].user_name!=localStorage.getItem("user_name") ?
+        <Link className="question-link" to={"/quora/profile/" + this.state.followersrows[x].user_name}>
+        <b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b>
+        </Link>
+        :
+        <Link className="question-link" to={"/quora/myprofile"}>
+        <b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b>
+        </Link>
+        
+      }
+        
+        
+        <br />
+        {this.state.followersrows[x].user_tagline}</div>)
         if(this.state.followerstab===false && this.state.followingtab===true){
       
          for(y in this.state.followingrows){
          console.log("hello",this.state.followingrows[y].firstname)
-         followingdisplay.push(<div id="followers-elem"><img src={this.state.followingrows[y].b64} width="40" height="40"/><b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b><br />{this.state.followingrows[y].user_tagline}</div>)
-     }
+         followingdisplay.push(
+         <div id="followers-elem">
+         {this.state.followingrows[y].b64==null ||this.state.followingrows[y].b64==undefined || this.state.followingrows[y].b64=="" || this.state.followingrows[y].b64=="default" ?
+         <img src={abc} width="40" height="40"/>
+         :
+         <img src={this.state.followingrows[y].b64} width="40" height="40"/>
+         }
+
+
+
+
+     {this.state.followingrows[y].user_name!=localStorage.getItem("user_name") ?
+         <Link className="question-link" to={"/quora/profile/" + this.state.followingrows[y].user_name}>
+         <b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b>
+         </Link>
+         :
+         <Link className="question-link" to={"/quora/myprofile"}>
+         <b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b>
+         </Link>
+         
+     }     
+         
+         
+         
+         <br />{this.state.followingrows[y].user_tagline}</div>
+         )
+         }
         }
       
         let profiledisplay=[];
@@ -226,7 +282,7 @@ showprofile(){
           
 <div className="upload-propic">
                 
-   {this.state.profilepic===null || this.state.profilepic ===undefined || this.state.profilepic === "" ?
+   {this.state.profilepic===null || this.state.profilepic ===undefined || this.state.profilepic === "" ||  this.state.profilepic === "default" ?
    defaultprofilepic:actualprofilepic}
 
         
@@ -237,16 +293,46 @@ showprofile(){
         <b>{localStorage.getItem("fullname")}</b>
         </span><br />
         {this.state.tagline==="" || this.state.tagline===null || this.state.tagline===undefined ? 
-        <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
+        <span className="tagline-profile" data-toggle="modal" data-target="#tagline">
         Add Profile Credential
         </span>
         :
-        <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
+        <span className="tagline-profile" data-toggle="modal" data-target="#tagline">
         {localStorage.setItem("tagline",this.state.tagline)}
         {
             console.log(this.state.tagline)}{this.state.tagline}
+            <br />
         </span>
         }<AddTagline triggertagline={this.updatetaglinevalue}/> <br />
+
+
+      
+       
+
+        {this.state.aboutme==="" || this.state.aboutme===null || this.state.aboutme===undefined  ? 
+                <span className="description-profile" data-toggle="modal" data-target="#description">
+                
+                Add Description
+                </span> :  <span  className="description-profile" data-toggle="modal" data-target="#description">
+                
+                {this.state.aboutme}
+                </span>}
+                
+                <AddDescription triggerdescription={this.updatedescriptionvalue}/><br />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             
         </div>
     <span className="credentials-profile">Credentials & Highlights</span>
@@ -299,8 +385,10 @@ Shares<br />
 Spaces<br />
 Posts<br />
 Blogs<br />
-<div onClick={this.showfollowers}>Followers {this.state.followerscount}</div>
-<div onClick={this.showfollowing}>Following {this.state.followingcount}</div>
+
+<div onClick={this.showfollowers}>Followers{this.state.followers != null || this.state.followers != undefined || this.state.followers !=null ? <span>{this.state.followers.length}</span> : <span>0</span>}</div>
+
+<div onClick={this.showfollowing}>Following {this.state.following != null || this.state.following != undefined || this.state.following !=null ? <span>{this.state.following.length}</span> : <span>0</span>}</div>
 Edits<br />
 Activity<br />
                                             </Nav>

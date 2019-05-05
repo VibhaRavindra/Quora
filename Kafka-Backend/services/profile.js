@@ -1,6 +1,6 @@
 var async = require('async');
 var Users = require('../models/UserSchema');
-var Connection=require('../DatabaseConnection')
+
 const {redisClient} = require('../redisClient')
 
 exports.profileService = function profileService(msg, callback){
@@ -18,6 +18,9 @@ exports.profileService = function profileService(msg, callback){
             break;
             case "addprofilepic":
             addprofilepic(msg,callback);
+            break;
+            case "adddescription":
+            adddescription(msg,callback);
             break;
             case "getprofileinfo":
             getprofileinfo(msg,callback);
@@ -96,6 +99,21 @@ console.log(msg.body)
     })
    
 }
+function adddescription(msg, callback){
+
+    console.log("In listing property topic service. Msg: ", msg)
+console.log(msg.body)
+  Users.users.update( {"user_name":msg.body.user_name},{$set: { "aboutme" : msg.body.aboutme}}, function (error,result) {
+        if (error) {
+            console.log(error.message)
+            callback(null, {status:400,error});
+        } else {
+            redisClient.del("applicantProfile_" + msg.body.user_name);
+            callback(null, {status: 200, result});
+        }
+    })
+   
+}
 
 
 function addprofilepic(msg, callback){
@@ -125,7 +143,7 @@ function getfollowersinfo(msg, callback){
             if(result[0]!=undefined){
                       console.log(result[0])
                       usersfollowed=result[0].users_followers
-                      Users.users.find( {user_name:{$in:usersfollowed}} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1}, function(err,result){
+                      Users.users.find( {user_name:{$in:usersfollowed},status:"Activated"} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1,"user_name":1}, function(err,result){
                         if (err) {
                             console.log(err);
                             console.log("unable to read the database");
@@ -152,7 +170,7 @@ function getfollowinginfo(msg, callback){
                       console.log(result[0])
                       usersfollowing=result[0].users_following
                     console.log(usersfollowing)
-                    Users.users.find( {user_name:{$in:usersfollowing}} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1}, function(err,result){
+                    Users.users.find( {user_name:{$in:usersfollowing},status:"Activated"} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1,"user_name":1}, function(err,result){
                         if (err) {
                             console.log(err);
                             console.log("unable to read the database");
@@ -171,6 +189,7 @@ function getfollowinginfo(msg, callback){
 }
 
 function getprofileinfo(msg, callback){
+    console.log(msg.body)
     let result = {};
     try {
         let redisKey = "applicantProfile_" + msg.body.user_name;
@@ -181,7 +200,7 @@ function getprofileinfo(msg, callback){
                 result=profile;
             } else {
                 console.log("Get applicant profile : inserting profile into cache");
-                profile = await Users.users.findOne( { user_name: msg.body.user_name },{"_id":0,"firstname":1,"lastname":"1","user_tagline":1,"user_profile_pic":1,"career":1,"education":1,"users_followers":1,"users_following":1,"zipcode":1,"state":1,"user_profile_pic":1,"b64":1});
+                profile = await Users.users.findOne( { user_name: msg.body.user_name },{"_id":0,"firstname":1,"lastname":"1","user_tagline":1,"user_profile_pic":1,"career":1,"education":1,"users_followers":1,"users_following":1,"zipcode":1,"state":1,"user_profile_pic":1,"b64":1,"aboutme":1});
                 if (profile) {
                     redisClient.set(redisKey, JSON.stringify(profile), function (error, reply) {
                         if (error) {

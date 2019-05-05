@@ -14,6 +14,9 @@ import musicImage from '../../Images/topic_music.png';
 import scienceImage from '../../Images/topic_science.png';
 import axios from 'axios'
 import {rooturl} from '../../Config/settings'
+import swal from 'sweetalert';
+//for pagination
+import ReactPaginate from 'react-paginate';
 
 class Topic extends Component {
     constructor(props) {
@@ -24,8 +27,24 @@ class Topic extends Component {
             isTabSelected: false,
             selectedTopic: null,
             topic: null,
-            topics:[]
+            topics:[],
+            //for pagination
+            paginated_questions:[],
+            results_per_page: 3,
+            num_pages:0
         }
+        //for pagination
+        this.handlePageClick = this.handlePageClick.bind(this);
+    }
+
+     //for pagination
+     handlePageClick(data){
+        console.log(data.selected)
+        let page_number = data.selected;
+        let offset = Math.ceil(page_number * this.state.results_per_page)
+        this.setState({
+            paginated_questions : this.state.questions.slice(offset, offset +this.state.results_per_page)
+        });
     }
 
     async componentDidMount() {
@@ -41,6 +60,14 @@ class Topic extends Component {
         questions = this.props.questions.questions;
         console.log(this.props.questions.questions);
         this.setState({ questions: questions });
+         // for pagination
+         const all_questions = questions;
+         const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+         this.setState({
+             num_pages:pages,
+             paginated_questions: all_questions.slice(0,this.state.results_per_page),
+         });
+         //
         let topicsArr=localStorage.getItem("topics");
         topicsArr=topicsArr.split(",");
      
@@ -58,6 +85,13 @@ class Topic extends Component {
         console.log(questionsArr[index].question);
         questionsArr.splice(index, 1);
         this.setState({ questions: questionsArr });
+        // for pagination
+        const all_questions = this.state.questions;
+        const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+        this.setState({
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
+        });
     }
 
     updateTopicQuestions = async (event, topic) => {
@@ -74,7 +108,7 @@ class Topic extends Component {
 
 
     unfollowtopic=(e,x)=>{
-       
+       swal(x,"topic unfollowed")
 
        let topicsArr=localStorage.getItem("topics")
        
@@ -95,14 +129,14 @@ if (index > -1) {
        axios.post("http://"+rooturl+":3001/quora/unfollowtopic",data, localStorage.getItem('jwtToken'))
     }
     followtopic=(e,x)=>{
-     
+        swal(x,"topic followed")
 
        let topicsArr=localStorage.getItem("topics")
        let newtopicsArr=[];
       newtopicsArr=topicsArr.split(","); 
-      
+      newtopicsArr.push(x);
       localStorage.setItem("topics", newtopicsArr);
-       console.log(localStorage.getItem("topics"))
+       console.log(localStorage.getItem("topics"),"hello")
       this.setState({topics:newtopicsArr})
        var data={
            user_name:localStorage.getItem("user_name"),
@@ -132,7 +166,7 @@ if (index > -1) {
         });
 
 
-        questionsDiv = this.state.questions.map((record, index) => {
+        questionsDiv = this.state.paginated_questions.map((record, index) => {
             return (
                 <DisplayQuestion question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} />
             )
@@ -200,6 +234,17 @@ if (index > -1) {
                                                     </Nav.Item>
                                                 </Link>
                                                 {topicsNavDiv}
+                                                <Link className="bookmark-home-nav" to="/quora/bookmarks">
+                                                    <Nav.Item>
+                                                        <div className="row">
+                                                            <img className="left-nav-feed-img" src={feedImg} alt="Feed" />
+                                                            <div className="label feed-label">  Bookmark
+                                                              </div>
+                                                        </div>
+
+                                                    </Nav.Item>
+                                                </Link>
+
                                             </Nav>
                                         </Col>
                                         <Col sm={9}>
@@ -215,7 +260,7 @@ if (index > -1) {
                                                             <div className="col-9">
                                                                 <h1 className="topic-heading">{this.state.topic}</h1>
                                                               
-                                                                { this.state.topics.includes(this.state.topic) && this.state.selectedTopic!==null ?
+                                                                { localStorage.getItem("topics").split(",").includes(this.state.topic) && this.state.selectedTopic!==null ?
                                                                     
                                                 
                                                                     <span class="following-topic-icon follow-topic" onClick={e=>this.unfollowtopic(e,this.state.topic)}>Following</span>
@@ -232,6 +277,21 @@ if (index > -1) {
                                                 </div>
                                                 {questionsDiv}
                                             </div>
+                                            <div className="row">
+                            <ReactPaginate
+                            previousLabel={'Previous'}
+                            nextLabel={'Next'}
+                            breakLabel={'...'}
+                            breakClassName={'break-me'}
+                            pageCount={this.state.num_pages}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={this.handlePageClick}
+                            containerClassName={'pagination'}
+                            subContainerClassName={'pages pagination'}
+                            activeClassName={'active'}
+                            />
+                        </div>
                                         </Col>
                                     </Row>
                                 </Tab.Container>

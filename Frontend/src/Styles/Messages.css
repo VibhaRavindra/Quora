@@ -1,0 +1,131 @@
+.message-title{
+    font-size: 19px;
+    font-weight: bold;
+    color: #333;
+    border-radius: 4px 4px 0 0;
+    padding: 0.6em;
+}
+
+.react-autosuggest__container {
+    position: relative;
+  }
+  
+  .react-autosuggest__input {
+    width: 240px;
+    height: 30px;
+    padding: 10px 20px;
+    font-family: Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+  }
+  
+  .react-autosuggest__input--focused {
+    outline: none;
+  }
+  
+  .react-autosuggest__input--open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  .react-autosuggest__suggestions-container {
+    display: none;
+  }
+  
+  .react-autosuggest__suggestions-container--open {
+    display: block;
+    position: absolute;
+    width: 260px;
+    border: 1px solid #aaa;
+    background-color: #fff;
+    font-family: Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    z-index: 2;
+  }
+  
+  .react-autosuggest__suggestions-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+  
+  .react-autosuggest__suggestion {
+    cursor: pointer;
+    padding: 10px 20px;
+  }
+  
+  .react-autosuggest__suggestion--highlighted {
+    background-color: #ddd;
+  }
+  
+
+  .message-person-name{
+    padding-left: 0.5em;
+    font-weight: bold;
+    font-size: 13px;
+    color: #333;
+    text-decoration: none;
+    text-align: left;
+    direction: ltr;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+
+  }
+
+  .message-latest-text{
+    font-size: 13px;
+    color: #949494;
+    font-weight: normal;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    margin-left: -0.6em;
+  }
+
+  .message-record-list {
+    cursor: pointer;
+  }
+
+  .message-record-list:hover {
+    background-color:#e1e1e1;
+  }
+
+  .message-css{
+    border-radius: 30px;
+    background: #e1e1e1;
+    padding:0.3em;
+  }
+
+  .message-css-blue{
+    border-radius: 30px;
+    background: #359dff;
+    color:white;
+    padding:0.3em;
+  }
+
+  .timestamp{
+    font-size: 12px;
+    margin-top: 3em;
+    color: #949494;
+    font-weight: normal;
+  }
+
+  .timestamp-blue{
+    font-size: 12px;
+    color: #949494;
+    font-weight: normal;
+  }
+
+  .modal-dialog{
+    overflow-y: initial !important
+}
+.modal-body{
+    height: 350px;
+    overflow-y: auto;
+}
+
+.modal-backdrop {
+  z-index: 0;
+}

@@ -14,6 +14,10 @@ const AnswerSchema = new Schema({
         type: String,
         required: true
     },
+    owner_userid: {
+      type: String,
+      required: true
+  },
     owner_name: {
         type: String,
         required: true
@@ -24,6 +28,10 @@ const AnswerSchema = new Schema({
     owner_profile_pic: {
         type: String,
     },
+     is_editied: {
+       type: Boolean,
+       default:false
+     },
      is_anonymous: {
        type: Boolean,
        default:false
@@ -36,7 +44,8 @@ const AnswerSchema = new Schema({
      downvote_count: {
         type: Number
       },
-     timestamp: {
+      bookmarked_by: [ String ],
+      timestamp: {
        type: Date, 
          default: Date.now,
          required: true
@@ -44,6 +53,10 @@ const AnswerSchema = new Schema({
      comments: {
       type: [Comment.CommentSchema],
       default: []
+     },
+     owner_status:{
+       type:String,
+       default:"Activated"
      }
   })
   const answers=mongoose.model('Answers', AnswerSchema)

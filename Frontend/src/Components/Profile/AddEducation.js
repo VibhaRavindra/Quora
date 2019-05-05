@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../../Styles/AskQuestion.css';
 import axios from 'axios'
 import {rooturl} from '../../Config/settings'
+import swal from 'sweetalert';
 class AddEducation extends Component {
     constructor(props) {
         super(props);

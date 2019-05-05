@@ -3,8 +3,11 @@ import { withRouter } from "react-router-dom";
 import ReactQuill from 'react-quill';
 import '../../Styles/Answer.css'
 import '../../Styles/AnswerButtons.css'
+import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html';
 import '../../../node_modules/quill/dist/quill.snow.css'
 import axios from 'axios'
+import defaultProfilePic from '../../Images/profile_logo.png'
+import anonymousProfilePic from '../../Images/anonymous_logo.png'
 import {Redirect} from 'react-router-dom';
 
 class AnswerForm extends React.Component {
@@ -13,10 +16,13 @@ class AnswerForm extends React.Component {
     this.state = { 
       text: '', 
       open: false,
-      redirectVar:''
+      redirectVar:'',
+      isAnonymous: false
    };
     this.handleChange = this.handleChange.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.submitAnswer = this.submitAnswer.bind(this);
+    this.editAnswer = this.editAnswer.bind(this);
     this.successfulSubmit = this.successfulSubmit.bind(this);
   }
 
@@ -31,24 +37,67 @@ class AnswerForm extends React.Component {
 
  componentWillMount() {
    console.log("Debug from mount")
+   var htmlText = ''
+   var delta = {}
+   if(this.props.isEditing) {
+     delta = this.props.answer.answer
+    let deltaOps = JSON.parse(delta).ops
+    htmlText = new QuillDeltaToHtmlConverter(deltaOps, {}).convert();
+   }
    this.setState ({
-     redirectVar: ''
+     redirectVar: '',
+     text:htmlText,
+     delta:delta
    })
  }
+
+ handleSelect(e) {
+   this.setState({isAnonymous: !this.state.isAnonymous})
+ }
+
+ editAnswer(e) {
+   console.log(this.state.text)
+   console.log(this.state.delta)
+   console.log("Debug edit answers")
+   let data = {
+    answer: JSON.stringify(this.state.delta),
+    answer_id: this.props.answer._id
+   }
+  axios.defaults.withCredentials = true;
+  axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+  axios.post('/answer/'+this.props.question_id + "?isEditing=true", data)
+    .then((response) => {
+        if (response !== undefined)
+            if (response.status === 200) {
+                console.log(response);
+                console.log("Debug axios success")
+                this.props.closeAnswerFormAndReload(data.answer)
+            }
+    });
+  }
 
  submitAnswer(e) {
    console.log(this.state.text)
    console.log(this.state.delta)
    console.log("Debug submit answers")
-
-
    let data = {
     answer: JSON.stringify(this.state.delta),
+    user_username: "anonymous@quora.com",
+    user_id: "anonymous",
+    user_name: "Anonymous",
+    user_profile_pic: "",
+    user_tagline: "",
+   }
+   if(!this.state.isAnonymous){
+  data = {
+    answer: JSON.stringify(this.state.delta),
     user_username: localStorage.user_name,
+    user_id: localStorage.userid,
     user_name: localStorage.fullname,
-    user_profile_pic: "swe.jpg",
-    user_tagline: "Software Engineer",
+    user_profile_pic: localStorage.b64,
+    user_tagline: localStorage.tagline,
   }
+}
   axios.defaults.withCredentials = true;
   axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
   axios.post('/answer/'+this.props.question_id, data)
@@ -56,9 +105,8 @@ class AnswerForm extends React.Component {
         if (response !== undefined)
             if (response.status === 200) {
                 console.log(response);
-                var path = '/answer/question/'+ this.props.question_id;
                 console.log("Debug axios success")
-                this.props.closeAnswerFormAndReload()
+                this.props.closeAnswerFormAndReload(data.answer)
             }
     });
   }
@@ -68,25 +116,51 @@ class AnswerForm extends React.Component {
   //     const author = this.props.current_user;
       console.log(this.props.question_id);
       console.log("Debug answer form render")
+      console.log(localStorage.b64)
 
+      var userImg = (localStorage.b64 && localStorage.b64 !== "default" && localStorage.b64 !== "undefined") ? "data:image/jpg;base64," + localStorage.b64 : defaultProfilePic
+      var userName = localStorage.fullname
+
+      if(this.state.isAnonymous) {
+        userImg = anonymousProfilePic
+        userName = "Anonymous"
+      }
+
+      var submitDiv = (
+        <div className="answer-form-footer">
+        <button className="submit-button" onClick={this.submitAnswer}>Submit</button>
+        <input className="ml-2" type="checkbox" id="defaultCheck1" value="option1" onChange={this.handleSelect}/>
+        <label className="small ml-1" for="defaultCheck1">
+        Answer Anonymously?
+        </label>
+        </div>
+      );
+
+      if(this.props.isEditing) {
+        submitDiv = (
+          <div className="answer-form-footer">
+          <button className="submit-button" onClick={this.editAnswer}>Submit</button>
+          </div>
+          )
+      }
+      
       return (
 
         <div className="answer-form-container">
          {this.state.redirectVar}
           <div className="answer-form">
             <div className="answer-header">
-              <img src="https://centrik.in/wp-content/uploads/2017/02/user-image-.png" alt="User 1's Picture"  className="answerer-pro-pic" />
+              <img src={userImg} alt="" className="answerer-pro-pic" />
               <div className="answer-details">
-                <h1>Anonymous</h1>
+                <h1>{userName}</h1>
               </div>
             </div>
             <ReactQuill value={this.state.text}
                         onChange={this.handleChange}
                         modules={modules}
                         placeholder={"Write your answer"}/>
-
-            <div className="answer-form-footer">
-            <button className="submit-button" onClick={this.submitAnswer}>Submit</button>
+            <div>
+            {submitDiv}
             </div>
           </div>
         </div>

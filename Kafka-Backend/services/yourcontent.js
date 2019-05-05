@@ -1,83 +1,113 @@
-var async = require('async');
-var Users = require('../models/UserSchema');
-var Answers = require('../models/AnswerSchema');
-var Notifications = require('../models/NotificationSchema');
-var Connection=require('../DatabaseConnection')
-const {redisClient} = require('../redisClient')
+var {users} = require('../models/UserSchema');
+var {questions} = require('../models/QuestionSchema');
+var {answers} = require('../models/AnswerSchema');
 
-exports.yourcontentService = function yourcontentService(msg, callback){
-    console.log("In follow Service path:", msg.path);
+exports.followService = function followService(msg, callback){
+    console.log("Inside kafka backend yourcontent.js");
+    console.log("msg", msg);
+    console.log("In Property Service path:", msg.path);
     switch(msg.path){
-            case "getquestionsasked":
-            getquestionsasked(msg,callback);
+        case "questions_asked":
+            questions_asked(msg,callback);
             break;
-            case "getquestionsfollowed" :
-            getquestionsfollowed(msg,callback);
+        case "questions_followed":
+            questions_followed(msg,callback);
             break;
-            case "getuseranswers":
-            getuseranswers(msg,callback);
+        case "questions_answered":
+            questions_answered(msg,callback);
             break;
     }
 };
 
-
-function getquestionsasked(msg, callback){
-    console.log("test1");
-    
-    Users.users.findOne({_id:msg.body.userid},{questions_asked:1,_id:0}, function(err,results){
-        if (err) {
-            console.log("unable to read the database questions");
-        } else  
-            if (results) {
-                console.log(results);
-                callback(null, { status: 200, questions: results.questions_asked });
-            }
-            else {
-                callback(null, { status: 204, questions: "no data found" });
-            }               
-                  
-    })   
-}
-
-function getquestionsfollowed(msg, callback) {
-
-    
-    console.log("test2");
-    Users.users.findOne({ _id:msg.body.user_id},{questions_followed:1,_id:0}, function (err, results) {
-        if (err) {
-            console.log(err);
-            callback(err, "Database Error");
+function questions_asked(msg, callback){
+    questions.find({ owner_id : msg.body.userid }, { question: 1, timestamp: 1 },function(err, results) {
+        let questions_asked_array = []
+        if(err) {
+            console.log(err)
+            callback(null, {
+                questionsAskedSuccess: false,
+                questions_asked_array: questions_asked_array
+            })
         } else {
-            if (results) {
-                callback(null, { status: 200, questions: results.questions_followed });
-            }
-            else {
-                callback(null, { status: 204, questions: "no data found" });
-            }
+            results.forEach((result)=>{
+                questions_asked_array.push({
+                    questionid: result._id,
+                    question: result.question,
+                    timestamp: result.timestamp
+                })
+            })
+            callback(null, {
+                questionsAskedSuccess: true,
+                questions_asked_array: questions_asked_array
+            });
         }
-    })
+    });
 }
-function getuseranswers(msg, callback) {
 
-    
-    console.log("test3");
-    Users.answers_answered.findOne({ _id:msg.body.owner_name},{useranswers:1,_id:0}, function (err, results) {
-        if (err) {
-            console.log(err);
-            callback(err, "Database Error");
+function questions_followed(msg, callback){
+    users.find({ _id : msg.body.userid }, { questions_followed: 1},function(err, results) {
+        let questions_followed_array = []
+        if(err) {
+            console.log(err)
+            callback(null, {
+                questionsFollowedSuccess: false,
+                questions_followed_array: questions_followed_array
+            })
         } else {
-            if (results) {
-                callback(null, { status: 200, questions: results.answers });
-            }
-            else {
-                callback(null, { status: 204, questions: "no data found" });
-            }
+            results[0].questions_followed.forEach((result)=>{
+                console.log(result);
+                questions_followed_array.push({
+                    questionid: result.qid,
+                    question: result.question,
+                    timestamp: result.timestamp
+                })
+            })
+            callback(null, {
+                questionsFollowedSuccess: true,
+                questions_followed_array: questions_followed_array
+            });
         }
-    })
+    });
 }
-  
 
-
-
-
+function questions_answered(msg, callback){
+    answers.find({ owner_userid : msg.body.userid }, { question_id: 1, timestamp: 1},function(err, results) {
+        let questions_answered_array = []
+        if(err) {
+            console.log(err)
+            callback(null, {
+                questionsAnsweredSuccess: false,
+                questions_answered_array: questions_answered_array
+            })
+        } else {
+            let questionid_array = []
+            for(let i=0; i<results.length; i++){
+                questionid_array.push(results[i].question_id);
+            }
+            questions.find({_id:questionid_array}, function(err, result){
+                if(err){
+                    console.log(err)
+                    callback(null, {
+                        questionsAnsweredSuccess: false,
+                        questions_answered_array: questions_answered_array
+                    })
+                } else {
+                    console.log("result.length : : : : : ",result.length);
+                    for (let i=0; i<result.length; i++){
+                        console.log("result.question : : : : : ",result[i].question);
+                        questions_answered_array.push({
+                            question: result[i].question,
+                            questionid: result[i]._id,
+                            timestamp: results[i].timestamp
+                        })
+                    }
+                    callback(null, {
+                        questionsAnsweredSuccess: true,
+                        questions_answered_array: questions_answered_array
+                    });
+                }
+            })
+        }
+    });
+}
 

@@ -29,7 +29,7 @@ class AddTagline extends Component {
 
     render() {
         return (
-            <div className="modal fade" id="askQuestion" tabIndex="-1" role="dialog" aria-labelledby="askQuestionLabel" aria-hidden="true">
+            <div className="modal fade" id="tagline" tabIndex="-1" role="dialog" aria-labelledby="tagline" aria-hidden="true">
                 <div className="modal-dialog modal-question" role="document" >
                     <div className="modal-content">
                         <div className="modal-header ask-question-header">

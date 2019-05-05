@@ -3,11 +3,14 @@ import Header from '../Navigation/Header';
 import { Nav, Tab, Col, Row } from 'react-bootstrap';
 import '../../Styles/Home.css';
 import feedImg from '../../Images/feed.png';
+import bookmarkImg from '../../Images/bookmark.png';
 import AskQuestion from "../Question/AskQuestion";
 import { connect } from 'react-redux';
 import { getAllQuestions } from '../../js/actions/question_actions';
 import DisplayQuestion from '../Question/DisplayQuestion';
 import { Link } from "react-router-dom";
+//for pagination
+import ReactPaginate from 'react-paginate';
 
 class Home extends Component {
     constructor(props) {
@@ -16,8 +19,24 @@ class Home extends Component {
             defaultImg: false,
             questions: [],
             isDefaultTopic : true,
-            followedquestions:[]
+            followedquestions:[],
+             //for pagination
+            paginated_questions:[],
+            results_per_page: 3,
+            num_pages:0
         }
+        //for pagination
+        this.handlePageClick = this.handlePageClick.bind(this);
+    }
+
+    //for pagination
+    handlePageClick(data){
+    console.log(data.selected)
+    let page_number = data.selected;
+    let offset = Math.ceil(page_number * this.state.results_per_page)
+    this.setState({
+        paginated_questions : this.state.questions.slice(offset, offset +this.state.results_per_page)
+    })
     }
 
     async componentDidMount() {
@@ -30,8 +49,13 @@ class Home extends Component {
         questions = this.props.questions.questions;
         console.log(this.props.questions.questions);
         this.setState({ questions: questions});
-        
-
+        // for pagination
+        const all_questions = questions;
+        const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+        this.setState({
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
+        });
     }
 
     closeDiv = (event, index) => {
@@ -40,6 +64,13 @@ class Home extends Component {
         console.log(questionsArr[index].question);
         questionsArr.splice(index, 1);
         this.setState({ questions: questionsArr });
+        // for pagination
+        const all_questions = this.state.questions;
+        const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+        this.setState({
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
+        });
     }
 
     render() {
@@ -63,7 +94,7 @@ class Home extends Component {
         });
 
        
-        questionsDiv = this.state.questions.map((record, index) => {
+        questionsDiv = this.state.paginated_questions.map((record, index) => {
             return (
             <DisplayQuestion question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} closeCardMethod={this.closeDiv}/>
             )
@@ -91,6 +122,15 @@ class Home extends Component {
                                                     </Nav.Link>
                                                 </Nav.Item>
                                                 {topicsNavDiv}
+                                                <Nav.Item style={{ marginBottom: "-0.4em" }}>
+                                                    <Nav.Link href="/quora/bookmarks" eventKey="second">
+                                                        <div className="row">
+                                                            <img className="left-nav-feed-img" src={bookmarkImg} alt="Feed" />
+                                                            <div className="label bookmark-label">  Bookmarks
+                                                              </div>
+                                                        </div>
+                                                    </Nav.Link>
+                                                </Nav.Item>
                                             </Nav>
                                         </Col>
                                         <Col sm={9}>
@@ -102,7 +142,7 @@ class Home extends Component {
                                                                 {this.state.defaultImg &&
                                                                     <div className="row">
                                                                         <div className="profile-logo-home"></div>
-                                                                        <div className="home-profie-name">{localStorage.getItem("name")}</div>
+                                                                        <div className="home-profie-name">{localStorage.getItem("fullname")}</div>
                                                                     </div>
                                                                 }
                                                                 <button className="btn" data-toggle="modal" data-target="#askQuestion">
@@ -116,6 +156,21 @@ class Home extends Component {
                                                     </div>
                                                 </Tab.Pane>
                                             </Tab.Content>
+                                            <div className="row">
+                            <ReactPaginate
+                            previousLabel={'Previous'}
+                            nextLabel={'Next'}
+                            breakLabel={'...'}
+                            breakClassName={'break-me'}
+                            pageCount={this.state.num_pages}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={this.handlePageClick}
+                            containerClassName={'pagination'}
+                            subContainerClassName={'pages pagination'}
+                            activeClassName={'active'}
+                            />
+                        </div>
                                         </Col>
                                     </Row>
                                 </Tab.Container>
@@ -123,6 +178,7 @@ class Home extends Component {
                         </div>
 
                     </div>
+                    
                 </div>
             </div>
         )

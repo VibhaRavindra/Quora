@@ -22,18 +22,16 @@ class CommentList extends React.Component {
       if(Object.keys(comment).length === 0) {
         return(<img src="https://image.ibb.co/iYo1yw/Screen_Shot_2017_09_28_at_6_43_28_PM.png" alt={`loading-image`}  className="loading-image" />);
       } else {
-          var imgdiv = ''
-        if (!comment.owner_profile_pic || !comment.owner_profile_pic.startsWith("http")) {
-            imgdiv = <img src={defaultProfilePic} className="answerer-pro-pic" />
-          } else {
-            imgdiv = <img src={comment.owner_profile_pic} className="answerer-pro-pic" />
-          }
+        var userImg = defaultProfilePic;
+        if (!comment.owner_profile_pic && !comment.owner_profile_pic === "undefined" && !comment.owner_profile_pic === "default" && !comment.owner_profile_pic.includes(".")) {
+          userImg = "data:image/jpg;base64," + comment.owner_profile_pic
+        } 
   
         return (
           <li className="comment-list-item">
             <div className="comment-header">
-              {imgdiv}
-              <div className="comment-details">
+            <img src={userImg} alt="" className="answerer-pro-pic" />
+            <div className="comment-details">
                 <h1>{comment.owner_name}</h1>
                 <h2> {timeAgo.format(new Date(comment.timestamp))}</h2>
               </div>

@@ -2,9 +2,8 @@ var async = require('async');
 var Users = require('../models/UserSchema');
 var Questions = require('../models/QuestionSchema');
 var Notifications = require('../models/NotificationSchema');
-var Connection=require('../DatabaseConnection')
 const {redisClient} = require('../redisClient')
-
+var {topics} = require('../models/TopicSchema');
 exports.followService = function followService(msg, callback){
     console.log("In follow Service path:", msg.path);
     switch(msg.path){
@@ -47,7 +46,8 @@ function getnotifications(msg, callback){
                            questionsfollowed.push(result[i]._id)
                       }
                      console.log("hello",questionsfollowed)
-                      Notifications.notifications.find( {qid:{$in:questionsfollowed}} , function(err,result){
+                      Notifications.notifications.find( {qid:{$in:questionsfollowed}}).sort({timestamp_answer:-1}).exec(
+                          function(err,result){
                         if (err) {
                             console.log(err);
                             console.log("unable to read the database");
@@ -56,7 +56,7 @@ function getnotifications(msg, callback){
                                        callback(null, {status: 200, result});}
                                 
                     })
-                 
+                
            }
                 
     })
@@ -66,11 +66,23 @@ function getnotifications(msg, callback){
 }
 
 function followquestion(msg, callback){
-
+   
     console.log("In listing property topic service. Msg: ", msg)
 console.log("hooray",msg.body.qid)
-Users.users.update( {"user_name":msg.body.follower_username},{$push:{questions_followed:msg.body.qid}}, function (error,result) {
-    redisClient.del("applicantProfile_" + msg.body.follower_username); 
+Users.users.update( {"user_name":msg.body.follower_username},{$push:{questions_followed:{
+    qid:msg.body.qid,
+    question:msg.body.question,
+    timestamp:new Date()
+}}}, function (error,result) {
+    if(error)
+    {
+        console.log(error)
+    }
+    else{
+        redisClient.del("applicantProfile_" + msg.body.follower_username); 
+        console.log(result)
+    }
+ 
 })
   Questions.questions.update( {"_id":msg.body.qid},{$push:{followers:msg.body.follower_username}},function (error,result) {
         if (error) {
@@ -84,7 +96,9 @@ Users.users.update( {"user_name":msg.body.follower_username},{$push:{questions_f
 
 }
 function followtopic(msg, callback){
-
+    topics.update({"name":msg.body.topicname}, { $inc: {
+        "num_of_followers": 1
+    }})
     console.log("In listing property topic service. Msg: ", msg)
 
   Users.users.update( {"user_name":msg.body.user_name},{$push:{topics_followed:msg.body.topicname}}, function (error,result) {
@@ -181,8 +195,13 @@ function unfollowuser(msg, callback){
   function unfollowquestion(msg, callback){
 
     console.log("In listing property topic service. Msg: ", msg)
-    Users.users.update( {"user_name":msg.body.follower_username},{$pull:{questions_followed:msg.body.qid}}, function (error,result) {
+    Users.users.update( {"user_name":msg.body.follower_username},{$pull:{questions_followed:{
+        qid:msg.body.qid,
+        question:msg.body.question,
+        timestamp:new Date()
+    }}}, function (error,result) {
         redisClient.del("applicantProfile_" + msg.body.follower_username); 
+        console.log("yippppe",result)
     })
   Questions.questions.update( {"_id":msg.body.qid},{$pull:{followers:msg.body.follower_username}},function (error,result) {
         if (error) {
@@ -199,7 +218,9 @@ function unfollowuser(msg, callback){
 function unfollowtopic(msg, callback){
 
     console.log("In listing property topic service. Msg: ", msg)
-
+topics.update({"name":msg.body.topicname}, { $inc: {
+    "num_of_followers": -1
+}})
   Users.users.update( {"user_name":msg.body.user_name},{$pull:{topics_followed:msg.body.topicname}}, function (error,result) {
         if (error) {
             console.log(error.message)

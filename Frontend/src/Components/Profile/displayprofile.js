@@ -13,6 +13,9 @@ import AddEducation from './AddEducation';
 import a from './a.png'
 import b from './b.png'
 import {rooturl} from '../../Config/settings'
+//redux imports
+import { connect } from 'react-redux';
+import { increaseProfileView } from '../../js/actions/graph_actions';
 class displayprofile extends Component {
     constructor(props) {
         super(props);
@@ -41,13 +44,14 @@ class displayprofile extends Component {
         this.showprofile=this.showprofile.bind(this);
     }
 
-componentWillMount=()=>{
+componentWillMount=async ()=>{
     var data={
         "user_name":this.props.match.params.user_id
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://"+rooturl+":3001/quora/getprofileinfo",data, localStorage.getItem('jwtToken'))
+      axios.get("http://"+rooturl+":3001/quora/getprofileinfo",   {params:data}
+      , localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);
@@ -74,6 +78,17 @@ componentWillMount=()=>{
     }
     })
       .catch()
+
+ //code added by AS to add profile view count
+ let profileData = null;
+ var today = new Date();
+ var day = today.getDate();
+ var month = today.getMonth() + 1; //January is 0!
+ var year = today.getFullYear();
+ profileData = {"user_id":this.props.match.params.user_id,"day":day,"month":month,"year":year};
+ console.log("***",profileData);
+ await this.props.increaseProfileView(profileData);
+
   }
 followuser=()=>{
    
@@ -94,6 +109,7 @@ followuser=()=>{
       }
   })
     .catch()
+
 }
 
 unfollowuser=()=>{
@@ -166,15 +182,63 @@ showfollowing(){
     render() {
     
      console.log("tagline now is"+this.state.tagline)
+
+     let defaultprofilepic=[],actualprofilepic=[];
+     defaultprofilepic.push(<div>
+          <img src={abc} width="120" height="120" /><br />
+           </div>
+     );
+     actualprofilepic.push(
+         <div>
+          <img src={this.state.profilepic} width="120" height="120" /><br />
+            </div>        
+     )
+   
    let followersdisplay=[],x="",followingdisplay=[],y="";
    if(this.state.followerstab===true && this.state.followingtab===false)
    for(x in this.state.followersrows)
-   followersdisplay.push(<div id="followers-elem"><img src={this.state.followersrows[x].b64} width="40" height="40"/><b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b><br />{this.state.followersrows[x].user_tagline}</div>)
+   followersdisplay.push(<div id="followers-elem">
+  {this.state.followersrows[x].b64===null || this.state.followersrows[x].b64 ===undefined || this.state.followersrows[x].b64 === "" ||this.state.followersrows[x].b64 === "default"? 
+  <img src={abc} width="40" height="40"/>
+  :
+   <img src={this.state.followersrows[x].b64} width="40" height="40"/>}
+   {this.state.followersrows[x].user_name!=localStorage.getItem("user_name") ?
+   <a className="question-link" href={"/quora/profile/" + this.state.followersrows[x].user_name}>
+   <b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b>
+   </a>
+   :
+   <a className="question-link" href={"/quora/myprofile"}>
+   <b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b>
+   </a>
+   }
+   
+   
+   
+   
+   
+   <br />{this.state.followersrows[x].user_tagline}
+   </div>
+   )
    if(this.state.followerstab===false && this.state.followingtab===true){
  
     for(y in this.state.followingrows){
     console.log("hello",this.state.followingrows[y].firstname)
-    followingdisplay.push(<div id="followers-elem"><img src={this.state.followingrows[y].b64} width="40" height="40"/><b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b><br />{this.state.followingrows[y].user_tagline}</div>)
+    followingdisplay.push(
+    <div id="followers-elem">
+     {this.state.followingrows[y].b64===null || this.state.followingrows[y].b64 ===undefined || this.state.followingrows[y].b64 === "" ||this.state.followingrows[y].b64 === "default"? 
+     <img src={abc} width="40" height="40"/>
+    :
+    <img src={this.state.followingrows[y].b64} width="40" height="40"/>}{this.state.followingrows[y].user_name!=localStorage.getItem("user_name")?
+    <a className="question-link" href={"/quora/profile/" + this.state.followingrows[y].user_name}>
+    <b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b>
+    </a>
+    :
+    <a className="question-link" href={"/quora/myprofile"}>
+    <b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b>
+    </a>
+    
+    }
+    <br />{this.state.followingrows[y].user_tagline}</div>)
 }
    }
  
@@ -189,14 +253,14 @@ showfollowing(){
          
                 <Header />
 <div className="profile-pic" >
-           <img src={this.state.profilepic} width="120" height="120" /> <div className="upload-propic">
-          </div>
+{this.state.profilepic===null || this.state.profilepic ===undefined || this.state.profilepic === "" ||this.state.profilepic === "default"?
+   defaultprofilepic:actualprofilepic}
         <br />
         <span className="info">
         <b>{this.state.name}</b>
         </span><br />
        
-        <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
+        <span className="tagline-profile" data-toggle="modal" data-target="#tagline">
      {this.state.tagline}<br />
      {this.state.isfollowing===false?
      <div onClick={this.followuser}><img src={a} width="90" height="40" />{this.state.followerscount} </div>:<div onClick={this.unfollowuser}><img src={b} width="90" height="40" />{this.state.followerscount}</div>}
@@ -275,4 +339,8 @@ Activity<br />
     }
 }
 
-export default displayprofile;
+const mapStateToProps = state => ({
+    response : state.graph.payload
+});
+
+export default connect(mapStateToProps, { increaseProfileView })(displayprofile);

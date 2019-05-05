@@ -68,14 +68,14 @@ router.route('/followuser').post( function (req, res) {
     }
   })
 });
-router.route('/notifications').post( function (req, res) {
+router.route('/notifications').get( function (req, res) {
 
   console.log("In Follow Question Route");
-  console.log(req.body);
+  console.log(req.query);
   //follower_username
   //qid
 
-  kafka.make_request('follow_topics',{"path":"getnotifications", "body": req.body}, function(error,result){
+  kafka.make_request('follow_topics',{"path":"getnotifications", "body": req.query}, function(error,result){
     if (error) {
       console.log(error);
       console.log("Question not found");
