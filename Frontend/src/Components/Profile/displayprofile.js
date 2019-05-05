@@ -50,7 +50,8 @@ componentWillMount=async ()=>{
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://"+rooturl+":3001/quora/getprofileinfo",data, localStorage.getItem('jwtToken'))
+      axios.get("http://"+rooturl+":3001/quora/getprofileinfo",   {params:data}
+      , localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);

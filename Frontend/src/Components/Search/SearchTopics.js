@@ -18,7 +18,8 @@ class SearchQuestions extends Component {
             //for pagination
             paginated_topics:[],
             results_per_page: 2,
-            num_pages:0
+            num_pages:0,
+            inc:[]
         }
    //for pagination
    this.handlePageClick = this.handlePageClick.bind(this);
@@ -48,9 +49,20 @@ handlePageClick(data){
             num_pages:pages,
             paginated_topics: all_topics.slice(0,this.state.results_per_page),
         });
+        var inc={}
+        this.state.topics.map(member=>
+          
+            inc[member.name]=member.num_of_followers             
+         
+            )
+
+   this.setState({inc:inc}) 
     }
     unfollowtopic=(e,x)=>{
         this.setState({follow:false})
+        var newinc=this.state.inc
+        newinc[x]=newinc[x]-1;
+        this.setState({inc:newinc})
      e.preventDefault();
  
         let topicsArr=localStorage.getItem("topics")
@@ -75,6 +87,9 @@ handlePageClick(data){
      
      followtopic=(e,x)=>{
         this.setState({follow:true})
+        var newinc=this.state.inc
+        newinc[x]=newinc[x]+1;
+        this.setState({inc:newinc})
         e.preventDefault();
         let topicsArr=localStorage.getItem("topics")
         let newtopicsArr=[];
@@ -118,13 +133,13 @@ handlePageClick(data){
                            <div className="follow-question" onClick={(e)=>this.followtopic(e,topic.name)}>
                                     <img className="follow-logo" src={followTopic} alt="follow"/>
                                 <span className="follow-text">Follow</span>
-                                <span className="numFollowers">{topic.num_of_followers}</span>
+                                <span className="numFollowers">{this.state.inc[topic.name]}</span>
                             </div>
                             :
                             <div className="follow-question" onClick={(e)=>this.unfollowtopic(e,topic.name)}>
                                 <img className="follow-logo" src={following} alt="follow"/>
                                 <span className="follow-text">Follow</span>
-                                <span className="numFollowers">{topic.num_of_followers}</span>
+                                <span className="numFollowers">{this.state.inc[topic.name]}</span>
                             </div>
                             }
                         </div>

@@ -189,6 +189,7 @@ function getfollowinginfo(msg, callback){
 }
 
 function getprofileinfo(msg, callback){
+    console.log(msg.body)
     let result = {};
     try {
         let redisKey = "applicantProfile_" + msg.body.user_name;
