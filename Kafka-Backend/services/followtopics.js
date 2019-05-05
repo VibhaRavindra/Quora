@@ -2,7 +2,6 @@ var async = require('async');
 var Users = require('../models/UserSchema');
 var Questions = require('../models/QuestionSchema');
 var Notifications = require('../models/NotificationSchema');
-var Connection=require('../DatabaseConnection')
 const {redisClient} = require('../redisClient')
 var {topics} = require('../models/TopicSchema');
 exports.followService = function followService(msg, callback){
