@@ -79,7 +79,7 @@ class answerviewsgraph extends Component {
           }
 console.log(this.state.answerviews)
         return (
-            <div style={{ background: "#fafafa", height: "100vh" }}>
+            <div style={{ background: "#fafafa" }}>
                    <Line ref="chart" data={data} />
             </div>
         )

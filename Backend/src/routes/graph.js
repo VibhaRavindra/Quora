@@ -90,7 +90,7 @@ router.post('/graphprofileview', function (req, res) {
 
 
 router.get('/graphprofileview', function (req, res) {
-  console.log("Inside graphprofileview post request");
+  console.log("Inside graphprofileview get request");
   console.log("Request Body:");
   console.log(req.query);
 
@@ -103,6 +103,45 @@ router.get('/graphprofileview', function (req, res) {
     {
       console.log("Count increased Added");
       res.status(200).json({ results: result.profileviews });
+    }
+  });
+
+});
+
+router.post('/graphbookmarkcount', function (req, res) {
+  console.log("Inside graphbookmarkcount post request");
+  console.log("Request Body:");
+  console.log(req.body);
+
+  kafka.make_request('graph_topics',{"path":"increase_bookmark_count","body":req.body}, function(err,result){
+    if (err) {
+      console.log(err);
+      res.status(500).json({ responseMessage: 'Database not responding' });
+    }
+    else if (result.status === 200)
+    {
+      console.log("Count increased Added");
+      res.status(200).json({ responseMessage: 'Successfully Increased profile view count!' });
+    }
+  });
+
+});
+
+
+router.get('/graphbookmarkcount', function (req, res) {
+  console.log("Inside graphbookmarkcount get request");
+  console.log("Request Body:");
+  console.log(req.query);
+
+  kafka.make_request('graph_topics',{"path":"get_bookmark_count","body":req.query}, function(err,result){
+    if (err) {
+      console.log(err);
+      res.status(500).json({ responseMessage: 'Database not responding' });
+    }
+    else if (result.status === 200)
+    {
+      console.log("Count increased Added");
+      res.status(200).json({ results: result.bookmarksCount });
     }
   });
 
