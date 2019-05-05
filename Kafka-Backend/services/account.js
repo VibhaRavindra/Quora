@@ -119,7 +119,6 @@ function signin(msg, callback){
                 signinSuccess:false,
                 signinMessage:"Sign In Failed"
             })
-            // throw err; 
         }
         mysqlconnection.query('SELECT * FROM Users WHERE user_name=?',[msg.body.user_name], 
         function(err, rowsOfTable){ 
@@ -132,7 +131,7 @@ function signin(msg, callback){
                     signinSuccess:false,
                     signinMessage:"Sign In Failed"
                 })
-            }
+            } 
             if(rowsOfTable.length == 1){
                 var result = bcrypt.compareSync(msg.body.password, rowsOfTable[0].password);
                 if(result){

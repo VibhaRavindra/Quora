@@ -10,9 +10,7 @@ var passport = require('passport');
 // Set up middleware
 var requireAuth = passport.authenticate('jwt', {session: false});
 
-
 router.get('/questions_asked', (req,res,next) => {
-    console.log("Inside Backend YourContent.js")
     let body = {
         userid: req.query.userid
     }
@@ -38,6 +36,23 @@ router.get('/questions_followed', (req,res,next) => {
             res.send({
                 questionsFollowedSuccess: false,
                 questions_followed_array: []
+            })
+        }else{
+            res.send(result);
+        }
+    });
+});
+
+router.get('/questions_answered', (req,res,next) => {
+    console.log("Inside Backend YourContent.js questions_answered")
+    let body = {
+        userid: req.query.userid
+    }
+    kafka.make_request('yourcontent', {"path":"questions_answered", body}, function(err,result){
+        if (err){
+            res.send({
+                questionsAnsweredSuccess: false,
+                questions_answered_array: []
             })
         }else{
             res.send(result);

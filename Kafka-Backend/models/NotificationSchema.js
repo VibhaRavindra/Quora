@@ -9,7 +9,7 @@ const NotificationSchema = new Schema({
     question: {
         type: String,
         default: '',
-        required: true
+
     },
     answeredby: {
         type: String,
@@ -19,7 +19,12 @@ const NotificationSchema = new Schema({
     answeredby_tagline: {
         type: String,
         default: '',
-        required: true
+    
+    },
+    answeredby_username: {
+        type: String,
+        default: '',
+  
     },
     answeredby_profile_pic: {
         type: String,

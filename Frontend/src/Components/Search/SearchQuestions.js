@@ -11,6 +11,9 @@ import share from '../../Images/feed-share.svg';
 import dots from '../../Images/feed-dots.svg';
 import downvote_unselected from '../../Images/downvote-unselected.svg';
 import { timingSafeEqual } from 'crypto';
+import unfollow from './unfollow.png'
+import axios from 'axios'
+import {rooturl} from '../../Config/settings'
 
 function mapStateToProps(store) {
     return {
@@ -32,7 +35,10 @@ class SearchQuestions extends Component {
     constructor(props){
         super(props);
         this.state = {
-            questions: []
+            questions: [],
+            status:[],
+            inc:[]
+        
         }
         this.populateSearchResults = this.populateSearchResults.bind(this)
     }
@@ -41,6 +47,39 @@ class SearchQuestions extends Component {
             this.populateSearchResults(newprops.match.params.searchValue)
         } 
     }
+    followquestion=(e,x,y)=>{
+     e.preventDefault();
+     var newstatus=this.state.status;
+     newstatus[x]=true;
+     console.log(newstatus,"eve new un")
+     var newinc=this.state.inc
+     newinc[x]=newinc[x]+1;
+     this.setState({status:newstatus,inc:newinc})
+        var data={
+            follower_username:localStorage.getItem("user_name"),
+            qid:x,
+            question:y
+        }
+        axios.post("http://"+rooturl+":3001/quora/question/followquestion",data, localStorage.getItem('jwtToken'))
+    
+    }
+    unfollowquestion=(e,x,y)=>{
+        e.preventDefault();
+        var newstatus=this.state.status;
+        newstatus[x]=false;
+        console.log(newstatus,"eve new un")
+        var newinc=this.state.inc
+        newinc[x]=newinc[x]-1;
+        this.setState({status:newstatus,inc:newinc})
+     var data={
+         follower_username:localStorage.getItem("user_name"),
+         qid:x,
+         question:y
+     }
+     axios.post("http://"+rooturl+":3001/quora/question/unfollowquestion",data, localStorage.getItem('jwtToken'))
+     
+ }
+      
     async populateSearchResults(searchString){
         const getQuestionsDetails = await fetch('/search/questions/'+searchString, {
             method:"GET",
@@ -50,6 +89,22 @@ class SearchQuestions extends Component {
         this.setState({
             questions : getQuestions.questions_array
         });
+        var status={},inc={};
+        this.state.questions.map(member=>
+          
+            
+            member.followers.includes(localStorage.getItem("user_name")) ? status[member.questionid]=true
+            :
+            status[member.questionid]=false
+         
+            )
+            this.state.questions.map(member=>
+          
+                inc[member.questionid]=member.num_of_followers             
+             
+                )
+
+       this.setState({status:status,inc:inc})  
     }
     componentDidMount(){
         this.populateSearchResults(this.props.match.params.searchValue)
@@ -65,11 +120,26 @@ class SearchQuestions extends Component {
                             <div className="question-text">{question.question}</div>
                         </Link>
                         <div className="row question-row">
-                            <div className="follow-question">
+                        { this.state.status[question.questionid]== false ?
+                            <div className="follow-question"  onClick={(e)=>this.followquestion(e,question.questionid,question.question)}>
                                 <img className="follow-logo" src={followImg} alt="follow"/>
                                 <span className="follow-text">Follow</span>
-                                <span className="numFollowers">{question.num_of_followers}</span>
+                                {console.log(this.state.inc[question.questionid],"ufff")}
+                                <span className="numFollowers">{this.state.inc[question.questionid]}</span>
                             </div>
+                             :
+                             <div className="follow-question" onClick={(e)=>this.unfollowquestion(e,question.questionid,question.question)}>
+                                <img className="follow-logo" src={unfollow} alt="follow"/>
+                                {console.log(this.state.inc[question.questionid],"ufff")}
+                                <span className="numFollowers">{this.state.inc[question.questionid]}</span>
+                            </div>
+
+                        
+                        }
+
+
+
+
                             <div className="right-icons">
                                 <div>
                                     <img className="downvote" src={downvote_unselected} alt="downvote"/>
