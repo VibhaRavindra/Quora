@@ -8,7 +8,7 @@ import AnswerForm from "../Answers/AnswerForm";
 import swal from 'sweetalert';
 import {rooturl} from '../../Config/settings'
 
-class DisplayQuestion extends Component {
+class DisplayBookmark extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,7 +26,7 @@ class DisplayQuestion extends Component {
         if (record.answers.length>0) {
             let answer = record.answers[0];
             console.log(answer);
-            answerDiv = <AnswerDetails answer={answer} reloadBookmarks={this.props.reloadBookmarks}/>;
+            answerDiv = <AnswerDetails answer={answer} reloadBookmarks={this.props.reloadBookmarks }/>;
         }
 
         return(
@@ -42,4 +42,4 @@ class DisplayQuestion extends Component {
         )
     }
 }
-export default DisplayQuestion;
+export default DisplayBookmark;
