@@ -293,11 +293,11 @@ showprofile(){
         <b>{localStorage.getItem("fullname")}</b>
         </span><br />
         {this.state.tagline==="" || this.state.tagline===null || this.state.tagline===undefined ? 
-        <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
+        <span className="tagline-profile" data-toggle="modal" data-target="#tagline">
         Add Profile Credential
         </span>
         :
-        <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
+        <span className="tagline-profile" data-toggle="modal" data-target="#tagline">
         {localStorage.setItem("tagline",this.state.tagline)}
         {
             console.log(this.state.tagline)}{this.state.tagline}

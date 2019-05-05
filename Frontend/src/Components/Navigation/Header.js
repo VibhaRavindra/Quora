@@ -49,7 +49,7 @@ class Header extends Component {
     render() {
         let noti=[];
         noti.push(<ul className="ulclass"> <a href="/quora/SeeAllNotifications">See all Notifications</a>{
-            this.state.rows.map(member=><li className="liclass">  <img src={abc} width="40" height="40" alt="abc"/><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered : <span className="question-notification">{member.question}</span><span className="timestamp-notification">  {member.timestamp}</span></li>)} 
+            this.state.rows.map(member=><li className="liclass">  <img src={abc} width="40" height="40" alt="abc"/><b>{member.answeredby}</b>,{member.answeredby_tagline}, answered :<Link  to={"/quora/question/" + member.qid}> <span className="question-notification">{member.question}</span></Link><span className="timestamp-notification">  {member.timestamp}</span></li>)} 
         </ul>  )
         let redirect = null;
         if (this.state.searchValue != null){
