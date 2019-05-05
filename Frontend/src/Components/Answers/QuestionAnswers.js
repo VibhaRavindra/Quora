@@ -7,6 +7,9 @@ import AnswerDetails from "./AnswerDetails"
 import AnswerForm from "./AnswerForm"
 import CommentForm from "./CommentForm"
 import CommentList from "./CommentList"
+import unfollow from '../../Images/unfollow.png';
+import swal from 'sweetalert';
+import {rooturl} from '../../Config/settings'
 
 class QuestionAnswers extends Component {
     constructor(props) {
@@ -15,7 +18,9 @@ class QuestionAnswers extends Component {
             defaultImg: false,
             question: {},
             openAnswer: '',
-            commentOpen: false
+            commentOpen: false,
+            follow:false,
+            followno:""
         };
 
         this.comments = this.comments.bind(this)
@@ -35,7 +40,32 @@ class QuestionAnswers extends Component {
                     }
             })
     }
+    followquestion=(e,x,y)=>{
+     
+        this.setState({follow:true,followno:this.state.followno+1})
+        swal("followed question");
+        var data={
+            follower_username:localStorage.getItem("user_name"),
+            qid:x,
+            question:y
+        }
+        axios.post("http://"+rooturl+":3001/quora/question/followquestion",data, localStorage.getItem('jwtToken'))
+  
+    }
+    unfollowquestion=(e,x,y)=>{
+  
+     this.setState({follow:false,followno:this.state.followno-1})
+     console.log("hophop",x);
+     swal("unfollowed question");
+     this.setState({follow:false})
+     var data={
+         follower_username:localStorage.getItem("user_name"),
+         qid:x,
+         question:y
+     }
+     axios.post("http://"+rooturl+":3001/quora/question/unfollowquestion",data, localStorage.getItem('jwtToken'))
 
+ }
     componentWillMount() {
         let topicsArr = [];
         topicsArr = ["Technology", "Science"];
@@ -52,8 +82,20 @@ class QuestionAnswers extends Component {
                     if (response.status === 200) {
                         console.log(response);
                         this.setState({ question: response.data.question });
+                        console.log(this.state.question.followers,"omg")
+                        this.setState({followno:this.state.question.followers.length})
+                        if(this.state.question.followers.includes(localStorage.getItem("user_name")))
+                        {
+                            this.setState({follow:true})
+                        }
+                        else
+                        {
+                            this.setState({follow:false})
+                        }
                     }
             })
+            console.log("followed",this.state.follow)
+           
     }
 
     CreateAnswer = (questionId) => {
@@ -148,9 +190,18 @@ class QuestionAnswers extends Component {
                             <div className="question-footer-elem" style={{ marginLeft: "0.3em" }}>
                                 <div className="answer-icon answer-icon-label" onClick={() => { this.CreateAnswer(this.props.match.params.questionId) }}>Answer</div>
                             </div>
-                            <div className="question-footer-elem" >
-                                <div className="follow-icon answer-icon-label">Follow</div>
+                            {this.state.follow===false ?
+                                <div className="follow-icon answer-icon-label" onClick={e=>this.followquestion(e,this.state.question._id,this.state.question.question)}>
+            Follow {(this.state.followno == 0)? "": this.state.followno}
+            </div>
+                              :
+
+                            <div id="unfollow-ques answer-icon-label" onClick={e=>this.unfollowquestion(e,this.state.question._id,this.state.question.question)}>
+                           <img src={unfollow} width="60" height="40" />{"  "}{(this.state.followno == 0)? ""
+                                :this.state.followno}
                             </div>
+                            }
+
                             <div className="question-footer-elem-share-icons" style={{ marginLeft: "20em" }}>
                                 <div className="fb-icon answer-icon-hide">&nbsp;</div>
                             </div>

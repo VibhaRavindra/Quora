@@ -74,7 +74,15 @@ Users.users.update( {"user_name":msg.body.follower_username},{$push:{questions_f
     question:msg.body.question,
     timestamp:new Date()
 }}}, function (error,result) {
-    redisClient.del("applicantProfile_" + msg.body.follower_username); 
+    if(error)
+    {
+        console.log(error)
+    }
+    else{
+        redisClient.del("applicantProfile_" + msg.body.follower_username); 
+        console.log(result)
+    }
+ 
 })
   Questions.questions.update( {"_id":msg.body.qid},{$push:{followers:msg.body.follower_username}},function (error,result) {
         if (error) {

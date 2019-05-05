@@ -34,6 +34,7 @@ function signinUpdate(returndata) {
       localStorage.setItem("lastname",returndata.lastname)
       localStorage.setItem("userid",returndata.userid)
       localStorage.setItem("topics",returndata.topics)
+      localStorage.setItem("b64","default")
       localStorage.setItem("isTopicSelected",returndata.isTopicSelected)
     }
     return { type: SIGN_IN, payload:returndata}
