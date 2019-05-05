@@ -38,6 +38,7 @@ class SignUp extends Component {
         this.props.signin(data);
     }
     render() {
+        console.log("singup render")
         let message;
         if(localStorage.getItem("jwtToken")!== null && localStorage.getItem("isTopicSelected") === "false"){
             return(<Redirect to="/quora/topics"/>)

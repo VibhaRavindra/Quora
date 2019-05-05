@@ -6,20 +6,46 @@ import { connect } from "react-redux";
 import { Redirect, Link } from "react-router-dom";
 import notify from '../../Images/profile-notify.svg';
 import followPerson from '../../Images/follow-person.svg';
+//for pagination
+import ReactPaginate from 'react-paginate';
 
 class SearchQuestions extends Component {
     constructor(props){
         super(props);
         this.state = {
-            profiles: []
-        }
+            profiles: [],
+        //for pagination
+        paginated_profiles:[],
+        results_per_page: 2,
+        num_pages:0
     }
+//for pagination
+this.handlePageClick = this.handlePageClick.bind(this);
+}
+
+//for pagination
+handlePageClick(data){
+console.log(data.selected)
+let page_number = data.selected;
+let offset = Math.ceil(page_number * this.state.results_per_page)
+this.setState({
+    paginated_profiles : this.state.profiles.slice(offset, offset +this.state.results_per_page)
+})
+}
     async componentDidMount(){
         const getProfilesDetails = await fetch('/search/profiles/'+this.props.match.params.searchValue, {
             method:"GET",
             headers:{'Authorization': "bearer " + localStorage.getItem("jwtToken")}
         })
         const getProfiles = await getProfilesDetails.json();
+        // for pagination
+        const all_profiles = getProfiles.profiles_array
+        const pages = Math.ceil(all_profiles.length/this.state.results_per_page)
+        this.setState({
+            profiles : all_profiles,
+            num_pages:pages,
+            paginated_profiles: all_profiles.slice(0,this.state.results_per_page),
+        });
         this.setState({
             profiles : getProfiles.profiles_array
         });
@@ -27,7 +53,7 @@ class SearchQuestions extends Component {
     render() {
         let allProfiles
         if(this.state.profiles.length > 0){
-            allProfiles = this.state.profiles.map(profile => {      
+            allProfiles = this.state.paginated_profiles.map(profile => {      
                 console.log(profile.career);
                 return(
                     <div className="question-container">
@@ -85,6 +111,21 @@ class SearchQuestions extends Component {
                             <h2 className="questn-title">Profiles for <span className="question-value">{this.props.match.params.searchValue}</span></h2>
                         </div>
                         {allProfiles}
+                        <div className="row">
+                            <ReactPaginate
+                            previousLabel={'Previous'}
+                            nextLabel={'Next'}
+                            breakLabel={'...'}
+                            breakClassName={'break-me'}
+                            pageCount={this.state.num_pages}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={this.handlePageClick}
+                            containerClassName={'pagination'}
+                            subContainerClassName={'pages pagination'}
+                            activeClassName={'active'}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

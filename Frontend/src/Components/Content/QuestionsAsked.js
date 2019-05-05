@@ -3,9 +3,7 @@ import '../../Styles/Search.css';
 import Header from '../Navigation/Header';
 import { yourQuestions } from "../../js/actions/action";
 import { connect } from "react-redux";
-import { Redirect, Link } from "react-router-dom";
-import notify from '../../Images/profile-notify.svg';
-import followPerson from '../../Images/follow-person.svg';
+import { Link } from "react-router-dom";
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 
@@ -92,7 +90,7 @@ class SearchQuestions extends Component {
                         </Link>
                     </div>
                     <div className="row question-row">
-                        <h2>Asked {timeAgo.format(new Date(question_asked.timestamp))}</h2>
+                        <h2 className="content-log">Asked {timeAgo.format(new Date(question_asked.timestamp))}</h2>
                     </div>
                 </div>
             )

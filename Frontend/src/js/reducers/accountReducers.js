@@ -1,4 +1,4 @@
-import { SIGN_IN,SIGN_OUT,SIGN_UP,SELECTED_TOPICS,YOUR_QUESTIONS,YOUR_QUESTIONSFOLLOWED } from "../constants/action-types";
+import { SIGN_IN,SIGN_OUT,SIGN_UP,SELECTED_TOPICS,YOUR_QUESTIONS,YOUR_QUESTIONSFOLLOWED,YOUR_ANSWERS } from "../constants/action-types";
 
 const initialState = {
     signupSuccess:null,
@@ -10,7 +10,9 @@ const initialState = {
     questionsAskedSuccess: false,
     questions_asked_array: [],
     questionsFollowedSuccess: false,
-    questions_followed_array: []
+    questions_followed_array: [],
+    questionsAnsweredSuccess: false,
+    questions_answered_array: []
   };
 export default function accountReducer(state = initialState, action) {
     if(action.type === SIGN_UP) {
@@ -44,6 +46,11 @@ export default function accountReducer(state = initialState, action) {
         return Object.assign({}, state, {
             questionsFollowedSuccess:action.payload.questionsFollowedSuccess,
             questions_followed_array:action.payload.questions_followed_array
+        });
+    } else if (action.type === YOUR_ANSWERS) {
+        return Object.assign({}, state, {
+            questionsAnsweredSuccess:action.payload.questionsAnsweredSuccess,
+            questions_answered_array:action.payload.questions_answered_array
         });
     }
     return state;

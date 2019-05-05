@@ -20,7 +20,7 @@ exports.followService = function followService(msg, callback){
 };
 
 function profiles(msg, callback){
-    users.find({ $text: { $search: msg.body.searchText}}, 
+    users.find({ $text: { $search: msg.body.searchText}, status:"Activated"}, 
         { score: { $meta: "textScore" }, user_name:1,firstname:1, lastname:1, user_tagline:1, user_profile_pic:1, users_followers:1, career:1, aboutme:1 })
     .sort({ score : { $meta : 'textScore' } })
     .exec(function(err, results) {

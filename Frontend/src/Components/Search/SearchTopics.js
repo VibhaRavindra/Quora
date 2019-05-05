@@ -3,34 +3,52 @@ import '../../Styles/Search.css';
 import Header from '../Navigation/Header';
 import { Redirect, Link } from "react-router-dom";
 import followTopic from '../../Images/follow-topic-icon.svg';
-// import Technology from '../../Images/Technology.png';
-// import Science from '../../Images/follow-topic-icon.svg';
-// import Music from '../../Images/follow-topic-icon.svg';
-// import Sports from '../../Images/follow-topic-icon.svg';
-// import Health from '../../Images/follow-topic-icon.svg';
+//for pagination
+import ReactPaginate from 'react-paginate';
 
 class SearchQuestions extends Component {
     constructor(props){
         super(props);
         this.state = {
-            topics: []
+            topics: [],
+            //for pagination
+            paginated_topics:[],
+            results_per_page: 2,
+            num_pages:0
         }
-    }
+   //for pagination
+   this.handlePageClick = this.handlePageClick.bind(this);
+}
+
+//for pagination
+handlePageClick(data){
+    console.log(data.selected)
+    let page_number = data.selected;
+    let offset = Math.ceil(page_number * this.state.results_per_page)
+    this.setState({
+        paginated_topics : this.state.topics.slice(offset, offset +this.state.results_per_page)
+    })
+}
     async componentDidMount(){
         const getTopicsDetails = await fetch('/search/topics/'+this.props.match.params.searchValue, {
             method:"GET",
             headers:{'Authorization': "bearer " + localStorage.getItem("jwtToken")}
         })
         const getTopics = await getTopicsDetails.json();
+        // for pagination
+        const all_topics = getTopics.topics_array
+        const pages = Math.ceil(all_topics.length/this.state.results_per_page)
         this.setState({
-            topics : getTopics.topics_array
+            topics : all_topics,
+            num_pages:pages,
+            paginated_topics: all_topics.slice(0,this.state.results_per_page),
         });
     }
     render() {
         let allTopics;
         console.log("this.state.topics.length : "+ this.state.topics.length)
         if(this.state.topics.length > 0){
-            allTopics = this.state.topics.map(topic => {      
+            allTopics = this.state.paginated_topics.map(topic => {      
                 console.log(topic.career);
                 let topicurl = "/quora/topic/"+topic.name.toLowerCase();
                 let img = topic.name;
@@ -85,6 +103,21 @@ class SearchQuestions extends Component {
                             <h2 className="questn-title">Topics for <span className="question-value">{this.props.match.params.searchValue}</span></h2>
                         </div>
                         {allTopics}
+                        <div className="row">
+                            <ReactPaginate
+                            previousLabel={'Previous'}
+                            nextLabel={'Next'}
+                            breakLabel={'...'}
+                            breakClassName={'break-me'}
+                            pageCount={this.state.num_pages}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={this.handlePageClick}
+                            containerClassName={'pagination'}
+                            subContainerClassName={'pages pagination'}
+                            activeClassName={'active'}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

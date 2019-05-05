@@ -143,7 +143,7 @@ router.post('/:question_id/:answer_id/bookmark', (req, res) => {
     }
 })
 
-router.get('/:question_id', requireAuth, (req, res) => {
+router.get('/:question_id', (req, res) => {
     console.log("Inside Quora Backend: Get One Answer");
     kafka.make_request('answer', {
         "path": "get-one", "req": {

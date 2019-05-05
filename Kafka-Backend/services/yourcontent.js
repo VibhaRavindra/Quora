@@ -1,5 +1,6 @@
 var {users} = require('../models/UserSchema');
 var {questions} = require('../models/QuestionSchema');
+var {answers} = require('../models/AnswerSchema');
 
 exports.followService = function followService(msg, callback){
     console.log("Inside kafka backend yourcontent.js");
@@ -70,27 +71,42 @@ function questions_followed(msg, callback){
 }
 
 function questions_answered(msg, callback){
-    users.find({ _id : msg.body.userid }, { questions_followed: 1},function(err, results) {
-        let questions_followed_array = []
+    answers.find({ owner_userid : msg.body.userid }, { question_id: 1, timestamp: 1},function(err, results) {
+        let questions_answered_array = []
         if(err) {
             console.log(err)
             callback(null, {
-                questionsFollowedSuccess: false,
-                questions_followed_array: questions_followed_array
+                questionsAnsweredSuccess: false,
+                questions_answered_array: questions_answered_array
             })
-        } else { 
-            results[0].questions_followed.forEach((result)=>{
-                console.log(result);
-                questions_followed_array.push({
-                    questionid: result.qid,
-                    question: result.question,
-                    timestamp: result.timestamp
-                })
+        } else {
+            let questionid_array = []
+            for(let i=0; i<results.length; i++){
+                questionid_array.push(results[i].question_id);
+            }
+            questions.find({_id:questionid_array}, function(err, result){
+                if(err){
+                    console.log(err)
+                    callback(null, {
+                        questionsAnsweredSuccess: false,
+                        questions_answered_array: questions_answered_array
+                    })
+                } else {
+                    console.log("result.length : : : : : ",result.length);
+                    for (let i=0; i<result.length; i++){
+                        console.log("result.question : : : : : ",result[i].question);
+                        questions_answered_array.push({
+                            question: result[i].question,
+                            questionid: result[i]._id,
+                            timestamp: results[i].timestamp
+                        })
+                    }
+                    callback(null, {
+                        questionsAnsweredSuccess: true,
+                        questions_answered_array: questions_answered_array
+                    });
+                }
             })
-            callback(null, {
-                questionsFollowedSuccess: true,
-                questions_followed_array: questions_followed_array
-            });
         }
     });
 }

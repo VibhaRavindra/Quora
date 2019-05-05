@@ -31,6 +31,23 @@ router.put('/signup', FormData.none(), (req,res,next) => {
     });
 });
 
+router.post("/deactivate", FormData.none(), (req,res)=>{
+    let body = {
+        user_name: req.body.user_name, 
+        password: req.body.password
+    }
+    kafka.make_request('account', {"path":"deactivate", "body":body}, function(err,result){
+        if (err){
+            res.send({
+                deactivateSuccess:false
+            })
+        }else{
+            console.log(result)
+            res.send(result)
+        }
+    });
+});
+
 router.post('/signin', FormData.none(), (req,res,next) => {
     let body = {
         user_name: req.body.user_name, 

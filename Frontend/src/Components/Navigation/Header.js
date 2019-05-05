@@ -8,7 +8,19 @@ import axios from 'axios';
 import {rooturl} from '../../Config/settings';
 import MessageList from '../Messages/MessageList';
 import AskQuestion from '../Question/AskQuestion';
+import { Modal, Button } from 'react-bootstrap';
+import {signout} from "../../js/actions/action";
+import { connect } from "react-redux";
+function mapStateToProps(store) {
+    return {
+    }
+}
 
+function mapDispatchToProps(dispatch) {
+    return {
+        signout: () => dispatch(signout())
+    };
+}
 class Header extends Component {
   constructor(props){
         super(props);
@@ -17,14 +29,61 @@ class Header extends Component {
             open:false,
             rows:[],
             searchValue: null,
-            contentClick: false
+            contentClick: false,
+            messagePopUp: false,
+            deactivate: false,
+            logout:false
         }
         this.onSearchEnter = this.onSearchEnter.bind(this);
+        this.clickDelete = this.clickDelete.bind(this);
+        this.clickDeactivate = this.clickDeactivate.bind(this);
+        this.deleteAccount = this.deleteAccount.bind(this);
+        this.closePopUp = this.closePopUp.bind(this); 
+        this.logout = this.logout.bind(this); 
+    }
+    logout = () => {
+        console.log("Inside frontend logout")
+        this.props.signout();
+        this.setState({
+            logout: true
+        })
     }
     onSearchEnter = (event) => {
         if(event.key === 'Enter'){
-        this.setState({searchValue: event.target.value})
+            this.setState({searchValue: event.target.value})
         }
+    }
+    clickDelete = () => {
+        this.setState({messagePopUp: true})
+    }
+    clickDeactivate = () => {
+        this.setState({messagePopUp: true})
+    }
+    closePopUp(){
+        this.setState({
+            messagePopUp: false
+        });
+    }
+    deleteAccount = (event) => {
+        event.preventDefault();
+    }
+    deactivateAccount = async (event) => {
+        event.preventDefault();
+        var data = new FormData(event.target);
+        console.log(data)
+        var fetchedRes = await fetch("/account/deactivate",{
+            method:"POST",
+            body:data,
+            headers:{
+                'Authorization': "Bearer " + localStorage.getItem("jwtToken")
+              }
+        })
+        var fetchedJson = await fetchedRes.json();
+        if(fetchedJson.deactivateSuccess) {
+            localStorage.clear();
+            this.setState({logout:true})
+        }
+        this.props.signout();
     }
     componentDidMount(){
         var data={
@@ -54,7 +113,8 @@ class Header extends Component {
         if (this.state.searchValue != null){
             redirect = <Redirect to={'/quora/search/questions/'+this.state.searchValue} />
         }
-      
+        if(this.state.logout)
+            redirect = <Redirect to="/signup"/>
     return (
         <div className="row">
             {redirect}
@@ -63,8 +123,8 @@ class Header extends Component {
                     <img className="quora-logo" src={Logo} alt="Quora"/>
                 </div>
                 <div className="header-elem home">
-                <Link to="/quora/home" >
-                    <div className="header-logo-text home-elem">Home</div>
+                    <Link to="/quora/home" >
+                        <div className="header-logo-text home-elem">Home</div>
                     </Link>
                 </div>
                 <div className="header-elem answer">
@@ -92,8 +152,9 @@ class Header extends Component {
                         <a class="dropdown-item-profile" href="/quora/myprofile">Profile</a>
                         <a class="dropdown-item-profile" href="#" data-toggle="modal" data-target="#messageList">Messages</a>
                         <a class="dropdown-item-profile" href="/quora/content/questions_asked">Your Content</a>
-                        <a class="dropdown-item-profile" href="settings">Settings</a>
-                        <a class="dropdown-item-profile" href="#">Logout</a>
+                        <a class="dropdown-item-profile" href="#" onClick={this.logout}>Logout</a>
+                        <a class="dropdown-item-profile" data-toggle="modal" data-target="#delete" href="#" onClick={this.clickDelete}>Delete</a>
+                        <a class="dropdown-item-profile" data-toggle="modal" data-target="#deactivate" href="#" onClick={this.clickDeactivate}>Deactivate</a>
                     </div>
                     <MessageList />
                 </div>
@@ -101,15 +162,47 @@ class Header extends Component {
                     <div className="add-question" data-toggle="modal" data-target="#askQuestion">Add Question or Link</div>
                     <AskQuestion/>
                 </div>
-              
-          </div>
-
-      </div>
-
-
-
+            </div>
+        <Modal className="modal-deleteAccount" show={this.state.messagePopUp} onHide={this.closePopUp} aria-labelledby="contained-modal-title-vcenter" centered>
+            <form onSubmit={this.deleteAccount}>
+                <Modal.Header closeButton>
+                    <h2 className="modal-delete-header">Enter Password</h2>
+                    
+                </Modal.Header>
+                <Modal.Body>
+                <div className="modal-below-text">For security purposes, please enter your password in order to continue. If you signed up for Quora using Facebook or Google, please create an account password.</div>
+                    <div className="incorrect-delete"></div>
+                    <input type="hidden" name="user_name" value={localStorage.getItem("user_name")}/>
+                    <input type="password"  className="delete-pw" name="password"  placeholder="Password" maxlength="255" />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button type="submit" className="deleteAccount-btn">
+                        Done
+                    </Button>
+                </Modal.Footer>
+            </form>
+        </Modal>
+        <Modal className="modal-deleteAccount" show={this.state.messagePopUp} onHide={this.closePopUp} aria-labelledby="contained-modal-title-vcenter" centered>
+        <form onSubmit={this.deactivateAccount}>
+            <Modal.Header closeButton>
+                <h2 className="modal-delete-header">Enter Password</h2>
+                
+            </Modal.Header>
+            <Modal.Body>
+            <div className="modal-below-text">For security purposes, please enter your password in order to continue. If you signed up for Quora using Facebook or Google, please create an account password.</div>
+                <div className="incorrect-delete"></div>
+                <input type="hidden" name="user_name" value={localStorage.getItem("user_name")}/>
+                <input type="password"  className="delete-pw" name="password"  placeholder="Password" maxlength="255" />
+            </Modal.Body>
+            <Modal.Footer>
+                <Button type="submit" className="deleteAccount-btn">
+                    Done
+                </Button>
+            </Modal.Footer>
+            </form>
+        </Modal>
+        </div>
     );
   }
 }
-
-export default Header;
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
