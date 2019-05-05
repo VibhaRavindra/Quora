@@ -80,7 +80,7 @@ class upvotegraph extends Component {
           }
 console.log(this.state.upvotes)
         return (
-            <div style={{ background: "#fafafa", height: "100vh" }}>
+            <div style={{ background: "#fafafa" }}>
                    <Bar ref="chart" data={data} />
             </div>
         )

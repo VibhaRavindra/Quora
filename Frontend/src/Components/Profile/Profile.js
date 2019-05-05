@@ -214,13 +214,57 @@ showprofile(){
         let followersdisplay=[],x="",followingdisplay=[],y="";
         if(this.state.followerstab===true && this.state.followingtab===false)
         for(x in this.state.followersrows)
-        followersdisplay.push(<div id="followers-elem"><img src={this.state.followersrows[x].b64} width="40" height="40"/><Link className="question-link" to={"/quora/profile/" + this.state.followersrows[x].user_name}><b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b></Link><br />{this.state.followersrows[x].user_tagline}</div>)
+        followersdisplay.push(<div id="followers-elem">
+        {this.state.followersrows[x].b64==null ||this.state.followersrows[x].b64==undefined || this.state.followersrows[x].b64=="" || this.state.followersrows[x].b64=="default" ?
+        <img src={abc} width="40" height="40"/>
+        :
+        <img src={this.state.followersrows[x].b64} width="40" height="40"/>}
+
+      {this.state.followersrows[x].user_name!=localStorage.getItem("user_name") ?
+        <Link className="question-link" to={"/quora/profile/" + this.state.followersrows[x].user_name}>
+        <b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b>
+        </Link>
+        :
+        <Link className="question-link" to={"/quora/myprofile"}>
+        <b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b>
+        </Link>
+        
+      }
+        
+        
+        <br />
+        {this.state.followersrows[x].user_tagline}</div>)
         if(this.state.followerstab===false && this.state.followingtab===true){
       
          for(y in this.state.followingrows){
          console.log("hello",this.state.followingrows[y].firstname)
-         followingdisplay.push(<div id="followers-elem"><img src={this.state.followingrows[y].b64} width="40" height="40"/><Link className="question-link" to={"/quora/profile/" + this.state.followingrows[y].user_name}><b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b></Link><br />{this.state.followingrows[y].user_tagline}</div>)
-     }
+         followingdisplay.push(
+         <div id="followers-elem">
+         {this.state.followingrows[y].b64==null ||this.state.followingrows[y].b64==undefined || this.state.followingrows[y].b64=="" || this.state.followingrows[y].b64=="default" ?
+         <img src={abc} width="40" height="40"/>
+         :
+         <img src={this.state.followingrows[y].b64} width="40" height="40"/>
+         }
+
+
+
+
+     {this.state.followingrows[y].user_name!=localStorage.getItem("user_name") ?
+         <Link className="question-link" to={"/quora/profile/" + this.state.followingrows[y].user_name}>
+         <b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b>
+         </Link>
+         :
+         <Link className="question-link" to={"/quora/myprofile"}>
+         <b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b>
+         </Link>
+         
+     }     
+         
+         
+         
+         <br />{this.state.followingrows[y].user_tagline}</div>
+         )
+         }
         }
       
         let profiledisplay=[];
@@ -249,11 +293,11 @@ showprofile(){
         <b>{localStorage.getItem("fullname")}</b>
         </span><br />
         {this.state.tagline==="" || this.state.tagline===null || this.state.tagline===undefined ? 
-        <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
+        <span className="tagline-profile" data-toggle="modal" data-target="#tagline">
         Add Profile Credential
         </span>
         :
-        <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
+        <span className="tagline-profile" data-toggle="modal" data-target="#tagline">
         {localStorage.setItem("tagline",this.state.tagline)}
         {
             console.log(this.state.tagline)}{this.state.tagline}

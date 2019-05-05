@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import '../../Styles/SeeAllNotifications.css';
 import { Bar } from 'react-chartjs-2';
 import { connect } from 'react-redux';
-import { getProfileViews } from '../../js/actions/graph_actions';
+import { getBookmarkCount } from '../../js/actions/graph_actions';
 
 
 class profilegraph extends Component {
@@ -11,25 +11,25 @@ class profilegraph extends Component {
         this.state = {
             defaultImg: false,
             days:[],
-            profileViews: []
+            bookmarksCount: []
         }
     }
     componentDidMount = async () => {
         var today = new Date();
         var month = today.getMonth() + 1; //January is 0!
         var year = today.getFullYear();
-        let user_id = localStorage.getItem("user_name");
+        let user_id = localStorage.getItem("userid");
         let data ={};
         data = {"user_id":user_id,"month":month,"year":year};
-        await this.props.getProfileViews(data);
+        await this.props.getBookmarkCount(data);
         let results = this.props.results.results;
         this.setState({results: results });
-        let days=[],views=[];
+        let days=[],count=[];
         this.state.results.map(member=> days.push(member.day));
-        this.state.results.map(member=> views.push(member.views));
+        this.state.results.map(member=> count.push(member.count));
                     console.log(days);
-                    console.log(views);
-        this.setState({days:days,profileViews:views});
+                    console.log(count);
+        this.setState({days:days,bookmarksCount:count});
     }
 
     render() {
@@ -37,7 +37,7 @@ class profilegraph extends Component {
             labels: this.state.days,
             datasets: [
               {
-                label: 'Profile Views Per Day of this Month',
+                label: 'No.of bookmarks saved Per Day of this Month',
                 fill: false,
                 lineTension: 0.1,
                 backgroundColor: 'rgba(75,192,192,0.4)',
@@ -55,11 +55,11 @@ class profilegraph extends Component {
                 pointHoverBorderWidth: 2,
                 pointRadius: 1,
                 pointHitRadius: 10,
-                data: this.state.profileViews
+                data: this.state.bookmarksCount
               }
             ]
           }
-console.log(this.state.profileViews)
+console.log(this.state.bookmarksCount)
         return (
             <div style={{ background: "#fafafa"}}>
                    <Bar ref="chart" data={data} />
@@ -70,7 +70,7 @@ console.log(this.state.profileViews)
 
 
 const mapStateToProps = state => ({
-    results : state.graph.views
+    results : state.graph.count
 });
 
-export default connect(mapStateToProps, { getProfileViews })(profilegraph);
+export default connect(mapStateToProps, { getBookmarkCount })(profilegraph);

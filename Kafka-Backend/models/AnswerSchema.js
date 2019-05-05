@@ -28,6 +28,10 @@ const AnswerSchema = new Schema({
     owner_profile_pic: {
         type: String,
     },
+     is_editied: {
+       type: Boolean,
+       default:false
+     },
      is_anonymous: {
        type: Boolean,
        default:false

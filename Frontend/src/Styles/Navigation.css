@@ -127,15 +127,18 @@
   display:block;
   font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
-  height:350px;
+  height:250px;
   line-height:19.6px;
   overflow:auto;
   text-size-adjust:100%;
   white-space:normal;
   width:480px;
-  background-color: white;
+  margin-top: 80px !important;
   position: relative;
   z-index: 999;
+  background: #f7f7f7;
+  border: 1px solid #ccc;
+  box-shadow: 0 1px 3px rgba(200,200,200,0.7);
 
   }
   .question-notification {
@@ -160,7 +163,12 @@
  
 }
 .ulclass{
-  width: 600px;
+  width: 480px;
+  background: #f7f7f7;
+  border: 1px solid #ccc;
+  box-shadow: 0 1px 3px rgba(200,200,200,0.7);
+  margin-left: -50px !important;
+  
 }
 .dropdown-menu{
   margin-top: 20px;
@@ -183,6 +191,7 @@
   box-shadow: 0 1px 3px rgba(200,200,200,0.7);
   padding: 0;
 }
+
 .dropdown-menu-profile a{
   text-decoration: none;
 }

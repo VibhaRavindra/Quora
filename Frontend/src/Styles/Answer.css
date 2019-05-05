@@ -128,3 +128,15 @@
 	 font-weight: 400;
 	 font-size: 14px;
 }
+
+.answer-edit-icon{
+	background: url('../Images/feed-answer-edit.svg') no-repeat 3px center;
+}
+
+.answer-icon-edit-label{
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	margin-left: 5px!important;
+	font-weight: 500!important;
+	font-size: 14px!important;
+	color: #666!important;
+}

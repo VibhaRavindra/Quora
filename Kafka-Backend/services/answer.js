@@ -2,8 +2,8 @@ var { users } = require('../models/UserSchema');
 var { questions } = require('../models/QuestionSchema');
 var { answers } = require('../models/AnswerSchema');
 var { comments } = require('../models/CommentSchema');
-var {views} =require('../models/AnswerViewSchema')
-
+var { views } = require('../models/AnswerViewSchema')
+var Notifications = require('../models/NotificationSchema');
 exports.answerService = function answerService(msg, callback) {
     console.log("Inside kafka backend answer.js");
     // console.log("msg"+ msg);
@@ -11,7 +11,11 @@ exports.answerService = function answerService(msg, callback) {
     console.log("In Property Service path:", msg.path);
     switch (msg.path) {
         case "submit":
-            submitAnswer(msg.req, callback);
+            if (msg.req.query.isEditing) {
+                updateAnswer(msg.req, callback);
+            } else {
+                submitAnswer(msg.req, callback);
+            }
             break;
         case "submit-comment":
             submitComment(msg.req, callback);
@@ -28,18 +32,48 @@ exports.answerService = function answerService(msg, callback) {
         case "get-one":
             getAllAnswers(msg.req, callback);
             break;
-            case "graphupvote":
+        case "graphupvote":
             graphupvote(msg, callback);
             break;
-            case "graphdownvote":
+        case "graphdownvote":
             graphdownvote(msg, callback);
             break;
-           
+
     }
 };
 
 async function submitAnswer(message, callback) {
     console.log(message.params.question_id);
+   let q;
+    questions.findOne({ "_id": message.params.question_id }, {
+        question: 1,
+        _id: 0
+    }, function (err, result) {
+        if (err) {
+
+}
+else{
+    Notifications.notifications.create({qid:message.params.question_id,
+        question:result.question,
+        answeredby:message.body.user_name,
+        answeredby_tagline:message.body.user_tagline,
+        answeredby_username:message.body.user_username,
+        answeredby_profile_pic:message.body.user_profile_pic,
+        timestamp_answer:new Date(),
+    },function(err,res){
+        if(err)
+        {
+             console.log("error is",err)
+        }
+        else{
+            console.log("notification created")
+        }
+    })
+}
+
+    });
+  
+
     try {
         var newAnswer = new answers({
             answer: message.body.answer,
@@ -68,6 +102,48 @@ async function submitAnswer(message, callback) {
         callback(null, {
             status: 400,
             submitAnswerMessage: "Submit Answer Failed"
+        })
+    }
+
+}
+
+async function updateAnswer(message, callback) {
+
+    try {
+
+        var answerUpdated = await answers.update({ "_id": message.body.answer_id }, {
+            $set: {
+                answer: message.body.answer,
+                is_edited: "true",
+                timestamp: Date.now()
+            }
+        });
+        console.log(JSON.stringify(answerUpdated))
+        var questionUpdated = await questions.update({ "_id": message.params.question_id, "answers._id": message.body.answer_id}, {
+            $set: {
+                "answers.$.answer": message.body.answer,
+                "answers.$.is_edited" : "true",
+                "answers.$.timestamp" : Date.now()
+            }
+        });
+        console.log(JSON.stringify(questionUpdated))
+        
+        var bookmarkUpdated = await users.update({ "bookmarks.answers.0._id": message.body.answer_id }, {
+            $set: {
+                "bookmarks.$.answers.0.answer": message.body.answer,
+                "bookmarks.$.answers.0.is_edited" : "true",
+                "bookmarks.$.answers.0.timestamp" : Date.now()
+            }
+        });
+        console.log(JSON.stringify(bookmarkUpdated))
+
+        callback(null, { updateStatus: "Success", question: questionUpdated })
+
+    } catch (error) {
+        console.log("Edit Answer Failed: " + error)
+        callback(null, {
+            status: 400,
+            submitAnswerMessage: "Edit Answer Failed"
         })
     }
 
@@ -133,7 +209,7 @@ async function submitUpvote(message, callback) {
                 }
             });
 
-            var userUpdated = await users.update({"bookmarks.answers.0._id": message.params.answer_id},{
+            var userUpdated = await users.update({ "bookmarks.answers.0._id": message.params.answer_id }, {
                 $push: {
                     "bookmarks.$.answers.0.upvotes": message.body.user_username
                 },
@@ -162,7 +238,7 @@ async function submitUpvote(message, callback) {
                 }
             });
 
-            var userUpdated = await users.update({"bookmarks.answers.0._id": message.params.answer_id},{
+            var userUpdated = await users.update({ "bookmarks.answers.0._id": message.params.answer_id }, {
                 $pull: {
                     "bookmarks.$.answers.0.upvotes": message.body.user_username
                 },
@@ -210,7 +286,7 @@ async function submitDownvote(message, callback) {
                 }
             });
 
-            var userUpdated = await users.update({"bookmarks.answers.0._id": message.params.answer_id},{
+            var userUpdated = await users.update({ "bookmarks.answers.0._id": message.params.answer_id }, {
                 $push: {
                     "bookmarks.$.answers.0.downvotes": message.body.user_username
                 },
@@ -239,7 +315,7 @@ async function submitDownvote(message, callback) {
                 }
             });
 
-            var userUpdated = await users.update({"bookmarks.answers.0._id": message.params.answer_id},{
+            var userUpdated = await users.update({ "bookmarks.answers.0._id": message.params.answer_id }, {
                 $pull: {
                     "bookmarks.$.answers.0.downvotes": message.body.user_username
                 },
@@ -297,14 +373,14 @@ async function submitBookmark(message, callback) {
                 answers: { $elemMatch: { "_id": message.params.answer_id } }
             });
             console.log(JSON.stringify(questionBookmarked));
-            
+
             var userUpdated = await users.update({ "_id": message.body.user_id }, {
                 $push: {
                     bookmarks: questionBookmarked
                 }
-            }); 
+            });
 
-            
+
             callback(null, { updateStatus: "Success", question: userUpdated })
         } else if (bookmarkState === "false") {
 
@@ -322,9 +398,9 @@ async function submitBookmark(message, callback) {
 
             var userUpdated = await users.update({ "_id": message.body.user_id }, {
                 $pull: {
-                    bookmarks: {"answers.0._id": message.params.answer_id}
+                    bookmarks: { "answers.0._id": message.params.answer_id }
                 }
-            }); 
+            });
 
             console.log("````````````````````````````````````````````````````")
             console.log(message.params.answer_id)
@@ -366,13 +442,13 @@ async function getAllAnswers(message, callback) {
 }
 
 async function graphupvote(message, callback) {
-    
+
     try {
-        
-        var answer = await answers.find({owner_username:message.body.owner_username},{"_id":1,"upvote_count":1}).sort(
-            { 
-                "upvote_count" : -1.0, 
-                "downvote_count" : 1.0
+
+        var answer = await answers.find({ owner_username: message.body.owner_username }, { "_id": 1, "upvote_count": 1 }).sort(
+            {
+                "upvote_count": -1.0,
+                "downvote_count": 1.0
             }
         ).limit(10);
         console.log(answer)
@@ -393,12 +469,12 @@ async function graphupvote(message, callback) {
 
 
 async function graphdownvote(message, callback) {
-    
+
     try {
-        var answer = await answers.find({owner_username:message.body.owner_username},{"_id":1,"downvote_count":1}).sort(
-            { 
-                "downvote_count" : -1.0, 
-                "upvote_count" : 1.0
+        var answer = await answers.find({ owner_username: message.body.owner_username }, { "_id": 1, "downvote_count": 1 }).sort(
+            {
+                "downvote_count": -1.0,
+                "upvote_count": 1.0
             }
         ).limit(10);
         console.log(answer)
