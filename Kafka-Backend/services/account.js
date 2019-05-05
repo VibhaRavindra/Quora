@@ -4,6 +4,7 @@ var {users} = require('../models/UserSchema');
 var {topics} = require('../models/TopicSchema');
 var { questions } = require('../models/QuestionSchema');
 var { answers } = require('../models/AnswerSchema');
+var { comments } = require('../models/CommentSchema');
 const mysql = require('mysql');
 
 // MySQL connection without pooling.
@@ -45,6 +46,9 @@ exports.followService = function followService(msg, callback){
             break;
         case "deactivate":
             deactivate(msg,callback);
+            break;
+        case "delete":
+            deleteMethod(msg,callback);
             break;
     }
 };
@@ -144,6 +148,56 @@ function deactivate(msg, callback) {
         }
     })
 }
+
+function deleteMethod(msg, callback) {
+    signinHelper(msg, (returnvalue)=>{
+        if(returnvalue.signinSuccess) {
+            mysqlconnection.beginTransaction(function(err) {
+                if (err) { 
+                    console.log("INSIDE ERROR 1")
+                    callback(null, {deleteSuccess:false})
+                } else {
+                    mysqlconnection.query('DELETE FROM Users WHERE user_name=?',[msg.body.user_name], (err, res)=>{
+                        if (err) { 
+                            console.log("INSIDE ERROR 2", err)
+                            callback(null, {deleteSuccess:false})
+                        } else {
+            users.deleteOne({_id:returnvalue.userid},(err, res)=>{
+                if (err) { 
+                    console.log(err)
+                    mysqlconnection.rollback();
+                    callback(null, {deleteSuccess:false})
+                }
+                else {
+                    answers.deleteMany({owner_userid:returnvalue.userid},(err, res)=>{
+                        if (err) { 
+                            console.log(err)
+                            mysqlconnection.rollback();
+                            callback(null, {deleteSuccess:false})
+                        }
+                        else {
+                            comments.deleteMany({owner_username:returnvalue.user_name}, (err, res)=>{
+                                if (err) { 
+                                    console.log(err);
+                                    mysqlconnection.rollback();
+                                    callback(null, {deleteSuccess:false})
+                                }
+                                else {
+                                    mysqlconnection.commit();
+                                    callback(null, {deleteSuccess:true})
+                                }
+                            });
+                        }
+                    })
+                }
+            })
+        }});
+            }})
+        } else {
+            callback(null, {deleteSuccess:false})
+        }
+    })
+}
 function signinHelper(msg, callback) {
     console.log("Inside signinHelper");
     mysqlconnection.beginTransaction(function(err) {
@@ -186,6 +240,13 @@ function signinHelper(msg, callback) {
                                 signinSuccess:false,
                                 signinMessage:"Sign In Failed",
                                 deactivated:false
+                            })
+                        }
+                        if(result === null) {
+                            console.log("NO USER FOUND")
+                            callback({
+                                signinSuccess:false,
+                                signinMessage:"User does not Exist!"
                             })
                         }
                         let topics = result.topics_followed;

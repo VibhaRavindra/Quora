@@ -89,7 +89,7 @@ class SignUp extends Component {
                             <div className="pw">
                                 <label className="account-labels email-label">PASSWORD</label>
                                 <div className="input-email">
-                                    <input className="email account-input" type="password" name="password" required></input>
+                                    <input className="email account-input" type="password" name="password" minlength="8" required></input>
                                 </div>
                             </div>
                             <div className="row">
@@ -104,7 +104,7 @@ class SignUp extends Component {
                                 <input className="email account-input" type="email" name="user_name" required></input>
                             </div>
                             <div className="input-email">
-                                <input className="email account-input email-top" type="password" name="password" required></input>
+                                <input className="email account-input email-top" type="password" name="password" minlength="8" required></input>
                             </div>
                             <div className="row">
                                 <button type="submit" className="account-btn-login">Login</button>
