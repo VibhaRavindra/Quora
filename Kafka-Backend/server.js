@@ -10,6 +10,7 @@ var search = require('./services/search.js');
 var yourcontent = require('./services/yourcontent.js');
 var messagetopics = require('./services/messagetopics');
 var bookmarks = require('./services/bookmarks.js');
+var graphtopics = require('./services/graphtopics');
 
 // Set up Database connection
 const mongoose = require('mongoose')
@@ -91,6 +92,12 @@ function handleTopicRequest(topic_name, fname) {
                     return;
                 })
                 break;
+            case 'graph_topics':
+                graphtopics.graphService(data.data, function(err, res){
+                response(data, res, producer);
+                return;
+            })
+            break;
         }
     })
 };
@@ -125,3 +132,4 @@ handleTopicRequest("bookmarks", bookmarks);
 handleTopicRequest("question_topics", questiontopics);
 handleTopicRequest("yourcontent", yourcontent);
 handleTopicRequest("message_topics", messagetopics);
+handleTopicRequest("graph_topics", graphtopics);
