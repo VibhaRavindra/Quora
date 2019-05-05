@@ -16,7 +16,7 @@ import SearchProfiles from './Search/SearchProfiles';
 import SearchTopics from './Search/SearchTopics';
 import QuestionsAsked from './Content/QuestionsAsked';
 import QuestionsFollowed from './Content/QuestionsFollowed';
-// import QuestionsAnswered from './Content/QuestionsAnswered';
+import QuestionsAnswered from './Content/QuestionsAnswered';
 import upvotegraph from './Graph/upvotegraph';
 import downvotegraph from './Graph/downvotegraph';
 import answerviewsgraph from './Graph/answerviewsgraph';
@@ -26,7 +26,7 @@ import bookmarksgraph from './Graph/bookmarksgraph';
 
 class Main extends Component {
   render() {
-    // if (localStorage.getItem("jwtToken")!== null) {
+    if (localStorage.getItem("jwtToken")!== null) {
       return (
         <div>
           <Route path="/header" component={Header} />
@@ -48,22 +48,24 @@ class Main extends Component {
           <Route exact path="/quora/content/questions_followed" component={QuestionsFollowed} />
           <Route exact path="/quora/content/questions_followed/:year" component={QuestionsFollowed} />
           <Route exact path="/quora/content/questions_followed/:year/:sortorder" component={QuestionsFollowed} />
-          {/* <Route exact path="/quora/content/questions_answered" component={QuestionsAnswered} /> */}
+          <Route exact path="/quora/content/questions_answered" component={QuestionsAnswered} />
+          <Route exact path="/quora/content/questions_answered/:year" component={QuestionsAnswered} />
+          <Route exact path="/quora/content/questions_answered/:year/:sortorder" component={QuestionsAnswered} />
           <Route path="/quora/AnalyticsDashboard" component={AnalyticsDashboard} />
-              <Route path="/quora/upvotegraph" component={upvotegraph} />
-              <Route path="/quora/downvotegraph" component={downvotegraph} />
-              <Route path="/quora/answerviewsgraph" component={answerviewsgraph} />
-              <Route path="/quora/profileviewsgraph" component={profileviewsgraph}/>
-              <Route path="/quora/bookmarksgraph" component={bookmarksgraph}/>
+          <Route path="/quora/upvotegraph" component={upvotegraph} />
+          <Route path="/quora/downvotegraph" component={downvotegraph} />
+          <Route path="/quora/answerviewsgraph" component={answerviewsgraph} />
+          <Route path="/quora/profileviewsgraph" component={profileviewsgraph}/>
+          <Route path="/quora/bookmarksgraph" component={bookmarksgraph}/>
         </div>
       );
-    // } else {
-    //   return (
-    //     <div>
-    //       <Route path="/" component={SignUp} />
-    //     </div>
-    //  )
-    // }
+    } else {
+      return (
+        <div>
+          <Route path="/" component={SignUp} />
+        </div>
+     )
+    }
   }
 }
 

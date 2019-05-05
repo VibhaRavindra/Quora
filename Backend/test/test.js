@@ -26,7 +26,7 @@ describe('Quora Mocha Test Harness:', () => {
 
         //sample data
         const questionData = { 
-            "question":"why is technology so important?",
+            "question":"why is technology not so op oi oh so important?",
             "topic_name": "technology",
             "owner_id": "5cc69cca0b036cd050eaa901",
             "owner_name": "Mocha Test",
@@ -61,6 +61,57 @@ describe('Quora Mocha Test Harness:', () => {
             expect(err).to.be.null;
             res.should.have.status(200);
             res.body.should.have.property('responseMessage').equal('Successfully Sent!');
+        done();
+        });
+    })
+
+       // Get profile info
+       it("Test Case 4 - Get profile info", (done) => {
+
+        const data = { 
+           "user_name":"mango2@sjsu.edu"
+        }
+        chai.request(rooturl)
+        .get(`/quora/getprofileinfo`)
+        .send(data)
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+            expect(err).to.be.null;
+            res.body.should.be.a('Object');
+            res.status.should.be.equal(200);  
+        done();
+        });
+    })
+    //addtagline
+    it("Test Case 5 - User should be able to add a tagline", (done) => { 
+
+        //sample data
+        var data={
+            "user_name":"mango2@sjsu.edu",
+            "tagline":"appleapple"
+          }
+        chai.request(rooturl)
+        .post('/quora/addtagline')
+        .send(data)
+        .end((err, res) => {
+            expect(err).to.be.null;
+            res.should.have.status(200);
+            res.body.should.have.property('responseMessage').equal('Successfully Added!');
+        done();
+        });
+    })
+    it("Test Case 6 - Get notifications", (done) => {
+
+        const data = { 
+           "user_name":"mango2@sjsu.edu"
+        }
+        chai.request(rooturl)
+        .get(`/quora/notifications`)
+        .send(data)
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+            expect(err).to.be.null;
+            res.status.should.be.equal(200);  
         done();
         });
     })

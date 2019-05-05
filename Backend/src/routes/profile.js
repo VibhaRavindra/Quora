@@ -38,8 +38,7 @@ router.route('/addtagline').post( function (req, res) {
     } else {
       console.log("Question Found");
       
-      res.writeHead(200, {'content-type':'application/json'});
-      res.end(JSON.stringify(result.result));
+      res.status(200).json({ responseMessage: 'Successfully Added!' });
     }
   })
 });
@@ -155,13 +154,13 @@ console.log(req.file.filename)
   res.send();
 });
 
-  router.route('/getprofileinfo').post( function (req, res) {
+  router.route('/getprofileinfo').get( function (req, res) {
 
-    console.log("In addprofilepic Route");
-    console.log(req.body);
+    console.log("In getprofileinfo Route");
+    console.log(req.query);
     //user_name
     
-    kafka.make_request('profile',{"path":"getprofileinfo", "body": req.body}, function(error,result){
+    kafka.make_request('profile',{"path":"getprofileinfo", "body": req.query}, function(error,result){
       if (error) {
         console.log(error);
         console.log("Question not found");

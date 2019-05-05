@@ -53,6 +53,10 @@ const AnswerSchema = new Schema({
      comments: {
       type: [Comment.CommentSchema],
       default: []
+     },
+     owner_status:{
+       type:String,
+       default:"Activated"
      }
   })
   const answers=mongoose.model('Answers', AnswerSchema)

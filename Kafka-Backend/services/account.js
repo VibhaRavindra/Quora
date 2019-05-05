@@ -4,6 +4,7 @@ var {users} = require('../models/UserSchema');
 var {topics} = require('../models/TopicSchema');
 var { questions } = require('../models/QuestionSchema');
 var { answers } = require('../models/AnswerSchema');
+var { comments } = require('../models/CommentSchema');
 const mysql = require('mysql');
 
 // MySQL connection without pooling.
@@ -42,6 +43,12 @@ exports.followService = function followService(msg, callback){
             break;
         case "selectedTopics":
             selectedTopics(msg,callback);
+            break;
+        case "deactivate":
+            deactivate(msg,callback);
+            break;
+        case "delete":
+            deleteMethod(msg,callback);
             break;
     }
 };
@@ -92,17 +99,23 @@ function signup(msg, callback){
                         })
                     }else{
                         mysqlconnection.commit(function(err) {
-                            if (err) { 
+                            if (err) {
                                 mysqlconnection.rollback(function(err) {
                                     if(err)
                                         console.log(err)
                                 });
+                                callback(null,{
+                                    signupSuccess:false,
+                                    signupMessage:"Sign Up Failed"
+                                })
+                            } else {
+                                callback(null,{
+                                    signupSuccess:true,
+                                    signupMessage:"Sign Up Success. Sign In to continue!"
+                                })
                             }
                         });
-                        callback(null,{
-                            signupSuccess:true,
-                            signupMessage:"Sign Up Success. Sign In to continue!"
-                        })
+                        
                     }
                 })
             }
@@ -110,14 +123,90 @@ function signup(msg, callback){
     })
 }
 
-function signin(msg, callback){
-    console.log("Inside signin");
+function deactivate(msg, callback) {
+    signinHelper(msg, (returnvalue)=>{
+        if(returnvalue.signinSuccess) {
+            users.updateOne({_id:returnvalue.userid},{'$set':{status:"Deactivated"}},(err, res)=>{
+                if (err) { 
+                    console.log(err)
+                    callback(null, {deactivateSuccess:false})
+                }
+                else {
+                    answers.updateMany({owner_userid:returnvalue.userid},{'$set':{owner_status:"Deactivated"}},(err, res)=>{
+                        if (err) { 
+                            console.log(err)
+                            callback(null, {deactivateSuccess:false})
+                        } else {
+                            console.log(":mongo all set, user deactivated.")
+                            callback(null, {deactivateSuccess:true})
+                        }
+                    });
+                }  
+            });
+        } else {
+            callback(null, {deactivateSuccess:false})
+        }
+    })
+}
+
+function deleteMethod(msg, callback) {
+    signinHelper(msg, (returnvalue)=>{
+        if(returnvalue.signinSuccess) {
+            mysqlconnection.beginTransaction(function(err) {
+                if (err) { 
+                    console.log("INSIDE ERROR 1")
+                    callback(null, {deleteSuccess:false})
+                } else {
+                    mysqlconnection.query('DELETE FROM Users WHERE user_name=?',[msg.body.user_name], (err, res)=>{
+                        if (err) { 
+                            console.log("INSIDE ERROR 2", err)
+                            callback(null, {deleteSuccess:false})
+                        } else {
+            users.deleteOne({_id:returnvalue.userid},(err, res)=>{
+                if (err) { 
+                    console.log(err)
+                    mysqlconnection.rollback();
+                    callback(null, {deleteSuccess:false})
+                }
+                else {
+                    answers.deleteMany({owner_userid:returnvalue.userid},(err, res)=>{
+                        if (err) { 
+                            console.log(err)
+                            mysqlconnection.rollback();
+                            callback(null, {deleteSuccess:false})
+                        }
+                        else {
+                            comments.deleteMany({owner_username:returnvalue.user_name}, (err, res)=>{
+                                if (err) { 
+                                    console.log(err);
+                                    mysqlconnection.rollback();
+                                    callback(null, {deleteSuccess:false})
+                                }
+                                else {
+                                    mysqlconnection.commit();
+                                    callback(null, {deleteSuccess:true})
+                                }
+                            });
+                        }
+                    })
+                }
+            })
+        }});
+            }})
+        } else {
+            callback(null, {deleteSuccess:false})
+        }
+    })
+}
+function signinHelper(msg, callback) {
+    console.log("Inside signinHelper");
     mysqlconnection.beginTransaction(function(err) {
         if (err) { 
             console.log("INSIDE ERROR 1")
-            callback(null,{
+            callback( {
                 signinSuccess:false,
-                signinMessage:"Sign In Failed"
+                signinMessage:"Sign In Failed",
+                deactivated:false
             })
         }
         mysqlconnection.query('SELECT * FROM Users WHERE user_name=?',[msg.body.user_name], 
@@ -127,9 +216,10 @@ function signin(msg, callback){
                     if(err)
                         console.log(err)
                 });
-                callback(null,{
+                callback({
                     signinSuccess:false,
-                    signinMessage:"Sign In Failed"
+                    signinMessage:"Sign In Failed",
+                    deactivated:false
                 })
             } 
             if(rowsOfTable.length == 1){
@@ -146,9 +236,17 @@ function signin(msg, callback){
                                 if(err)
                                     console.log(err)
                             });
-                            callback(null,{
+                            callback( {
                                 signinSuccess:false,
-                                signinMessage:"Sign In Failed"
+                                signinMessage:"Sign In Failed",
+                                deactivated:false
+                            })
+                        }
+                        if(result === null) {
+                            console.log("NO USER FOUND")
+                            callback({
+                                signinSuccess:false,
+                                signinMessage:"User does not Exist!"
                             })
                         }
                         let topics = result.topics_followed;
@@ -159,7 +257,7 @@ function signin(msg, callback){
                             isTopicSelected = false;
                         }
                         console.log("topics : ", topics);
-                        callback(null,{
+                        callback( {
                             signinSuccess:true,
                             user_name: rowsOfTable[0].user_name,
                             firstname: rowsOfTable[0].firstname,
@@ -167,27 +265,66 @@ function signin(msg, callback){
                             userid: rowsOfTable[0].mongo_userid,
                             topics: topics,
                             isTopicSelected: isTopicSelected,
-                            signinMessage:"Success!"
-                        });
+                            signinMessage:"Success!",
+                            deactivated: result.status==="Deactivated"
+                        })
                     })
                 } else{
+                    console.log("INSIDE PASS FAIL")
                     mysqlconnection.rollback(function(err) {
                         if(err)
                             console.log(err)
                     });
-                    callback(null,{
+                    callback({
                         signinSuccess:false,
                         signinMessage:"Password Incorrect!"
                     })
                 }
             } else {
-                callback(null,{
+                console.log("NO USER FOUND")
+                callback({
                     signinSuccess:false,
                     signinMessage:"User does not Exist!"
                 })
             }
         })
     })
+
+}
+function signin(msg, callback){
+    signinHelper(msg, (returnvalue)=>{
+        console.log("returnvalue", returnvalue)
+        if(returnvalue.deactivated && returnvalue.signinSuccess){
+            users.updateOne({_id:returnvalue.userid},{'$set':{status:"Activated"}},(err, res)=>{
+                if (err) {
+                    console.log(err)
+                    callback(null, {
+                        signinSuccess:false,
+                        signinMessage:"Sign In Failed",
+                        deactivated:false
+                    })
+                }
+                else {
+                    // update answers
+                    answers.updateMany({owner_userid:returnvalue.userid},{'$set':{owner_status:"Activated"}},(err, res)=>{
+                        if (err) {
+                            console.log(err)
+                            callback(null, {
+                                signinSuccess:false,
+                                signinMessage:"Sign In Failed",
+                                deactivated:false
+                            })
+                        } else {
+                            console.log(":mongo all set, user Activated.")
+                            callback(null, returnvalue)
+                        }
+                    })
+                }  
+            });
+        } else {
+            callback(null, returnvalue)
+        }
+    });
 }
 
 function selectedTopics(msg, callback){

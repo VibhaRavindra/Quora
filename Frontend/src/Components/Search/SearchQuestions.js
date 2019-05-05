@@ -11,6 +11,7 @@ import share from '../../Images/feed-share.svg';
 import dots from '../../Images/feed-dots.svg';
 import downvote_unselected from '../../Images/downvote-unselected.svg';
 import { timingSafeEqual } from 'crypto';
+import ReactPaginate from 'react-paginate';
 import unfollow from './unfollow.png'
 import axios from 'axios'
 import {rooturl} from '../../Config/settings'
@@ -36,11 +37,27 @@ class SearchQuestions extends Component {
         super(props);
         this.state = {
             questions: [],
+            //for pagination
+            paginated_questions:[],
+            results_per_page: 2,
+            num_pages:0,
             status:[],
             inc:[]
         
         }
         this.populateSearchResults = this.populateSearchResults.bind(this)
+        //for pagination
+        this.handlePageClick = this.handlePageClick.bind(this);
+    }
+
+    //for pagination
+    handlePageClick(data){
+        console.log(data.selected)
+        let page_number = data.selected;
+        let offset = Math.ceil(page_number * this.state.results_per_page)
+        this.setState({
+            paginated_questions : this.state.questions.slice(offset, offset +this.state.results_per_page)
+        })
     }
     componentWillReceiveProps(newprops) {
         if(newprops.match.params.searchValue != null) {
@@ -86,8 +103,12 @@ class SearchQuestions extends Component {
             headers:{'Authorization': "bearer " + localStorage.getItem("jwtToken")}
         })
         const getQuestions = await getQuestionsDetails.json();
+        const all_questions = getQuestions.questions_array
+        const pages = Math.ceil(all_questions.length/this.state.results_per_page)
         this.setState({
-            questions : getQuestions.questions_array
+            questions : getQuestions.questions_array,
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
         });
         var status={},inc={};
         this.state.questions.map(member=>
@@ -113,7 +134,7 @@ class SearchQuestions extends Component {
         console.log("this.state.questions.length : " +this.state.questions.length)
         let allQuestions;
         if(this.state.questions.length > 0){
-            allQuestions = this.state.questions.map(question => {      
+            allQuestions = this.state.paginated_questions.map(question => {     
                 return(
                     <div className="question-container">
                         <Link to={"/quora/question/"+question.questionid}>
@@ -191,6 +212,21 @@ class SearchQuestions extends Component {
                             <h2 className="questn-title">Questions for <span className="question-value">{this.props.match.params.searchValue}</span></h2>
                         </div>
                         {allQuestions}
+                        <div className="row">
+                            <ReactPaginate
+                            previousLabel={'Previous'}
+                            nextLabel={'Next'}
+                            breakLabel={'...'}
+                            breakClassName={'break-me'}
+                            pageCount={this.state.num_pages}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={this.handlePageClick}
+                            containerClassName={'pagination'}
+                            subContainerClassName={'pages pagination'}
+                            activeClassName={'active'}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

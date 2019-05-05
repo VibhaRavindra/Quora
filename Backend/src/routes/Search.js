@@ -8,7 +8,7 @@ var jwt = require('jsonwebtoken');
 var passport = require('passport');
 var requireAuth = passport.authenticate('jwt', {session: false});
 
-router.get('/topics/:searchText',requireAuth, (req,res,next) => {
+router.get('/topics/:searchText', (req,res,next) => {
     let body = {
         searchText: req.params.searchText
     }
@@ -24,7 +24,7 @@ router.get('/topics/:searchText',requireAuth, (req,res,next) => {
     });
 });
 
-router.get('/profiles/:searchText',requireAuth, FormData.none(), (req,res,next) => {
+router.get('/profiles/:searchText', FormData.none(), (req,res,next) => {
     let body = {
         searchText: req.params.searchText
     }
@@ -40,7 +40,7 @@ router.get('/profiles/:searchText',requireAuth, FormData.none(), (req,res,next) 
         }
     });
 })
-router.get('/questions/:searchText',requireAuth, (req,res,next) => {
+router.get('/questions/:searchText', (req,res,next) => {
     let body = {
         searchText: req.params.searchText
     }

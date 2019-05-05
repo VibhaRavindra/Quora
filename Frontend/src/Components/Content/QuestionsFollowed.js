@@ -83,7 +83,7 @@ class SearchQuestions extends Component {
                         </Link>
                     </div>
                     <div className="row question-row">
-                        <h2>Asked {timeAgo.format(new Date(question_followed.timestamp))}</h2>
+                    <h2 className="content-log">Asked {timeAgo.format(new Date(question_followed.timestamp))}</h2>
                     </div>
                 </div>
             )
@@ -106,7 +106,7 @@ class SearchQuestions extends Component {
                             <div className="search-profiles search-div search-div-bg">
                                 <li className="search-item letter-space">Questions Followed</li>
                             </div>
-                            <Link to={"/quora/content/answers"}>
+                            <Link to={"/quora/content/questions_answered"}>
                                 <div className="search-topics search-div">
                                     <li className="search-item letter-space">Answers</li>
                                 </div>

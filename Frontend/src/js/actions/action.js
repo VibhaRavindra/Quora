@@ -34,6 +34,7 @@ function signinUpdate(returndata) {
       localStorage.setItem("lastname",returndata.lastname)
       localStorage.setItem("userid",returndata.userid)
       localStorage.setItem("topics",returndata.topics)
+      localStorage.setItem("b64","default")
       localStorage.setItem("isTopicSelected",returndata.isTopicSelected)
     }
     return { type: SIGN_IN, payload:returndata}
@@ -41,17 +42,11 @@ function signinUpdate(returndata) {
 
 // actions for sign out
 export function signout(){
-    return (dispatch) => {
-      fetch('/logout',{
-        method: 'GET'
-      }).then(()=>dispatch(signoutUpdate()))
-    }
-}
-function signoutUpdate(returndata) {
-    localStorage.removeItem("jwtToken")
-    localStorage.removeItem("userid")
-    localStorage.removeItem("username")
-    return { type: SIGN_OUT}
+  localStorage.removeItem("jwtToken")
+  localStorage.removeItem("userid")
+  localStorage.removeItem("username")
+  localStorage.clear();
+  return { type: SIGN_OUT}
 }
 
 //actions for choose-topics

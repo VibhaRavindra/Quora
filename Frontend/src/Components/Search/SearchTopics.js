@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import '../../Styles/Search.css';
 import Header from '../Navigation/Header';
-import { Redirect, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import followTopic from '../../Images/follow-topic-icon.svg';
+//for pagination
+import ReactPaginate from 'react-paginate';
 import following from '../../Images/following-topic-icon.svg';
-// import Technology from '../../Images/Technology.png';
-// import Science from '../../Images/follow-topic-icon.svg';
-// import Music from '../../Images/follow-topic-icon.svg';
-// import Sports from '../../Images/follow-topic-icon.svg';
-// import Health from '../../Images/follow-topic-icon.svg';
 import axios from 'axios'
 import {rooturl} from '../../Config/settings'
 
@@ -16,24 +13,56 @@ class SearchQuestions extends Component {
     constructor(props){
         super(props);
         this.state = {
+            follow:false,
             topics: [],
-            follow:false
+            //for pagination
+            paginated_topics:[],
+            results_per_page: 2,
+            num_pages:0,
+            inc:[]
         }
-     
-        this.unfollowtopic=this.unfollowtopic.bind(this);
-    }
+   //for pagination
+   this.handlePageClick = this.handlePageClick.bind(this);
+   this.unfollowtopic=this.unfollowtopic.bind(this);
+}
+
+//for pagination
+handlePageClick(data){
+    console.log(data.selected)
+    let page_number = data.selected;
+    let offset = Math.ceil(page_number * this.state.results_per_page)
+    this.setState({
+        paginated_topics : this.state.topics.slice(offset, offset +this.state.results_per_page)
+    })
+}
     async componentDidMount(){
         const getTopicsDetails = await fetch('/search/topics/'+this.props.match.params.searchValue, {
             method:"GET",
             headers:{'Authorization': "bearer " + localStorage.getItem("jwtToken")}
         })
         const getTopics = await getTopicsDetails.json();
+        // for pagination
+        const all_topics = getTopics.topics_array
+        const pages = Math.ceil(all_topics.length/this.state.results_per_page)
         this.setState({
-            topics : getTopics.topics_array
+            topics : all_topics,
+            num_pages:pages,
+            paginated_topics: all_topics.slice(0,this.state.results_per_page),
         });
+        var inc={}
+        this.state.topics.map(member=>
+          
+            inc[member.name]=member.num_of_followers             
+         
+            )
+
+   this.setState({inc:inc}) 
     }
     unfollowtopic=(e,x)=>{
         this.setState({follow:false})
+        var newinc=this.state.inc
+        newinc[x]=newinc[x]-1;
+        this.setState({inc:newinc})
      e.preventDefault();
  
         let topicsArr=localStorage.getItem("topics")
@@ -58,6 +87,9 @@ class SearchQuestions extends Component {
      
      followtopic=(e,x)=>{
         this.setState({follow:true})
+        var newinc=this.state.inc
+        newinc[x]=newinc[x]+1;
+        this.setState({inc:newinc})
         e.preventDefault();
         let topicsArr=localStorage.getItem("topics")
         let newtopicsArr=[];
@@ -78,7 +110,7 @@ class SearchQuestions extends Component {
         let allTopics;
         console.log(this.state.topics,"yayyymytopic")
         if(this.state.topics.length > 0){
-            allTopics = this.state.topics.map(topic => {      
+            allTopics = this.state.paginated_topics.map(topic => {      
                 console.log(topic.career);
               
                 let img = topic.name;
@@ -101,13 +133,13 @@ class SearchQuestions extends Component {
                            <div className="follow-question" onClick={(e)=>this.followtopic(e,topic.name)}>
                                     <img className="follow-logo" src={followTopic} alt="follow"/>
                                 <span className="follow-text">Follow</span>
-                                <span className="numFollowers">{topic.num_of_followers}</span>
+                                <span className="numFollowers">{this.state.inc[topic.name]}</span>
                             </div>
                             :
                             <div className="follow-question" onClick={(e)=>this.unfollowtopic(e,topic.name)}>
                                 <img className="follow-logo" src={following} alt="follow"/>
                                 <span className="follow-text">Follow</span>
-                                <span className="numFollowers">{topic.num_of_followers}</span>
+                                <span className="numFollowers">{this.state.inc[topic.name]}</span>
                             </div>
                             }
                         </div>
@@ -144,6 +176,21 @@ class SearchQuestions extends Component {
                             <h2 className="questn-title">Topics for <span className="question-value">{this.props.match.params.searchValue}</span></h2>
                         </div>
                         {allTopics}
+                        <div className="row">
+                            <ReactPaginate
+                            previousLabel={'Previous'}
+                            nextLabel={'Next'}
+                            breakLabel={'...'}
+                            breakClassName={'break-me'}
+                            pageCount={this.state.num_pages}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={this.handlePageClick}
+                            containerClassName={'pagination'}
+                            subContainerClassName={'pages pagination'}
+                            activeClassName={'active'}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
