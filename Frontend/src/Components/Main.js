@@ -25,7 +25,7 @@ import profileviewsgraph from './Graph/profilegraph';
 
 class Main extends Component {
   render() {
-    if (localStorage.getItem("jwtToken")!== null) {
+    // if (localStorage.getItem("jwtToken")!== null) {
       return (
         <div>
           <Route path="/header" component={Header} />
@@ -55,13 +55,13 @@ class Main extends Component {
               <Route path="/quora/profileviewsgraph" component={profileviewsgraph}/>
         </div>
       );
-    } else {
-      return (
-        <div>
-          <Route path="/" component={SignUp} />
-        </div>
-     )
-    }
+    // } else {
+    //   return (
+    //     <div>
+    //       <Route path="/" component={SignUp} />
+    //     </div>
+    //  )
+    // }
   }
 }
 

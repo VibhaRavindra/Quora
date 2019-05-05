@@ -1,6 +1,6 @@
 var async = require('async');
 var Users = require('../models/UserSchema');
-var Connection=require('../DatabaseConnection')
+
 const {redisClient} = require('../redisClient')
 
 exports.profileService = function profileService(msg, callback){
