@@ -6,14 +6,79 @@ import { connect } from "react-redux";
 import { Redirect, Link } from "react-router-dom";
 import notify from '../../Images/profile-notify.svg';
 import followPerson from '../../Images/follow-person.svg';
-
+import axios from 'axios';
+import {rooturl} from '../../Config/settings'
+import unfollowuser from './unfollowuser.png'
 class SearchQuestions extends Component {
     constructor(props){
         super(props);
         this.state = {
-            profiles: []
+            profiles: [],
+            status:[],
+            inc:[]
         }
+        this.followssuser=this.followssuser.bind(this);
+        this.unfollowuser=this.unfollowuser.bind(this);
     }
+
+    
+  unfollowuser(e,x){
+      e.preventDefault();
+        var newstatus=this.state.status;
+        newstatus[x]=false;
+        console.log(newstatus,"eve new un")
+        var newinc=this.state.inc
+        newinc[x]=newinc[x]-1;
+        this.setState({status:newstatus,inc:newinc})
+            var data={
+                "user_name":localStorage.getItem("user_name"),
+                "unfollow_user_name":x
+            }
+        
+            axios.defaults.withCredentials = true;
+            //make a post request with the user data
+            axios.post("http://"+rooturl+":3001/quora/unfollowuser",data, localStorage.getItem('jwtToken'))
+                    .then(response => {
+                    
+              console.log("Status Code : ",response.status);
+              if(response.status === 200){
+                  console.log(response.data);
+    
+              }
+          })
+            .catch()
+        }
+      followssuser(e,x){
+        e.preventDefault();
+            var newstatus=this.state.status;
+            newstatus[x]=true;
+            console.log(newstatus,"eve new fo")
+            var newinc=this.state.inc
+            newinc[x]=newinc[x]+1;
+         
+            this.setState({status:newstatus,inc:newinc})
+            var data={
+                "user_name":localStorage.getItem("user_name"),
+                "follow_user_name":x
+            }
+        
+            axios.defaults.withCredentials = true;
+            //make a post request with the user data
+            axios.post("http://"+rooturl+":3001/quora/followuser",data, localStorage.getItem('jwtToken'))
+                    .then(response => {
+                    
+              console.log("Status Code : ",response.status);
+              if(response.status === 200){
+                  console.log(response.data);
+              }
+          })
+            .catch()
+        }
+
+
+
+
+
     async componentDidMount(){
         const getProfilesDetails = await fetch('/search/profiles/'+this.props.match.params.searchValue, {
             method:"GET",
@@ -23,7 +88,26 @@ class SearchQuestions extends Component {
         this.setState({
             profiles : getProfiles.profiles_array
         });
+        var status={},inc={};
+        this.state.profiles.map(member=>
+          
+            
+            member.followers.includes(localStorage.getItem("user_name")) ? status[member.user_name]=true
+            :
+            status[member.user_name]=false
+            )
+            this.state.profiles.map(member=>
+          inc[member.user_name]=member.num_of_followers
+           
+                )
+            console.log(status,"hiphop")
+
+       this.setState({status:status,inc:inc})     
     }
+
+
+
+
     render() {
         let allProfiles
         if(this.state.profiles.length > 0){
@@ -42,11 +126,18 @@ class SearchQuestions extends Component {
                         </div>
                         <div className="profile-aboutme">{profile.aboutme}</div>
                         <div className="row question-row">
-                            <div className="follow-question">
-                                <img className="follow-logo" src={followPerson} alt="follow"/>
-                                <span className="follow-text">Follow</span>
-                                <span className="numFollowers">{profile.num_of_followers}</span>
+                           { this.state.status[profile.user_name]== false ?
+                               <div className="follow-question" onClick={(e)=>this.followssuser(e,profile.user_name)}>
+                                <img className="follow-logo" src={followPerson} />
+                                <span className="follow-text" >Follow</span>
+                                <span className="numFollowers">{this.state.inc[profile.user_name]}</span>
                             </div>
+                            :
+                            <div className="follow-question" onClick={(e)=>this.unfollowuser(e,profile.user_name)}>
+                                <img className="follow-logo" src={unfollowuser} alt="follow" />
+                                <span className="numFollowers">{this.state.inc[profile.user_name]}</span>
+                            </div>
+                            }
                             <div className="follow-question">
                                 <img className="profile-notify" src={notify} alt="notify"/>
                                 <span className="profile-notify">Notify Me</span>
