@@ -12,6 +12,10 @@ import { Link } from "react-router-dom";
 import anonymousProfilePic from '../../Images/anonymous_logo.png'
 
 
+//redux imports
+import { connect } from 'react-redux';
+import { increaseBookmarkCount } from '../../js/actions/graph_actions';
+
 TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en-US')
 
@@ -195,7 +199,16 @@ componentDidMount(){
               }, this.props.reloadBookmarks)
             }
         });
-   
+        
+        //code added by AS to add profile view count
+        let bookmarkData = null;
+        var today = new Date();
+        var day = today.getDate();
+        var month = today.getMonth() + 1; //January is 0!
+        var year = today.getFullYear();
+        bookmarkData = {"user_id":localStorage.getItem("userid"),"day":day,"month":month,"year":year};
+        console.log("***",bookmarkData);
+        this.props.increaseBookmarkCount(bookmarkData);
 
   };
 
@@ -259,5 +272,7 @@ componentDidMount(){
   }
 }
 
+const mapStateToProps = state => ({
+});
 
-export default AnswerDetails;
+export default connect(mapStateToProps, { increaseBookmarkCount })(AnswerDetails);

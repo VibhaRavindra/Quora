@@ -259,7 +259,7 @@ showfollowing(){
         <b>{this.state.name}</b>
         </span><br />
        
-        <span className="tagline-profile" data-toggle="modal" data-target="#askQuestion">
+        <span className="tagline-profile" data-toggle="modal" data-target="#tagline">
      {this.state.tagline}<br />
      {this.state.isfollowing===false?
      <div onClick={this.followuser}><img src={a} width="90" height="40" />{this.state.followerscount} </div>:<div onClick={this.unfollowuser}><img src={b} width="90" height="40" />{this.state.followerscount}</div>}

@@ -22,10 +22,11 @@ import downvotegraph from './Graph/downvotegraph';
 import answerviewsgraph from './Graph/answerviewsgraph';
 import AnalyticsDashboard from './Graph/AnalyticsDashboard';
 import profileviewsgraph from './Graph/profilegraph';
+import bookmarksgraph from './Graph/bookmarksgraph';
 
 class Main extends Component {
   render() {
-    if (localStorage.getItem("jwtToken")!== null) {
+    // if (localStorage.getItem("jwtToken")!== null) {
       return (
         <div>
           <Route path="/header" component={Header} />
@@ -53,15 +54,16 @@ class Main extends Component {
               <Route path="/quora/downvotegraph" component={downvotegraph} />
               <Route path="/quora/answerviewsgraph" component={answerviewsgraph} />
               <Route path="/quora/profileviewsgraph" component={profileviewsgraph}/>
+              <Route path="/quora/bookmarksgraph" component={bookmarksgraph}/>
         </div>
       );
-    } else {
-      return (
-        <div>
-          <Route path="/" component={SignUp} />
-        </div>
-     )
-    }
+    // } else {
+    //   return (
+    //     <div>
+    //       <Route path="/" component={SignUp} />
+    //     </div>
+    //  )
+    // }
   }
 }
 
