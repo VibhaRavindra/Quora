@@ -181,12 +181,48 @@ showfollowing(){
    let followersdisplay=[],x="",followingdisplay=[],y="";
    if(this.state.followerstab===true && this.state.followingtab===false)
    for(x in this.state.followersrows)
-   followersdisplay.push(<div id="followers-elem"><img src={this.state.followersrows[x].b64} width="40" height="40"/><a className="question-link" href={"/quora/profile/" + this.state.followersrows[x].user_name}><b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b></a><br />{this.state.followersrows[x].user_tagline}</div>)
+   followersdisplay.push(<div id="followers-elem">
+  {this.state.followersrows[x].b64===null || this.state.followersrows[x].b64 ===undefined || this.state.followersrows[x].b64 === "" ||this.state.followersrows[x].b64 === "default"? 
+  <img src={abc} width="40" height="40"/>
+  :
+   <img src={this.state.followersrows[x].b64} width="40" height="40"/>}
+   {this.state.followersrows[x].user_name!=localStorage.getItem("user_name") ?
+   <a className="question-link" href={"/quora/profile/" + this.state.followersrows[x].user_name}>
+   <b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b>
+   </a>
+   :
+   <a className="question-link" href={"/quora/myprofile"}>
+   <b>{this.state.followersrows[x].firstname}{"  "}{this.state.followersrows[x].lastname}</b>
+   </a>
+   }
+   
+   
+   
+   
+   
+   <br />{this.state.followersrows[x].user_tagline}
+   </div>
+   )
    if(this.state.followerstab===false && this.state.followingtab===true){
  
     for(y in this.state.followingrows){
     console.log("hello",this.state.followingrows[y].firstname)
-    followingdisplay.push(<div id="followers-elem"><img src={this.state.followingrows[y].b64} width="40" height="40"/><a className="question-link" href={"/quora/profile/" + this.state.followingrows[y].user_name}><b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b></a><br />{this.state.followingrows[y].user_tagline}</div>)
+    followingdisplay.push(
+    <div id="followers-elem">
+     {this.state.followingrows[y].b64===null || this.state.followingrows[y].b64 ===undefined || this.state.followingrows[y].b64 === "" ||this.state.followingrows[y].b64 === "default"? 
+     <img src={abc} width="40" height="40"/>
+    :
+    <img src={this.state.followingrows[y].b64} width="40" height="40"/>}{this.state.followingrows[y].user_name!=localStorage.getItem("user_name")?
+    <a className="question-link" href={"/quora/profile/" + this.state.followingrows[y].user_name}>
+    <b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b>
+    </a>
+    :
+    <a className="question-link" href={"/quora/myprofile"}>
+    <b>{this.state.followingrows[y].firstname}{"  "}{this.state.followingrows[y].lastname}</b>
+    </a>
+    
+    }
+    <br />{this.state.followingrows[y].user_tagline}</div>)
 }
    }
  
@@ -201,7 +237,7 @@ showfollowing(){
          
                 <Header />
 <div className="profile-pic" >
-{this.state.profilepic===null || this.state.profilepic ===undefined || this.state.profilepic === "" ?
+{this.state.profilepic===null || this.state.profilepic ===undefined || this.state.profilepic === "" ||this.state.profilepic === "default"?
    defaultprofilepic:actualprofilepic}
         <br />
         <span className="info">

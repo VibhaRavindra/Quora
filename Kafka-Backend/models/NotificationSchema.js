@@ -21,6 +21,11 @@ const NotificationSchema = new Schema({
         default: '',
         required: true
     },
+    answeredby_username: {
+        type: String,
+        default: '',
+        required: true
+    },
     answeredby_profile_pic: {
         type: String,
         default: '',

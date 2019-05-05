@@ -3,7 +3,7 @@ var { questions } = require('../models/QuestionSchema');
 var { answers } = require('../models/AnswerSchema');
 var { comments } = require('../models/CommentSchema');
 var {views} =require('../models/AnswerViewSchema')
-
+var Notifications = require('../models/NotificationSchema');
 exports.answerService = function answerService(msg, callback) {
     console.log("Inside kafka backend answer.js");
     // console.log("msg"+ msg);
@@ -40,6 +40,29 @@ exports.answerService = function answerService(msg, callback) {
 
 async function submitAnswer(message, callback) {
     console.log(message.params.question_id);
+   var q;
+    questions.findOne({ "_id": message.params.question_id }, {
+        question: 1,
+        _id:0
+    }, function(err,result){
+if(err)
+{
+
+}
+else{
+    console.log(result,"wooooo")
+    q=result[0]
+}
+
+    });
+   
+    Notifications.notifications.create({qid:message.params.question_id,question:q,
+        answeredby:message.body.user_name,
+        answeredby_tagline:message.body.user_tagline,
+        answeredby_username:message.body.user_username,
+        answeredby_profile_pic:message.body.user_profile_pic,
+        timestamp_answer:new Date(),
+    })
     try {
         var newAnswer = new answers({
             answer: message.body.answer,

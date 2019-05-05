@@ -47,10 +47,11 @@ function profiles(msg, callback){
                     aboutme: result.aboutme,
                     user_tagline: result.user_tagline,
                     num_of_followers: num_of_followers,
-                    profile_image: result.user_profile_pic
+                    profile_image: result.user_profile_pic,
+                    followers:result.users_followers
                 })
             })
-            console.log(profiles_array.career);
+         
             callback(null, {
                 searchSuccess: true,
                 profiles_array: profiles_array
@@ -80,7 +81,9 @@ function questions_search(msg, callback){
                 questions_array.push({
                     questionid: result._id,
                     question: result.question,
-                    num_of_followers: num_of_followers
+                    num_of_followers: num_of_followers,
+                    followers:result.followers
+
                 })
             })
             callback(null, {
@@ -105,6 +108,8 @@ function topics_function(msg, callback){
                 topics_array: topics_array
             })
         } else {
+
+            console.log("yayyyyy",results)
             results.forEach((result)=>{
                 topics_array.push({
                     topic_id : result._id,
