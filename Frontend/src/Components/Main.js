@@ -15,6 +15,8 @@ import SearchQuestions from './Search/SearchQuestions';
 import SearchProfiles from './Search/SearchProfiles';
 import SearchTopics from './Search/SearchTopics';
 import QuestionsAsked from './Content/QuestionsAsked';
+import QuestionsFollowed from './Content/QuestionsFollowed';
+// import QuestionsAnswered from './Content/QuestionsAnswered';
 import upvotegraph from './Graph/upvotegraph';
 import downvotegraph from './Graph/downvotegraph';
 import answerviewsgraph from './Graph/answerviewsgraph';
@@ -40,6 +42,12 @@ class Main extends Component {
           <Route exact path="/quora/search/profiles/:searchValue" component={SearchProfiles} />
           <Route exact path="/quora/search/topics/:searchValue" component={SearchTopics} />
           <Route exact path="/quora/content/questions_asked" component={QuestionsAsked} />
+          <Route exact path="/quora/content/questions_asked/:year" component={QuestionsAsked} />
+          <Route exact path="/quora/content/questions_asked/:year/:sortorder" component={QuestionsAsked} />
+          <Route exact path="/quora/content/questions_followed" component={QuestionsFollowed} />
+          <Route exact path="/quora/content/questions_followed/:year" component={QuestionsFollowed} />
+          <Route exact path="/quora/content/questions_followed/:year/:sortorder" component={QuestionsFollowed} />
+          {/* <Route exact path="/quora/content/questions_answered" component={QuestionsAnswered} /> */}
           <Route path="/quora/AnalyticsDashboard" component={AnalyticsDashboard} />
               <Route path="/quora/upvotegraph" component={upvotegraph} />
               <Route path="/quora/downvotegraph" component={downvotegraph} />

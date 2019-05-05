@@ -12,17 +12,14 @@ exports.followService = function followService(msg, callback){
         case "questions_followed":
             questions_followed(msg,callback);
             break;
-        // case "questions":
-        //     console.log("in questions case")
-        //     questions_search(msg,callback);
-        //     break;
+        case "questions_answered":
+            questions_answered(msg,callback);
+            break;
     }
 };
 
 function questions_asked(msg, callback){
-    console.log("in questions_asked")
     questions.find({ owner_id : msg.body.userid }, { question: 1, timestamp: 1 },function(err, results) {
-        console.log("in questions_asked exec.")
         let questions_asked_array = []
         if(err) {
             console.log(err)
@@ -47,9 +44,7 @@ function questions_asked(msg, callback){
 }
 
 function questions_followed(msg, callback){
-    console.log("in questions_followed")
     users.find({ _id : msg.body.userid }, { questions_followed: 1},function(err, results) {
-        console.log("in questions_asked exec.")
         let questions_followed_array = []
         if(err) {
             console.log(err)
@@ -58,11 +53,38 @@ function questions_followed(msg, callback){
                 questions_followed_array: questions_followed_array
             })
         } else {
-            console.log("questions_followed : ", questions_followed)
-            results.forEach((result)=>{
+            results[0].questions_followed.forEach((result)=>{
+                console.log(result);
                 questions_followed_array.push({
-                    questionid: result.questions_followed.qid,
-                    question: result.question
+                    questionid: result.qid,
+                    question: result.question,
+                    timestamp: result.timestamp
+                })
+            })
+            callback(null, {
+                questionsFollowedSuccess: true,
+                questions_followed_array: questions_followed_array
+            });
+        }
+    });
+}
+
+function questions_answered(msg, callback){
+    users.find({ _id : msg.body.userid }, { questions_followed: 1},function(err, results) {
+        let questions_followed_array = []
+        if(err) {
+            console.log(err)
+            callback(null, {
+                questionsFollowedSuccess: false,
+                questions_followed_array: questions_followed_array
+            })
+        } else { 
+            results[0].questions_followed.forEach((result)=>{
+                console.log(result);
+                questions_followed_array.push({
+                    questionid: result.qid,
+                    question: result.question,
+                    timestamp: result.timestamp
                 })
             })
             callback(null, {
