@@ -78,7 +78,7 @@ class downvotegraph extends Component {
           }
 console.log(this.state.downvotes)
         return (
-            <div style={{ background: "#fafafa", height: "100vh" }}>
+            <div style={{ background: "#fafafa" }}>
                    <Bar ref="chart" data={data} />
             </div>
         )
