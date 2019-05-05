@@ -14,19 +14,16 @@ exports.followService = function followService(msg, callback){
             profiles(msg,callback);
             break;
         case "questions":
-            console.log("in questions case")
             questions_search(msg,callback);
             break;
     }
 };
 
 function profiles(msg, callback){
-    console.log("in profiles")
     users.find({ $text: { $search: msg.body.searchText}}, 
         { score: { $meta: "textScore" }, user_name:1,firstname:1, lastname:1, user_tagline:1, user_profile_pic:1, users_followers:1, career:1, aboutme:1 })
     .sort({ score : { $meta : 'textScore' } })
     .exec(function(err, results) {
-        console.log("in profiles exec.")
         let profiles_array = []
         if(err) {
             console.log(err)
@@ -51,7 +48,6 @@ function profiles(msg, callback){
                     followers:result.users_followers
                 })
             })
-         
             callback(null, {
                 searchSuccess: true,
                 profiles_array: profiles_array
@@ -61,12 +57,10 @@ function profiles(msg, callback){
 }
 
 function questions_search(msg, callback){
-    console.log("in questions")
     questions.find({ $text: { $search: msg.body.searchText}}, 
         { score: { $meta: "textScore" }, question:1,followers:1 })
     .sort({ score : { $meta : 'textScore' } })
     .exec(function(err, results) {
-        console.log("in search exec.")
         let questions_array = []
         if(err) {
             console.log(err)
@@ -83,7 +77,6 @@ function questions_search(msg, callback){
                     question: result.question,
                     num_of_followers: num_of_followers,
                     followers:result.followers
-
                 })
             })
             callback(null, {
@@ -95,7 +88,6 @@ function questions_search(msg, callback){
 }
 
 function topics_function(msg, callback){
-    console.log("in TOPICS");
     topics.find({ $text: { $search: msg.body.searchText}}, 
         { score: { $meta: "textScore" }})
     .sort({ score : { $meta : 'textScore' } })
@@ -108,8 +100,6 @@ function topics_function(msg, callback){
                 topics_array: topics_array
             })
         } else {
-
-            console.log("yayyyyy",results)
             results.forEach((result)=>{
                 topics_array.push({
                     topic_id : result._id,
@@ -117,7 +107,6 @@ function topics_function(msg, callback){
                     num_of_followers: result.num_of_followers
                 })
             })
-            console.log("TOPICS ARRAY : ", topics_array);
             callback(null, {
                 searchSuccess: true,
                 topics_array: topics_array
