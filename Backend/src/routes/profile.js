@@ -167,9 +167,12 @@ console.log(req.file.filename)
         res.status(400).json({responseMessage: 'Question not found'});
       } else {
         console.log("Question Found");
-        
-        res.writeHead(200, {'content-type':'application/json'});
-        res.end(JSON.stringify(result.result));
+        if(JSON.stringify(result.result)!=JSON.stringify({}))
+      {  res.writeHead(200, {'content-type':'application/json'});
+        res.end(JSON.stringify(result.result))}
+        else{
+          res.status(204).json({responseMessage: 'Profile not found'});
+        }
       }
     })
   });
