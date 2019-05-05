@@ -20,7 +20,7 @@ class answerviewsgraph extends Component {
         }
     }
     componentDidMount(){
-        localStorage.setItem("user_name","vibhashree.ravindra@sjsu.edu")
+     
         var data={
             owner_username:localStorage.getItem("user_name")
         }
