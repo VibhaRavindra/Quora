@@ -13,6 +13,9 @@ import AddEducation from './AddEducation';
 import a from './a.png'
 import b from './b.png'
 import {rooturl} from '../../Config/settings'
+//redux imports
+import { connect } from 'react-redux';
+import { increaseProfileView } from '../../js/actions/graph_actions';
 class displayprofile extends Component {
     constructor(props) {
         super(props);
@@ -41,7 +44,7 @@ class displayprofile extends Component {
         this.showprofile=this.showprofile.bind(this);
     }
 
-componentWillMount=()=>{
+componentWillMount=async ()=>{
     var data={
         "user_name":this.props.match.params.user_id
       }
@@ -74,6 +77,17 @@ componentWillMount=()=>{
     }
     })
       .catch()
+
+ //code added by AS to add profile view count
+ let profileData = null;
+ var today = new Date();
+ var day = today.getDate();
+ var month = today.getMonth() + 1; //January is 0!
+ var year = today.getFullYear();
+ profileData = {"user_id":this.props.match.params.user_id,"day":day,"month":month,"year":year};
+ console.log("***",profileData);
+ await this.props.increaseProfileView(profileData);
+
   }
 followuser=()=>{
    
@@ -94,6 +108,7 @@ followuser=()=>{
       }
   })
     .catch()
+
 }
 
 unfollowuser=()=>{
@@ -323,4 +338,8 @@ Activity<br />
     }
 }
 
-export default displayprofile;
+const mapStateToProps = state => ({
+    response : state.graph.payload
+});
+
+export default connect(mapStateToProps, { increaseProfileView })(displayprofile);
