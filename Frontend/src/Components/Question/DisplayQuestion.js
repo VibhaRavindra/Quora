@@ -37,7 +37,8 @@ class DisplayQuestion extends Component {
         swal("followed question");
         var data={
             follower_username:localStorage.getItem("user_name"),
-            qid:x
+            qid:x,
+            question:y
         }
         axios.post("http://"+rooturl+":3001/quora/question/followquestion",data, localStorage.getItem('jwtToken'))
         window.location.reload(true);

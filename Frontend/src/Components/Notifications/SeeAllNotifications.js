@@ -29,7 +29,7 @@ class SeeAllNotifications extends Component {
         }
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post("http://"+rooturl+":3001/quora/notifications",data, localStorage.getItem('jwtToken'))
+        axios.get("http://"+rooturl+":3001/quora/notifications",{params:data}, localStorage.getItem('jwtToken'))
                 .then(response => {
                 
           console.log("Status Code : ",response.status);

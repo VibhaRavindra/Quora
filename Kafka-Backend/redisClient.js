@@ -8,7 +8,6 @@ redisClient.on('connect', function (err) {
     console.log('connected to Redis...');
     }
 });
-
 module.exports = {
     redisClient
 };

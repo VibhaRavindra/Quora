@@ -69,7 +69,7 @@ console.log("username from localstorage is",localStorage.getItem("user_name"))
       }
       axios.defaults.withCredentials = true;
       //make a post request with the user data
-      axios.post("http://"+rooturl+":3001/quora/getprofileinfo",data, localStorage.getItem('jwtToken'))
+      axios.get("http://"+rooturl+":3001/quora/getprofileinfo",{params:data}, localStorage.getItem('jwtToken'))
               .then(response => {
               
         console.log("Status Code : ",response.status);
@@ -385,8 +385,10 @@ Shares<br />
 Spaces<br />
 Posts<br />
 Blogs<br />
-<div onClick={this.showfollowers}>Followers {this.state.followers.length}</div>
-<div onClick={this.showfollowing}>Following {this.state.following.length}</div>
+
+<div onClick={this.showfollowers}>Followers{this.state.followers != null || this.state.followers != undefined || this.state.followers !=null ? <span>{this.state.followers.length}</span> : <span>0</span>}</div>
+
+<div onClick={this.showfollowing}>Following {this.state.following != null || this.state.following != undefined || this.state.following !=null ? <span>{this.state.following.length}</span> : <span>0</span>}</div>
 Edits<br />
 Activity<br />
                                             </Nav>
