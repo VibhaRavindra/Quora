@@ -151,9 +151,6 @@ async function updateAnswer(message, callback) {
 
 async function submitComment(message, callback) {
     console.log(message.params.question_id);
-    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-    console.log(message.body.user_id);
-    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     try {
         var newComment = new comments({
             comment: message.body.comment,
