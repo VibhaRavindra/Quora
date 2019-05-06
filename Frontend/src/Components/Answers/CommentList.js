@@ -4,6 +4,7 @@ import '../../Styles/Comments.css'
 import defaultProfilePic from '../../Images/profile_logo.png'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
+import CommentDetails from './CommentDetails'
 import axios from 'axios'
 
 TimeAgo.addLocale(en)
@@ -20,6 +21,7 @@ class CommentList extends React.Component {
   componentWillMount() {
     axios.defaults.withCredentials = true;
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+    console.log("Debug "+ JSON.stringify(this.props.comments) +" profile pic req: ");
     axios.get('/quora/profilepic?userid=' + this.props.comments.owner_userid)
         .then((response) => {
             if (response !== undefined)
@@ -39,33 +41,12 @@ class CommentList extends React.Component {
     // console.log(JSON.stringify(this.props.comments))
     if(!this.props.comments) return null;
     const commentItems = this.props.comments.map( comment => {
-      // console.log(JSON.stringify(comment))
-    //   <CommentListItem key={ "comment-" + comment.id } comment={comment} voteOnComment={voteOnComment} />
-      if(Object.keys(comment).length === 0) {
-        return(<img src="https://image.ibb.co/iYo1yw/Screen_Shot_2017_09_28_at_6_43_28_PM.png" alt={`loading-image`}  className="loading-image" />);
-      } else {
-        var userImg = defaultProfilePic;
-      if(this.state.userImg !== '' && this.state.userImg !== 'default') {
-          console.log("Debug profile pic : " + this.state.userImg)
-          userImg = this.state.userImg
-      }
   
         return (
-          <li className="comment-list-item">
-            <div className="comment-header">
-            <img src={userImg} alt="" className="answerer-pro-pic" />
-            <div className="comment-details">
-                <h1>{comment.owner_name}</h1>
-                <h2> {timeAgo.format(new Date(comment.timestamp))}</h2>
-              </div>
-            </div>
-            <div className="comment-body">{comment.comment}</div>
-          </li>
+          <CommentDetails comment={comment} />
         );
   
-      }
-  
-    });
+      })
 
     return(
       <div id="comments-container">

@@ -20,7 +20,6 @@ class DisplayBookmark extends Component {
 
       
         let record = this.props.question;
-        let index = this.props.questionIndex;
         let answerDiv = null;
         
         if (record.answers.length>0) {
