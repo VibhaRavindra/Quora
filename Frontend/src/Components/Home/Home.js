@@ -7,8 +7,11 @@ import bookmarkImg from '../../Images/bookmark.png';
 import AskQuestion from "../Question/AskQuestion";
 import { connect } from 'react-redux';
 import { getAllQuestions } from '../../js/actions/question_actions';
+import { getProfilePic } from '../../js/actions/profile_actions';
 import DisplayQuestion from '../Question/DisplayQuestion';
 import { Link } from "react-router-dom";
+//for pagination
+import ReactPaginate from 'react-paginate';
 
 class Home extends Component {
     constructor(props) {
@@ -17,8 +20,25 @@ class Home extends Component {
             defaultImg: false,
             questions: [],
             isDefaultTopic : true,
-            followedquestions:[]
+            followedquestions:[],
+             //for pagination
+            paginated_questions:[],
+            results_per_page: 3,
+            num_pages:0,
+            profile_b64: null
         }
+        //for pagination
+        this.handlePageClick = this.handlePageClick.bind(this);
+    }
+
+    //for pagination
+    handlePageClick(data){
+    console.log(data.selected)
+    let page_number = data.selected;
+    let offset = Math.ceil(page_number * this.state.results_per_page)
+    this.setState({
+        paginated_questions : this.state.questions.slice(offset, offset +this.state.results_per_page)
+    })
     }
 
     async componentDidMount() {
@@ -31,8 +51,16 @@ class Home extends Component {
         questions = this.props.questions.questions;
         console.log(this.props.questions.questions);
         this.setState({ questions: questions});
-        
+        // for pagination
+        const all_questions = questions;
+        const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+        this.setState({
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
+        });
 
+        let userid = localStorage.getItem("userid");
+        await this.props.getProfilePic(userid);
     }
 
     closeDiv = (event, index) => {
@@ -41,6 +69,13 @@ class Home extends Component {
         console.log(questionsArr[index].question);
         questionsArr.splice(index, 1);
         this.setState({ questions: questionsArr });
+        // for pagination
+        const all_questions = this.state.questions;
+        const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+        this.setState({
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
+        });
     }
 
     render() {
@@ -64,7 +99,7 @@ class Home extends Component {
         });
 
        
-        questionsDiv = this.state.questions.map((record, index) => {
+        questionsDiv = this.state.paginated_questions.map((record, index) => {
             return (
             <DisplayQuestion question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} closeCardMethod={this.closeDiv}/>
             )
@@ -126,6 +161,21 @@ class Home extends Component {
                                                     </div>
                                                 </Tab.Pane>
                                             </Tab.Content>
+                                            <div className="row">
+                            <ReactPaginate
+                            previousLabel={'Previous'}
+                            nextLabel={'Next'}
+                            breakLabel={'...'}
+                            breakClassName={'break-me'}
+                            pageCount={this.state.num_pages}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={this.handlePageClick}
+                            containerClassName={'pagination'}
+                            subContainerClassName={'pages pagination'}
+                            activeClassName={'active'}
+                            />
+                        </div>
                                         </Col>
                                     </Row>
                                 </Tab.Container>
@@ -133,6 +183,7 @@ class Home extends Component {
                         </div>
 
                     </div>
+                    
                 </div>
             </div>
         )
@@ -143,4 +194,4 @@ const mapStateToProps = state => ({
     questions : state.question.payload
 });
 
-export default connect(mapStateToProps, { getAllQuestions })(Home);
+export default connect(mapStateToProps, { getAllQuestions, getProfilePic })(Home);

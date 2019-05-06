@@ -15,6 +15,8 @@ import scienceImage from '../../Images/topic_science.png';
 import axios from 'axios'
 import {rooturl} from '../../Config/settings'
 import swal from 'sweetalert';
+//for pagination
+import ReactPaginate from 'react-paginate';
 
 class Topic extends Component {
     constructor(props) {
@@ -25,8 +27,24 @@ class Topic extends Component {
             isTabSelected: false,
             selectedTopic: null,
             topic: null,
-            topics:[]
+            topics:[],
+            //for pagination
+            paginated_questions:[],
+            results_per_page: 3,
+            num_pages:0
         }
+        //for pagination
+        this.handlePageClick = this.handlePageClick.bind(this);
+    }
+
+     //for pagination
+     handlePageClick(data){
+        console.log(data.selected)
+        let page_number = data.selected;
+        let offset = Math.ceil(page_number * this.state.results_per_page)
+        this.setState({
+            paginated_questions : this.state.questions.slice(offset, offset +this.state.results_per_page)
+        });
     }
 
     async componentDidMount() {
@@ -42,6 +60,14 @@ class Topic extends Component {
         questions = this.props.questions.questions;
         console.log(this.props.questions.questions);
         this.setState({ questions: questions });
+         // for pagination
+         const all_questions = questions;
+         const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+         this.setState({
+             num_pages:pages,
+             paginated_questions: all_questions.slice(0,this.state.results_per_page),
+         });
+         //
         let topicsArr=localStorage.getItem("topics");
         topicsArr=topicsArr.split(",");
      
@@ -59,6 +85,13 @@ class Topic extends Component {
         console.log(questionsArr[index].question);
         questionsArr.splice(index, 1);
         this.setState({ questions: questionsArr });
+        // for pagination
+        const all_questions = this.state.questions;
+        const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+        this.setState({
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
+        });
     }
 
     updateTopicQuestions = async (event, topic) => {
@@ -133,7 +166,7 @@ if (index > -1) {
         });
 
 
-        questionsDiv = this.state.questions.map((record, index) => {
+        questionsDiv = this.state.paginated_questions.map((record, index) => {
             return (
                 <DisplayQuestion question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} />
             )
@@ -244,6 +277,21 @@ if (index > -1) {
                                                 </div>
                                                 {questionsDiv}
                                             </div>
+                                            <div className="row">
+                            <ReactPaginate
+                            previousLabel={'Previous'}
+                            nextLabel={'Next'}
+                            breakLabel={'...'}
+                            breakClassName={'break-me'}
+                            pageCount={this.state.num_pages}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={this.handlePageClick}
+                            containerClassName={'pagination'}
+                            subContainerClassName={'pages pagination'}
+                            activeClassName={'active'}
+                            />
+                        </div>
                                         </Col>
                                     </Row>
                                 </Tab.Container>

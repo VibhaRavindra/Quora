@@ -34,6 +34,9 @@ exports.profileService = function profileService(msg, callback){
             case "addlocation":
             addlocation(msg,callback);
             break;
+            case "get_profile_pic":
+            getprofilepic(msg,callback);
+            break;
             
     
     }
@@ -143,7 +146,7 @@ function getfollowersinfo(msg, callback){
             if(result[0]!=undefined){
                       console.log(result[0])
                       usersfollowed=result[0].users_followers
-                      Users.users.find( {user_name:{$in:usersfollowed}} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1,"user_name":1}, function(err,result){
+                      Users.users.find( {user_name:{$in:usersfollowed},status:"Activated"} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1,"user_name":1}, function(err,result){
                         if (err) {
                             console.log(err);
                             console.log("unable to read the database");
@@ -170,7 +173,7 @@ function getfollowinginfo(msg, callback){
                       console.log(result[0])
                       usersfollowing=result[0].users_following
                     console.log(usersfollowing)
-                    Users.users.find( {user_name:{$in:usersfollowing}} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1,"user_name":1}, function(err,result){
+                    Users.users.find( {user_name:{$in:usersfollowing},status:"Activated"} ,{"_id":0,"firstname":1,"lastname":1,"user_tagline":1,"user_profile_pic":1,"b64":1,"user_name":1}, function(err,result){
                         if (err) {
                             console.log(err);
                             console.log("unable to read the database");
@@ -224,6 +227,28 @@ function getprofileinfo(msg, callback){
         callback(null, {status:400,error});
     }
    
+}
+
+
+
+function getprofilepic(msg, callback) {
+    console.log("In message get profile pic. Msg: ", msg);
+    Users.users.find({"_id":msg.body.userid}, { "b64": 1, "_id": 0 }, function (err, results) {
+        if (err) {
+            console.log(err);
+            console.log("DB error");
+            callback(err, "DB error");
+        } else {
+            if (results) {
+                console.log("results:", results)
+                callback(null, { status: 200, base64: results });
+            }
+            else {
+                console.log("No results found");
+                callback(null, { status: 204 });
+            }
+        }
+    });
 }
 
 

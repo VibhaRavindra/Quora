@@ -69,7 +69,7 @@ describe('Quora Mocha Test Harness:', () => {
        it("Test Case 4 - Get profile info", (done) => {
 
         const data = { 
-           "user_name":"mango2@sjsu.edu"
+           "user_name":"mango243@sjsu.edu"
         }
         chai.request(rooturl)
         .get(`/quora/getprofileinfo`)
@@ -78,7 +78,7 @@ describe('Quora Mocha Test Harness:', () => {
         .end((err, res) => {
             expect(err).to.be.null;
             res.body.should.be.a('Object');
-            res.status.should.be.equal(200);  
+            res.status.should.be.equal(204);  
         done();
         });
     })
@@ -115,5 +115,61 @@ describe('Quora Mocha Test Harness:', () => {
         done();
         });
     })
+
+    it("Test Case 7 - Get All answers", (done) => {
+
+        chai.request(rooturl)
+        .get(`/answer/5cc69ab70b487ecef8fc8c74`)
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+            expect(err).to.be.null;
+            res.status.should.be.equal(200);  
+        done();
+        });
+    })
+
+    it("Test Case 8 - Get user bookmarks", (done) => {
+
+        const data = { 
+            user_id: "5cc5e68b7be83718d457a28b"
+         }
+        chai.request(rooturl)
+        .post('/bookmarks')
+        .send(data)
+        .end((err, res) => {
+            expect(err).to.be.null;
+            res.should.have.status(200);
+        done();
+        });
+    })
+
+    it("Test Case 9 - Get questions asked", (done) => {
+
+        const data = { 
+            user_id: "5cc5e68b7be83718d457a28b"
+         }
+        chai.request(rooturl)
+        .get(`/content/questions_asked`)
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+            expect(err).to.be.null;
+            res.status.should.be.equal(200);  
+        done();
+        });
+    })
+
+    it("Test Case 10 - Search topics", (done) => {
+
+         chai.request(rooturl)
+        .get(`/search/topics/technology`)
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+            expect(err).to.be.null;
+            res.status.should.be.equal(200);  
+        done();
+        });
+    })
+
+
 
 })

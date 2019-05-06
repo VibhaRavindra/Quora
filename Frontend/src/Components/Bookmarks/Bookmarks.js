@@ -9,7 +9,8 @@ import { connect } from 'react-redux';
 import { getAllQuestions } from '../../js/actions/question_actions';
 import DisplayBookmark from './DisplayBookmark';
 import { Link } from "react-router-dom";
-import axios from 'axios'
+import axios from 'axios';
+import ReactPaginate from 'react-paginate';
 
 
 class Bookmarks extends Component {
@@ -18,22 +19,39 @@ class Bookmarks extends Component {
         this.state = {
             defaultImg: false,
             questions: [],
-            isDefaultTopic : true,
-            followedquestions:[]
+            isDefaultTopic: true,
+            followedquestions: [],
+            //for pagination
+            paginated_questions: [],
+            results_per_page: 2,
+            num_pages: 0,
+            currentPage: 1,
         }
+        //for pagination
+        this.handlePageClick = this.handlePageClick.bind(this);
+    }
+    //for pagination
+    handlePageClick(data) {
+        console.log(data.selected)
+        let page_number = data.selected;
+        let offset = Math.ceil(page_number * this.state.results_per_page)
+        this.setState({
+            paginated_questions: this.state.questions.slice(offset, offset + this.state.results_per_page),
+            currentPage: page_number
+        })
     }
 
     async componentDidMount() {
         console.log(localStorage.getItem("tagline"))
         //if (localStorage.getItem("image") === null) {
-            this.setState({ defaultImg: true });
+        this.setState({ defaultImg: true });
         //}
 
         var data = {
-            user_id : localStorage.getItem('userid')
+            user_id: localStorage.getItem('userid')
         }
         console.log(data)
-       axios.defaults.withCredentials = true;
+        axios.defaults.withCredentials = true;
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
         axios.post('/bookmarks', data)
             .then((response) => {
@@ -41,17 +59,29 @@ class Bookmarks extends Component {
                 if (response !== undefined)
                     if (response.status === 200) {
                         console.log(response);
-                        this.setState({ questions: response.data.bookmarks });
+                        const all_questions = response.data.bookmarks;
+                        const pages = Math.ceil(all_questions.length / this.state.results_per_page)
+                        this.setState({
+                            questions: all_questions,
+                            num_pages: pages,
+                            paginated_questions: all_questions.slice(0, this.state.results_per_page),
+                        });
                     }
+
             })
     }
 
     closeDiv = (index) => {
         console.log(index);
         let questionsArr = this.state.questions;
-        console.log(questionsArr[index].question);
+        console.log(questionsArr[((this.state.currentPage-1)*this.state.results_per_page) + index].question);
         questionsArr.splice(index, 1);
-        this.setState({ questions: questionsArr });
+       
+        let paginatedQuestionsArr = this.state.paginated_questions;
+        console.log(paginatedQuestionsArr[index].question);
+        paginatedQuestionsArr.splice(index, 1);
+
+        this.setState({ questions: questionsArr, paginated_questions: paginatedQuestionsArr });
     }
 
     render() {
@@ -64,20 +94,20 @@ class Bookmarks extends Component {
         let userTopics = topics.split(",");
         console.log(userTopics);
         topicsNavDiv = userTopics.map((record, index) => {
-            let topicurl = "/quora/topic/"+record.toLowerCase();
+            let topicurl = "/quora/topic/" + record.toLowerCase();
             return (
                 <Link className="feed-home-nav" to={topicurl} >
-                <Nav.Item>
+                    <Nav.Item>
                         <div className="label feed-label">{record}</div>
-                </Nav.Item>
+                    </Nav.Item>
                 </Link>
             )
         });
 
-       
-        questionsDiv = this.state.questions.map((record, index) => {
+
+        questionsDiv = this.state.paginated_questions.map((record, index) => {
             return (
-            <DisplayBookmark question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} reloadBookmarks={() => {this.closeDiv(index)}}/>
+                <DisplayBookmark question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} reloadBookmarks={() => { this.closeDiv(index) }} />
             )
         });
 
@@ -117,7 +147,22 @@ class Bookmarks extends Component {
                                         <Col sm={9}>
                                             <Tab.Content>
                                                 <Tab.Pane eventKey="first">
-                                                        {questionsDiv}
+                                                    {questionsDiv}
+                                                    <div className="row">
+                                                        <ReactPaginate
+                                                            previousLabel={'Previous'}
+                                                            nextLabel={'Next'}
+                                                            breakLabel={'...'}
+                                                            breakClassName={'break-me'}
+                                                            pageCount={this.state.num_pages}
+                                                            marginPagesDisplayed={2}
+                                                            pageRangeDisplayed={5}
+                                                            onPageChange={this.handlePageClick}
+                                                            containerClassName={'pagination'}
+                                                            subContainerClassName={'pages pagination'}
+                                                            activeClassName={'active'}
+                                                        />
+                                                    </div>
                                                 </Tab.Pane>
                                             </Tab.Content>
                                         </Col>
