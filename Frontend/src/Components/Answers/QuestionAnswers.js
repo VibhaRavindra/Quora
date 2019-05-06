@@ -190,18 +190,18 @@ class QuestionAnswers extends Component {
                             <div className="question-footer-elem" style={{ marginLeft: "0.3em" }}>
                                 <div className="answer-icon answer-icon-label" onClick={() => { this.CreateAnswer(this.props.match.params.questionId) }}>Answer</div>
                             </div>
+                            <div className="question-footer-elem" style={{ marginLeft: "0.3em" }}>
                             {this.state.follow===false ?
-                                <div className="follow-icon answer-icon-label" onClick={e=>this.followquestion(e,this.state.question._id,this.state.question.question)}>
+                                <div className="follow-icon follow-icon-label" onClick={e=>this.followquestion(e,this.state.question._id,this.state.question.question)}>
             Follow {(this.state.followno == 0)? "": this.state.followno}
             </div>
                               :
 
-                            <div id="unfollow-ques answer-icon-label" onClick={e=>this.unfollowquestion(e,this.state.question._id,this.state.question.question)}>
-                           <img src={unfollow} width="60" height="40" />{"  "}{(this.state.followno == 0)? ""
-                                :this.state.followno}
+                            <div className="unfollow-icon unfollow-icon-label" onClick={e=>this.unfollowquestion(e,this.state.question._id,this.state.question.question)}>
+                           Unfollow {(this.state.followno == 0)? "" :this.state.followno}
                             </div>
                             }
-
+                            </div>
                             <div className="question-footer-elem-share-icons" style={{ marginLeft: "20em" }}>
                                 <div className="fb-icon answer-icon-hide">&nbsp;</div>
                             </div>
