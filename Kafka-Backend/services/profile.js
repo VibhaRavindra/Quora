@@ -34,6 +34,9 @@ exports.profileService = function profileService(msg, callback){
             case "addlocation":
             addlocation(msg,callback);
             break;
+            case "get_profile_pic":
+            getprofilepic(msg,callback);
+            break;
             
     
     }
@@ -224,6 +227,28 @@ function getprofileinfo(msg, callback){
         callback(null, {status:400,error});
     }
    
+}
+
+
+
+function getprofilepic(msg, callback) {
+    console.log("In message get profile pic. Msg: ", msg);
+    Users.users.find({"_id":msg.body.userid}, { "b64": 1, "_id": 0 }, function (err, results) {
+        if (err) {
+            console.log(err);
+            console.log("DB error");
+            callback(err, "DB error");
+        } else {
+            if (results) {
+                console.log("results:", results)
+                callback(null, { status: 200, base64: results });
+            }
+            else {
+                console.log("No results found");
+                callback(null, { status: 204 });
+            }
+        }
+    });
 }
 
 
