@@ -155,6 +155,7 @@ async function submitComment(message, callback) {
         var newComment = new comments({
             comment: message.body.comment,
             owner_username: message.body.user_username,
+            owner_userid: message.body.user_id,
             owner_name: message.body.user_name,
             owner_profile_pic: message.body.user_profile_pic
         });
