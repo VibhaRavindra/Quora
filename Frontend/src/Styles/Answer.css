@@ -1,0 +1,142 @@
+
+.editorContainer {
+    text-align:center;
+    height:300px;
+    width:600px;
+    border: 1px solid #e2e2e2;
+    border-radius: 3px;
+  }
+    .quill strong {
+      font-weight: bold;
+   }
+    .quill em {
+      font-style: italic;
+   }
+    div.ql-toolbar.ql-snow, div.ql-container.ql-snow {
+      border-left: 0;
+      border-right: 0;
+   }
+    .answer-form {
+      border: 1px solid #e2e2e2;
+      margin-top: 10px;
+   }
+    .answer-form .answer-header {
+      background-color: #f6f6f6;
+      border: 0;
+      padding-left: 10px;
+			padding-bottom: 30px;
+			padding-top: 30px;
+			margin-top: 0px
+   }
+    .answer-form .answer-form-footer {
+      padding: 10px;
+      background-color: #f6f6f6;
+   }
+    
+  
+.answer-list {
+	 border-bottom: 1px solid #efefef;
+	 padding-left: 20px;
+	 padding-right: 16px;
+}
+ .answer-item {
+	 display: flex;
+	 flex-direction: column;
+	 font-size: 18px;
+	 padding-top: 10px;
+	 padding-bottom: 10px;
+	 font-weight: 400;
+}
+ .answer-item .answer-buttons {
+	 display: flex;
+	 flex-direction: row;
+	 justify-content: flex-start;
+}
+
+.answer-header {
+  border-top: 1px solid #e2e2e2;
+  padding-top: 20px;
+}
+ .answer-header {
+	 display: flex;
+	 flex-direction: row;
+	 align-items: center;
+	 height: 50px;
+}
+ .answer-header img {
+	 height: 42px;
+	 width: 42px;
+	 border-radius: 50%;
+}
+ .answer-details {
+	 display: flex;
+	 flex-direction: column;
+	 display: block;
+	 overflow: hidden;
+	 margin-left: 10px;
+	 font-family: 'q_serif', Georgia, Times, "Times New Roman", "Hiragino Kaku Gothic Pro", "Meiryo", serif;
+	 font-size: 16px;
+}
+ .answer-details h1,h2 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+ .answer-details h1 {
+	 font-size: 16px;
+}
+
+ .answer-details h2 {
+	 font-size: 14px;
+	 color: #949494;
+	 margin-top: 3px;
+}
+ .answer-body {
+	 font-family: 'q_serif', Georgia, Times, "Times New Roman", "Hiragino Kaku Gothic Pro", "Meiryo", serif;
+	 font-size: 15px;
+	 line-height: 1.4;
+	 margin-top: 20px;
+	 margin-bottom: 20px;
+}
+ .answer-body img {
+	 padding-top: 10px;
+   padding-bottom: 10px;
+   max-width:100%;
+}
+ .answer-body ul {
+	 list-style-position: inside;
+}
+ .answer-body li {
+	 list-style-type: circle;
+	 list-style-position: inside;
+	 margin-left: 15px;
+}
+ .answer-body ol > li {
+	 list-style-type: decimal;
+	 margin-top: 10px;
+}
+ .ql-editor {
+	 min-height: 150px;
+	 font-weight: normal;
+}
+ .no-answers-message {
+	 padding: 16px;
+	 padding-left: 0;
+	 font-weight: 400;
+	 font-size: 14px;
+}
+
+.answer-edit-icon{
+	background: url('../Images/feed-answer-edit.svg') no-repeat 3px center;
+}
+
+.answer-icon-edit-label{
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	margin-left: 5px!important;
+	font-weight: 500!important;
+	font-size: 14px!important;
+	color: #666!important;
+}

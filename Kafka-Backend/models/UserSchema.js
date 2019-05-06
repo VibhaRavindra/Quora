@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var Question = require('./QuestionSchema');
 var Answer= require('./AnswerSchema');
-var Bookmark= require('./BookmarkSchema');
 //schema
 const UserSchema = new Schema({
   user_name: {
@@ -12,14 +11,20 @@ const UserSchema = new Schema({
     sparse: true 
   },
   user_tagline: {
-    type: String
+    type: String,
+    default:""
   },
   user_profile_pic:{
       type: String
   },
+  b64:{
+    type: String,
+    default:"default"
+},
   firstname: {
     type: String,
-    required: true
+    required: true,
+    default:""
   },
   lastname:{
     type: String,
@@ -41,19 +46,21 @@ const UserSchema = new Schema({
     }
   },
   education:{
-    type: String
+    type: String,
+    default:""
   },
   career: {
-    type: String
+    type: String,
+    default:""
   },
   aboutme:{
     type: String
   },
   users_followers:{
-    type: Number
+    type: Array
   },
   users_following:{
-    type:Number 
+    type:Array 
   },
   topics_followed:{
     type:Array
@@ -62,10 +69,10 @@ const UserSchema = new Schema({
     type: [Answer.AnswerSchema] 
   },
   questions_asked:{
-    type: [Question.QuestionSchema]    
+    type: Array    
   },
   bookmarks:{
-    type:[Bookmark.BookmarkSchema],
+    type:[Question.QuestionSchema],
   },
   profileview_count:{
     type: Number,
@@ -73,7 +80,11 @@ const UserSchema = new Schema({
   status:{
     type:String,
     default:"Activated"
-  }
+  },
+questions_followed:{
+    type:Array,
+  
+},
 });
     
 var users=mongoose.model('Users',UserSchema)

@@ -20,12 +20,10 @@ const QuestionSchema = new Schema({
         required: true
     },
     owner_tagline: {
-        type: String,
-        required: true
+        type: String
     },
     owner_profile_pic: {
-        type: String,
-        required: true
+        type: String
     },
     followers: {
         type: Array,

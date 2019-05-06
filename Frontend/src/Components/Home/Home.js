@@ -3,176 +3,121 @@ import Header from '../Navigation/Header';
 import { Nav, Tab, Col, Row } from 'react-bootstrap';
 import '../../Styles/Home.css';
 import feedImg from '../../Images/feed.png';
-import { Link } from "react-router-dom";
+import bookmarkImg from '../../Images/bookmark.png';
 import AskQuestion from "../Question/AskQuestion";
+import { connect } from 'react-redux';
+import { getAllQuestions } from '../../js/actions/question_actions';
+import { getProfilePic } from '../../js/actions/profile_actions';
+import DisplayQuestion from '../Question/DisplayQuestion';
+import { Link } from "react-router-dom";
+//for pagination
+import ReactPaginate from 'react-paginate';
 
 class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
             defaultImg: false,
-            questions: []
+            questions: [],
+            isDefaultTopic : true,
+            followedquestions:[],
+             //for pagination
+            paginated_questions:[],
+            results_per_page: 3,
+            num_pages:0,
+            profile_b64: null
         }
+        //for pagination
+        this.handlePageClick = this.handlePageClick.bind(this);
     }
 
-    componentDidMount() {
-        let topicsArr = [];
-        topicsArr = ["Technology", "Science"];
-        localStorage.setItem("topics", topicsArr);
-        localStorage.setItem("name", "Akhila");
-        if (localStorage.getItem("image") === null) {
+    //for pagination
+    handlePageClick(data){
+    console.log(data.selected)
+    let page_number = data.selected;
+    let offset = Math.ceil(page_number * this.state.results_per_page)
+    this.setState({
+        paginated_questions : this.state.questions.slice(offset, offset +this.state.results_per_page)
+    })
+    }
+
+    async componentDidMount() {
+        console.log(localStorage.getItem("tagline"))
+        //if (localStorage.getItem("image") === null) {
             this.setState({ defaultImg: true });
-        }
-        let questions = [{ question: "What is 2/2", answer: { ans: "1", name: "Severus Snape", tagline: "Professor at Hogsward", timestamp: "" } },
-        { question: "Who is the president of USA", answer: { ans: "Trump", name: "Cinderella", tagline: "Princess", timestamp: "2019-04-22T15:26:46.320+00:00" } }];
-        this.setState({ questions: questions });
+        //}
+        await this.props.getAllQuestions();
+        let questions = null;
+        questions = this.props.questions.questions;
+        console.log(this.props.questions.questions);
+        this.setState({ questions: questions});
+        // for pagination
+        const all_questions = questions;
+        const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+        this.setState({
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
+        });
+
+        let userid = localStorage.getItem("userid");
+        await this.props.getProfilePic(userid);
     }
 
     closeDiv = (event, index) => {
         console.log(index);
-
         let questionsArr = this.state.questions;
         console.log(questionsArr[index].question);
         questionsArr.splice(index, 1);
         this.setState({ questions: questionsArr });
+        // for pagination
+        const all_questions = this.state.questions;
+        const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+        this.setState({
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
+        });
     }
 
     render() {
-        let redirectVar = '';
-        //need to enable after login
-        /*if (!localStorage.getItem('cookie1')) {
-            redirectVar = <Redirect to="/login" />
-        }*/
 
-        let topicsDiv = null;
+        let topicsNavDiv = null;
         let topics = localStorage.getItem("topics");
 
         let questionsDiv = null;
 
         let userTopics = topics.split(",");
         console.log(userTopics);
-        topicsDiv = userTopics.map((record, index) => {
-
+        topicsNavDiv = userTopics.map((record, index) => {
+            let topicurl = "/quora/topic/"+record.toLowerCase();
             return (
+                <Link className="feed-home-nav" to={topicurl} >
                 <Nav.Item>
-                    <Nav.Link eventKey={record} className="left-tabs-feed">
                         <div className="label feed-label">{record}</div>
-                    </Nav.Link>
                 </Nav.Item>
-
+                </Link>
             )
         });
 
-
-        questionsDiv = this.state.questions.map((record, index) => {
-            let ansdiv = null;
-            if (record.answer.ans !== "" || record.answer.ans != null) {
-                let imgdiv = null;
-                if (record.answer.img == null) {
-                    imgdiv = <div className="questions-default-logo"></div>;
-                }
-
-                if (record.answer.timestamp) {
-                    /* let timestamp = new Date(record.answer.timestamp);
-                     var date = timestamp.getDate();
-                     var month = timestamp.getMonth(); 
-                     var year = timestamp.getFullYear();
-                     var time = timestamp.getTime();
-     
-                     var dateTime = date + "/" +(month + 1) + "/" + year;*/
-
-                    var dateTime = record.answer.timestamp.replace("T", " ");
-                    dateTime = dateTime.substring(0, dateTime.indexOf('.'));
-                }
-
-                ansdiv = (
-                    <div style={{ marginTop: "0.3em" }}>
-                        <div className="row">
-                            <div className="col-1 answer-user-pic">
-                                {imgdiv}
-                            </div>
-                            <div className="col-9">
-                                <div className="row">
-                                    <Link className="question-link" to={"/profile/" + record.user_id}>
-                                        <div className="answer-user-profile">{record.answer.name},</div>
-                                    </Link>
-                                    <div className="answer-user-profile">&nbsp;{record.answer.tagline}</div>
-                                </div>
-                                <div className="row">
-                                    <div className="answer-timestamp"><span>Answered&nbsp;</span>{dateTime}</div>
-                                </div>
-
-                            </div>
-
-                        </div>
-                        <div className="row answer-to-question">
-                            {record.answer.ans}
-                        </div>
-
-                    </div>
-                );
-            }
-
-            let questionFooterDiv = null;
-            questionFooterDiv = (
-                <div>
-                    <div className="row" style={{ marginTop: "0.3em" }}>
-                        <div className="question-footer-elem" style={{ marginLeft: "0.3em" }}>
-                            <div className="answer-icon answer-icon-label">Answer</div>
-                        </div>
-                        <div className="question-footer-elem">
-                            <div className="pass-icon answer-icon-label">Pass</div>
-                        </div>
-                        <div className="question-footer-elem" >
-                            <div className="follow-icon answer-icon-label">Follow</div>
-                        </div>
-                        <div className="question-footer-elem-share-icons" style={{ marginLeft: "20em" }}>
-                            <div className="fb-icon answer-icon-hide">a</div>
-                        </div>
-                        <div className="question-footer-elem-share-icons">
-                            <div className="twitter-icon answer-icon-hide">a</div>
-                        </div>
-                        <div className="question-footer-elem-share-icons">
-                            <div className="share-icon answer-icon-hide">a</div>
-                        </div>
-                        <div className="question-footer-elem-share-icons">
-                            <div className="dots-icon answer-icon-hide">a</div>
-                        </div>
-
-                    </div>
-                </div>
-            );
-
-
+       
+        questionsDiv = this.state.paginated_questions.map((record, index) => {
             return (
-                <div className="card question-card">
-                    <div className="card-body question-card-body">
-                        <span className="pull-right clickable close-icon" data-effect="fadeOut" onClick={(event) => this.closeDiv(event, index)}><i class="fa fa-times"></i></span>
-                        <p className="question-card-subtitle"> Answer . Topic you might like</p>
-                        <Link className="question-link" to={"/question/" + record._id}>
-                            <span className="card-title question-card">{record.question}</span>
-                        </Link>
-                        {ansdiv}
-                        {questionFooterDiv}
-                    </div>
-                </div>
+            <DisplayQuestion question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} closeCardMethod={this.closeDiv}/>
             )
         });
 
         return (
-            <div style={{ background: "#fafafa", height: "100vh" }}>
-                {redirectVar}
+            <div className="home-container">
                 <Header />
                 <div className="row">
                     <div className="container" style={{ marginTop: "5em" }}>
-                        <div className="row justify-content-center align-items-center" style={{ height: '10vh' }}>
+                        <div className="row justify-content-center align-items-center">
 
                             <div className="col-12">
-                                <Tab.Container id="left-tabs-example" defaultActiveKey="first" onSelect={this.handleSelect}>
+                                <Tab.Container id="left-tabs-example" defaultActiveKey="first" onSelect={this.handleTopicSelect}>
                                     <Row>
                                         <Col sm={2}>
                                             <Nav variant="pills" className="flex-column feed-nav">
-                                                <Nav.Item style={{ marginBottom: "-1em" }}>
+                                                <Nav.Item style={{ marginBottom: "-0.4em" }}>
                                                     <Nav.Link eventKey="first">
                                                         <div className="row">
                                                             <img className="left-nav-feed-img" src={feedImg} alt="Feed" />
@@ -181,7 +126,16 @@ class Home extends Component {
                                                         </div>
                                                     </Nav.Link>
                                                 </Nav.Item>
-                                                {topicsDiv}
+                                                {topicsNavDiv}
+                                                <Nav.Item style={{ marginBottom: "-0.4em" }}>
+                                                    <Nav.Link href="/quora/bookmarks" eventKey="second">
+                                                        <div className="row">
+                                                            <img className="left-nav-feed-img" src={bookmarkImg} alt="Feed" />
+                                                            <div className="label bookmark-label">  Bookmarks
+                                                              </div>
+                                                        </div>
+                                                    </Nav.Link>
+                                                </Nav.Item>
                                             </Nav>
                                         </Col>
                                         <Col sm={9}>
@@ -193,7 +147,7 @@ class Home extends Component {
                                                                 {this.state.defaultImg &&
                                                                     <div className="row">
                                                                         <div className="profile-logo-home"></div>
-                                                                        <div className="home-profie-name">{localStorage.getItem("name")}</div>
+                                                                        <div className="home-profie-name">{localStorage.getItem("fullname")}</div>
                                                                     </div>
                                                                 }
                                                                 <button className="btn" data-toggle="modal" data-target="#askQuestion">
@@ -206,12 +160,22 @@ class Home extends Component {
                                                         {questionsDiv}
                                                     </div>
                                                 </Tab.Pane>
-                                                <Tab.Pane eventKey="second">
-                                                    <div id="accordion">
-                                                        {"Second tab selected"}
-                                                    </div>
-                                                </Tab.Pane>
                                             </Tab.Content>
+                                            <div className="row">
+                            <ReactPaginate
+                            previousLabel={'Previous'}
+                            nextLabel={'Next'}
+                            breakLabel={'...'}
+                            breakClassName={'break-me'}
+                            pageCount={this.state.num_pages}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={this.handlePageClick}
+                            containerClassName={'pagination'}
+                            subContainerClassName={'pages pagination'}
+                            activeClassName={'active'}
+                            />
+                        </div>
                                         </Col>
                                     </Row>
                                 </Tab.Container>
@@ -219,10 +183,15 @@ class Home extends Component {
                         </div>
 
                     </div>
+                    
                 </div>
             </div>
         )
     }
 }
 
-export default Home;
+const mapStateToProps = state => ({
+    questions : state.question.payload
+});
+
+export default connect(mapStateToProps, { getAllQuestions, getProfilePic })(Home);

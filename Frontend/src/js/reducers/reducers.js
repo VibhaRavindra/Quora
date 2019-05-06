@@ -1,29 +1,18 @@
-import { SIGN_IN,SIGN_OUT,SIGN_UP } from "../constants/action-types";
+import { combineReducers } from 'redux';
+import  AccountReducer from './accountReducers';
+import QuestionReducer from './questionReducer';
+import MessageReducer from './messageReducer';
+import { reducer as formReducer } from "redux-form";
+import GraphReducer from './graphReducer';
+import ProfileReducer from './profileReducer';
 
-const initialState = {
-    signupSuccess:null,
-    signupMessage: null,
-    signinSuccess: null,
-    signinMessage: null
-  };
-function rootReducer(state = initialState, action) {
-    if(action.type === SIGN_UP) {
-        return Object.assign({}, state, {
-            signupSuccess:action.payload.signupSuccess,
-            signupMessage:action.payload.signupMessage,
-            signinSuccess:null,
-            signinMessage:null
-        });
-    } else if(action.type === SIGN_IN) {
-        return Object.assign({}, state, {
-            signinSuccess:action.payload.signinSuccess,
-            signinMessage:action.payload.signinMessage,
-            signupSuccess:null,
-            signupMessage:null
-        });
-    } else if(action.type === SIGN_OUT) {
-        return initialState;
-    }
-    return state;
-}
+const rootReducer = combineReducers({
+    question: QuestionReducer,
+    account: AccountReducer,
+    form: formReducer,
+    message: MessageReducer,
+    graph: GraphReducer,
+    profile: ProfileReducer
+});
+
 export default rootReducer;
