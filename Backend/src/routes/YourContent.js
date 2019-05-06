@@ -16,12 +16,12 @@ router.get('/questions_asked', (req,res,next) => {
     }
     kafka.make_request('yourcontent', {"path":"questions_asked", body}, function(err,result){
         if (err){
-            res.send({
+            res.status(400).send({
                 questionsAskedSuccess: false,
                 questions_asked_array: []
             })
         }else{
-            res.send(result);
+            res.status(200).send(result);
         }
     });
 });
