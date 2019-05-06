@@ -165,7 +165,7 @@ class Header extends Component {
         } 
 
         return (
-        <div className="row">
+        <div>
             {redirect}
             <div className="header" >
                 <div>

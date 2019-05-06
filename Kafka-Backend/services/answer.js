@@ -81,8 +81,6 @@ else{
             owner_username: message.body.user_username,
             owner_name: message.body.user_name,
             owner_userid: message.body.user_id,
-            owner_tagline: message.body.user_tagline,
-            owner_profile_pic: message.body.user_profile_pic,
             upvote_count: 0,
             downvote_count: 0
 
@@ -157,7 +155,6 @@ async function submitComment(message, callback) {
             owner_username: message.body.user_username,
             owner_userid: message.body.user_id,
             owner_name: message.body.user_name,
-            owner_profile_pic: message.body.user_profile_pic
         });
 
         var comment = await newComment.save();
@@ -367,8 +364,6 @@ async function submitBookmark(message, callback) {
                 owner_id: 1,
                 owner_username: 1,
                 owner_name: 1,
-                owner_tagline: 1,
-                owner_profile_pic: 1,
                 followers: 1,
                 timestamp: 1,
                 answers: { $elemMatch: { "_id": message.params.answer_id } }
