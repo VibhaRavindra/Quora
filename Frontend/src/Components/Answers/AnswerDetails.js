@@ -92,23 +92,96 @@ class AnswerDetails extends Component {
       answeredText = 'Updated'
     }
 
+    if(this.props.answer.owner_userid !== 'undefined') {
     axios.defaults.withCredentials = true;
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
     axios.get('/quora/profilepic?userid=' + this.props.answer.owner_userid)
         .then((response) => {
             if (response !== undefined)
                 if (response.status === 200) {
-                  
+                  console.log("Debug Profile pic : " + this.props.answer.owner_username)
                   if(response.data.base64.length > 0) {
                     this.setState({ userImg: response.data.base64[0].b64 });
                 }
               }
         })
+      }
 
     this.setState({
       upvoteCount: this.props.answer.upvote_count,
       answer: this.props.answer.answer,
       timestamp: timeAgo.format(new Date(this.props.answer.timestamp)),
+      answeredText: answeredText,
+      upvoteText: upvoteText,
+      downvoteText: downvoteText,
+      bookmarkText: bookmarkText,
+      upvoteClass: upvoteClass,
+      downvoteClass: downvoteClass,
+      bookmarkClass: bookmarkClass
+    })
+
+  }
+
+  componentWillReceiveProps(nextProps) {
+    //alert(this.props.answer.answer)
+    //this.props.requestAnswer(this.props.id);
+
+    var upvotes = nextProps.answer.upvotes
+    var downvotes = nextProps.answer.downvotes
+    var bookmarked_by = nextProps.answer.bookmarked_by
+    var upvoteText = 'Upvote'
+    var downvoteText = 'Downvote'
+    var bookmarkText = 'Bookmark'
+    var upvoteClass = "answer-upvote-unselected-icon answer-upvote-unselected-icon-label"
+    var bookmarkClass = "answer-bookmark-unselected-icon answer-bookmark-unselected-icon-label"
+    var downvoteClass = "answer-downvote-unselected-icon  answer-downvote-unselected-icon-label"
+
+    console.log("Debug answer username: " + localStorage.user_name)
+    if (upvotes.includes(localStorage.user_name)) {
+      upvoteText = 'Upvoted'
+      upvoteClass = "answer-upvote-selected-icon answer-upvote-selected-icon-label"
+    }
+    if (downvotes.includes(localStorage.user_name)) {
+      downvoteText = 'Downvoted'
+      downvoteClass = "answer-downvote-selected-icon answer-downvote-selected-icon-label"
+    }
+    if (bookmarked_by.includes(localStorage.user_name)) {
+      var bookmarkText = 'Bookmarked'
+      bookmarkClass = "answer-bookmark-selected-icon answer-bookmark-selected-icon-label"
+    }
+    //     var found = false;
+    //   for(var i = 0; i < upvotes.length; i++) {
+    //     if (upvotes[i].username === localStorage.username) {
+    //         found = true;
+    //         break;
+    //     }
+    // }
+
+    var answeredText = 'Answered'
+
+    if(nextProps.answer.is_edited) {
+      answeredText = 'Updated'
+    }
+
+    if(nextProps.answer.owner_userid !== 'undefined') {
+    axios.defaults.withCredentials = true;
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+    axios.get('/quora/profilepic?userid=' + nextProps.answer.owner_userid)
+        .then((response) => {
+            if (response !== undefined)
+                if (response.status === 200) {
+                  console.log("Debug Profile pic : " + nextProps.answer.owner_username)
+                  if(response.data.base64.length > 0) {
+                    this.setState({ userImg: response.data.base64[0].b64 });
+                }
+              }
+        })
+      }
+
+    this.setState({
+      upvoteCount: nextProps.answer.upvote_count,
+      answer: nextProps.answer.answer,
+      timestamp: timeAgo.format(new Date(nextProps.answer.timestamp)),
       answeredText: answeredText,
       upvoteText: upvoteText,
       downvoteText: downvoteText,
@@ -306,13 +379,20 @@ class AnswerDetails extends Component {
           userImg = this.state.userImg
       }
 
+      var profileNameDiv = (
+        <h1><Link className="question-link" to={"/quora/profile/" + this.props.answer.owner_username}>{this.props.answer.owner_name}</Link>{tagline}</h1>
+      );
+      if(this.props.answer.owner_status === 'Deactivated') {
+        profileNameDiv = (<h1>{this.props.answer.owner_name}{tagline} (Deactivated)</h1>);
+      }
+
       var tagline = (this.props.answer.owner_tagline && this.props.answer.owner_tagline !== 'undefined' && this.props.answer.owner_tagline !== '') ? ', ' + this.props.answer.owner_tagline : ''
       return (
         <li className="answer-item">
           <div className="answer-header">
             <img src={userImg} className="answerer-pro-pic" />
             <div className="answer-details">
-              <h1><Link className="question-link" to={"/quora/profile/" + this.props.answer.owner_username}>{this.props.answer.owner_name}</Link>{tagline}</h1>
+              {profileNameDiv}
               <h2>{this.state.answeredText} {this.state.timestamp}</h2>
             </div>
           </div>

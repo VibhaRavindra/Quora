@@ -25,7 +25,7 @@ class Bookmarks extends Component {
             paginated_questions: [],
             results_per_page: 2,
             num_pages: 0,
-
+            currentPage: 1,
         }
         //for pagination
         this.handlePageClick = this.handlePageClick.bind(this);
@@ -36,7 +36,8 @@ class Bookmarks extends Component {
         let page_number = data.selected;
         let offset = Math.ceil(page_number * this.state.results_per_page)
         this.setState({
-            paginated_questions: this.state.questions.slice(offset, offset + this.state.results_per_page)
+            paginated_questions: this.state.questions.slice(offset, offset + this.state.results_per_page),
+            currentPage: page_number
         })
     }
 
@@ -73,9 +74,14 @@ class Bookmarks extends Component {
     closeDiv = (index) => {
         console.log(index);
         let questionsArr = this.state.questions;
-        console.log(questionsArr[index].question);
+        console.log(questionsArr[((this.state.currentPage-1)*this.state.results_per_page) + index].question);
         questionsArr.splice(index, 1);
-        this.setState({ questions: questionsArr });
+       
+        let paginatedQuestionsArr = this.state.paginated_questions;
+        console.log(paginatedQuestionsArr[index].question);
+        paginatedQuestionsArr.splice(index, 1);
+
+        this.setState({ questions: questionsArr, paginated_questions: paginatedQuestionsArr });
     }
 
     render() {
