@@ -17,6 +17,7 @@ class AnswerForm extends React.Component {
       text: '', 
       open: false,
       redirectVar:'',
+      userImg: '',
       isAnonymous: false
    };
     this.handleChange = this.handleChange.bind(this);
@@ -44,6 +45,22 @@ class AnswerForm extends React.Component {
     let deltaOps = JSON.parse(delta).ops
     htmlText = new QuillDeltaToHtmlConverter(deltaOps, {}).convert();
    }
+
+   
+   axios.defaults.withCredentials = true;
+   axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+   axios.get('/quora/profilepic?userid=' + localStorage.userid)
+       .then((response) => {
+           if (response !== undefined)
+               if (response.status === 200) {
+                 
+                 if(response.data.base64.length > 0) {
+                   console.log("Debug profile pic : " + response.data.base64[0].b64)
+                   this.setState({ userImg: response.data.base64[0].b64 });
+               }
+             }
+       })
+
    this.setState ({
      redirectVar: '',
      text:htmlText,
@@ -118,7 +135,10 @@ class AnswerForm extends React.Component {
       console.log("Debug answer form render")
       console.log(localStorage.b64)
 
-      var userImg = (localStorage.b64 && localStorage.b64 !== "default" && localStorage.b64 !== "undefined") ? "data:image/jpg;base64," + localStorage.b64 : defaultProfilePic
+      var userImg = defaultProfilePic;
+      if(this.state.userImg !== '' && this.state.userImg !== 'default') {
+          userImg = this.state.userImg
+      }
       var userName = localStorage.fullname
 
       if(this.state.isAnonymous) {

@@ -5,11 +5,29 @@ import axios from 'axios'
 class CommentForm extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { text: '' };
+    this.state = { text: '', userImg: '' };
     this.handleChange = this.handleChange.bind(this);
     this.submitComment = this.submitComment.bind(this);
     this.successfulSubmit = this.successfulSubmit.bind(this);
   }
+ 
+
+componentWillMount() {
+  axios.defaults.withCredentials = true;
+  axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+  axios.get('/quora/profilepic?userid=' + localStorage.userid)
+      .then((response) => {
+          if (response !== undefined)
+              if (response.status === 200) {
+                
+                if(response.data.base64.length > 0) {
+                  this.setState({ userImg: response.data.base64[0].b64 });
+              }
+            }
+      })
+
+}
+
 
   handleChange(e) {
    this.setState({ text: e.currentTarget.value })
@@ -29,6 +47,7 @@ class CommentForm extends React.Component {
   let data = {
    comment: this.state.text,
    user_username: localStorage.user_name,
+   user_id: localStorage.userid,
    user_name: localStorage.fullname,
    user_profile_pic: localStorage.b64,
  }
@@ -49,9 +68,9 @@ class CommentForm extends React.Component {
 
   render () {
     var userImg = defaultProfilePic;
-    if (!this.props.answer.owner_profile_pic && !this.props.answer.owner_profile_pic === "undefined" &&!this.props.answer.owner_profile_pic === "default" && !this.props.answer.owner_profile_pic.includes(".")) {
-      userImg = "data:image/jpg;base64," + this.props.answer.owner_profile_pic
-    } 
+      if(this.state.userImg !== '' && this.state.userImg !== 'default') {
+          userImg = this.state.userImg
+      }
       return (
         <div className="comment-form">
         <img src={userImg} alt ="" className="answerer-pro-pic" />

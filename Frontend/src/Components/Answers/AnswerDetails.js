@@ -29,6 +29,7 @@ class AnswerDetails extends Component {
       upvoteText: 'Upvote',
       downvoteText: 'Downvote',
       bookmarkText: 'Bookmark',
+      userImg: '',
       upvoteCount: 0,
       upvoteClass: "answer-upvote-unselected-icon answer-upvote-unselected-icon-label",
       bookmarkClass: "answer-bookmark-unselected-icon answer-bookmark-unselected-icon-label",
@@ -91,6 +92,19 @@ class AnswerDetails extends Component {
       answeredText = 'Updated'
     }
 
+    axios.defaults.withCredentials = true;
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+    axios.get('/quora/profilepic?userid=' + this.props.answer.owner_userid)
+        .then((response) => {
+            if (response !== undefined)
+                if (response.status === 200) {
+                  
+                  if(response.data.base64.length > 0) {
+                    this.setState({ userImg: response.data.base64[0].b64 });
+                }
+              }
+        })
+
     this.setState({
       upvoteCount: this.props.answer.upvote_count,
       answer: this.props.answer.answer,
@@ -105,12 +119,6 @@ class AnswerDetails extends Component {
     })
 
   }
-  componentDidMount() {
-    console.log(this.props.answer._id, "Hello");
-
-
-  }
-
 
   UpvoteAnswer = (questionId, answerId) => {
     console.log("Debug upvote")
@@ -294,8 +302,8 @@ class AnswerDetails extends Component {
       if (this.props.answer.owner_username === "anonymous@quora.com") {
         userImg = anonymousProfilePic;
       }
-      else if (!this.props.answer.owner_profile_pic && !this.props.answer.owner_profile_pic === "undefined" && !this.props.answer.owner_profile_pic === "default" && !this.props.answer.owner_profile_pic.includes(".")) {
-        userImg = "data:image/jpg;base64," + this.props.answer.owner_profile_pic
+      else if(this.state.userImg !== '' && this.state.userImg !== 'default') {
+          userImg = this.state.userImg
       }
 
       var tagline = (this.props.answer.owner_tagline && this.props.answer.owner_tagline !== 'undefined' && this.props.answer.owner_tagline !== '') ? ', ' + this.props.answer.owner_tagline : ''

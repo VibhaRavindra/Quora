@@ -10,6 +10,10 @@ const CommentSchema = new Schema({
     type: String,
     required: true
 },
+owner_userid: {
+  type: String,
+  required: true
+},
 owner_name: {
     type: String,
     required: true
