@@ -216,4 +216,24 @@ console.log(req.file.filename)
     })
   });
 
+  router.route('/profilepic').get(function (req, res) {
+    console.log("Inside get profile pic");
+    console.log("Request Body:");
+    console.log(req.query);
+    kafka.make_request('profile',{"path":"get_profile_pic", "body": req.query}, function(err,result){
+      if (err) {
+        console.log(err);
+        res.status(500).json({ responseMessage: 'Database not responding' });
+      }
+      else if (result.status === 200)
+      {
+        console.log("Found pic");
+        res.status(200).json({ base64: result.base64 });
+      } else if (result.status === 204){
+        console.log("No results found");
+        res.status(200).json({ responseMessage: 'No results found' });
+      }
+    });
+  });
+
 module.exports = router;
