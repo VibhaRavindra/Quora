@@ -16,8 +16,32 @@ exports.followService = function followService(msg, callback){
         case "questions_answered":
             questions_answered(msg,callback);
             break;
+        case "getanswer":
+            getanswer(msg,callback);
+            break;
     }
 };
+
+function getanswer(message, callback) {
+    console.log("Inside Kafka-Backend: Getting One Answers for a question")
+    let answerid = message.req.params.answerId
+    let questionid = message.req.params.question_id;
+    console.log("questionid",questionid)
+    console.log("answerid",answerid)
+    try {
+        questions.findOne({'answers._id':answerid},{"answers.$":1,question:1},(err, result)=>{
+            console.log("result",result)
+            callback(null, { updateStatus: "Success", question: result })
+        });
+    } catch (error) {
+        console.log("Getting Answer Failed: " + error)
+        callback(null, {
+            status: 400,
+            submitAnswerMessage: "Getting Answer Failed"
+        })
+    }
+
+}
 
 function questions_asked(msg, callback){
     questions.find({ owner_id : msg.body.userid }, { question: 1, timestamp: 1 },function(err, results) {
@@ -81,8 +105,12 @@ function questions_answered(msg, callback){
             })
         } else {
             let questionid_array = []
+            let question_answer_map = {}
+            let question_timestamp_map = {}
             for(let i=0; i<results.length; i++){
                 questionid_array.push(results[i].question_id);
+                question_answer_map[results[i].question_id] = results[i]._id;
+                question_timestamp_map[results[i].question_id] = results[i].timestamp;
             }
             questions.find({_id:questionid_array}, function(err, result){
                 if(err){
@@ -98,7 +126,8 @@ function questions_answered(msg, callback){
                         questions_answered_array.push({
                             question: result[i].question,
                             questionid: result[i]._id,
-                            timestamp: results[i].timestamp
+                            timestamp: question_timestamp_map[result[i]._id],
+                            answer_id:question_answer_map[result[i]._id]
                         })
                     }
                     callback(null, {

@@ -46,12 +46,12 @@ router.get('/questions/:searchText', (req,res,next) => {
     }
     kafka.make_request('search', {"path":"questions", body}, function(err,result){
         if (err){
-            res.send({
+            res.status(400).send({
                 searchSuccess: false,
                 questions_array: []
             })
         }else{
-            res.send(result);
+            res.status(200).send(result);
         }
     });
 });
