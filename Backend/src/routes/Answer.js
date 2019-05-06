@@ -19,12 +19,12 @@ router.post('/:question_id', (req, res) => {
         console.log('in result');
         console.log(result);
         if (err) {
-            res.send({
+            res.status(400).send({
                 submitAnswerSuccess: false,
                 submitAnswerMessage: "Submit Answer Failed"
             })
         } else {
-            res.send({
+            res.status(200).send({
                 submitAnswerSuccess: true,
                 submitAnswerMessage: "Success"
             });
@@ -43,12 +43,12 @@ router.post('/:question_id/:answer_id/comment', (req, res) => {
         console.log('in result');
         console.log(result);
         if (err) {
-            res.send({
+            res.status(400).send({
                 submitCommentSuccess: false,
                 submitCommentMessage: "Submit Comment Failed"
             })
         } else {
-            res.send({
+            res.status(200).send({
                 submitCommentSuccess: true,
                 submitCommentMessage: "Success"
             });
@@ -69,12 +69,12 @@ router.post('/:question_id/:answer_id', (req, res) => {
             console.log('in result');
             console.log(result);
             if (err) {
-                res.send({
+                res.status(400).send({
                     submitUpvoteSuccess: false,
                     submitUpvoteMessage: "Submit Upvote Failed"
                 })
             } else {
-                res.send({
+                res.status(200).send({
                     submitUpvoteSuccess: true,
                     submitUpvoteMessage: "Success"
                 });
@@ -92,19 +92,19 @@ router.post('/:question_id/:answer_id', (req, res) => {
             console.log('in result');
             console.log(result);
             if (err) {
-                res.send({
+                res.status(400).send({
                     submitDownvoteSuccess: false,
                     submitDownvoteMessage: "Submit Downvote Failed"
                 })
             } else {
-                res.send({
+                res.status(200).send({
                     submitDownvoteSuccess: true,
                     submitDownvoteMessage: "Success"
                 });
             }
         });
     } else {
-        res.send({
+        res.status(400).send({
             submitVoteSuccess: false,
             submitDownvoteMessage: "Submit Vote Failed"
         })
@@ -124,19 +124,19 @@ router.post('/:question_id/:answer_id/bookmark', (req, res) => {
             console.log('in result');
             console.log(result);
             if (err) {
-                res.send({
+                res.status(400).send({
                     submitBookmarkSuccess: false,
                     submitBookmarkMessage: "Submit Bookmark Failed"
                 })
             } else {
-                res.send({
+                res.status(200).send({
                     submitBookmarkSuccess: true,
                     submitBookmarkMessage: "Success"
                 });
             }
         });
     } else {
-        res.send({
+        res.status(400).send({
             submitBookmarkSuccess: false,
             submitBookmarkMessage: "Submit bookmark Failed"
         })
