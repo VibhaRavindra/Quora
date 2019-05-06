@@ -9,7 +9,6 @@ import SignUp from './Account/SignUp';
 import ChooseTopics from './Account/ChooseTopics';
 import SeeAllNotifications from './Notifications/SeeAllNotifications';
 import Profile from './Profile/Profile';
-import ProfileTest from './Profile/ProfileTest';
 import displayprofile from './Profile/displayprofile';
 import Topic from './Topic/Topic';
 import SearchQuestions from './Search/SearchQuestions';
@@ -40,7 +39,6 @@ class Main extends Component {
           <Route exact path="/quora/bookmarks" component={Bookmarks} />
           <Route exact path="/quora/topic/:topicName" component={Topic} />
           <Route path="/quora/myprofile" component={Profile} />
-          <Route path="/quora/myprofiletest" component={ProfileTest} />
           <Route path = "/quora/profile/:user_id" component = {displayprofile} />
           <Route exact path="/quora/SeeAllNotifications" component={SeeAllNotifications} />
           <Route exact path="/quora/search/questions/:searchValue" component={SearchQuestions} />
