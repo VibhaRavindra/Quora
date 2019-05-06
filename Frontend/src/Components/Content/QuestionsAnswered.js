@@ -75,7 +75,7 @@ class SearchQuestions extends Component {
                 <div className="question-container">
                     <div className="profile-header">
                         <span className="">Your answer to </span>
-                        <Link to={"/quora/question/"+question_answered.questionid}>
+                        <Link to={"/quora/question/"+question_answered.questionid+"/"+question_answered.answer_id}>
                             <span className="question-text">{question_answered.question}</span>
                         </Link>
                     </div>

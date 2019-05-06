@@ -9,6 +9,7 @@ import SignUp from './Account/SignUp';
 import ChooseTopics from './Account/ChooseTopics';
 import SeeAllNotifications from './Notifications/SeeAllNotifications';
 import Profile from './Profile/Profile';
+import ProfileTest from './Profile/ProfileTest';
 import displayprofile from './Profile/displayprofile';
 import Topic from './Topic/Topic';
 import SearchQuestions from './Search/SearchQuestions';
@@ -17,6 +18,7 @@ import SearchTopics from './Search/SearchTopics';
 import QuestionsAsked from './Content/QuestionsAsked';
 import QuestionsFollowed from './Content/QuestionsFollowed';
 import QuestionsAnswered from './Content/QuestionsAnswered';
+import SingleQuestionAnswer from './Answers/SingleQuestionAnswer';
 import upvotegraph from './Graph/upvotegraph';
 import downvotegraph from './Graph/downvotegraph';
 import answerviewsgraph from './Graph/answerviewsgraph';
@@ -32,11 +34,13 @@ class Main extends Component {
           <Route path="/header" component={Header} />
           <Route path="/signup" component={SignUp} />
           <Route path="/quora/topics" component={ChooseTopics} />
-          <Route path="/quora/question/:questionId" component={QuestionAnswers} />
+          <Route exact path="/quora/question/:questionId" component={QuestionAnswers} />
+          <Route path="/quora/question/:questionId/:answerId" component={SingleQuestionAnswer} />
           <Route exact path="/quora/home" component={Home} />
           <Route exact path="/quora/bookmarks" component={Bookmarks} />
           <Route exact path="/quora/topic/:topicName" component={Topic} />
           <Route path="/quora/myprofile" component={Profile} />
+          <Route path="/quora/myprofiletest" component={ProfileTest} />
           <Route path = "/quora/profile/:user_id" component = {displayprofile} />
           <Route exact path="/quora/SeeAllNotifications" component={SeeAllNotifications} />
           <Route exact path="/quora/search/questions/:searchValue" component={SearchQuestions} />

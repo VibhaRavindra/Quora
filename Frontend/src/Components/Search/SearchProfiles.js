@@ -145,6 +145,7 @@ this.setState({
                         {/* <Link to={} ></Link> */}
 
                         <div className="profile-header">
+                        <img src={"/search/getRawImage?userid="+ profile.profile_id} className="answerer-pro-pic" />
                             <span className="profile-text">Profile: </span>
                             <Link to={"/quora/profile/"+profile.profile_id}>
                                 <span className="question-text">{profile.firstname}  {profile.lastname}</span>
