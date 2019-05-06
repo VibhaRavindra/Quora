@@ -7,6 +7,7 @@ import bookmarkImg from '../../Images/bookmark.png';
 import AskQuestion from "../Question/AskQuestion";
 import { connect } from 'react-redux';
 import { getAllQuestions } from '../../js/actions/question_actions';
+import { getProfilePic } from '../../js/actions/profile_actions';
 import DisplayQuestion from '../Question/DisplayQuestion';
 import { Link } from "react-router-dom";
 //for pagination
@@ -23,7 +24,8 @@ class Home extends Component {
              //for pagination
             paginated_questions:[],
             results_per_page: 3,
-            num_pages:0
+            num_pages:0,
+            profile_b64: null
         }
         //for pagination
         this.handlePageClick = this.handlePageClick.bind(this);
@@ -56,6 +58,9 @@ class Home extends Component {
             num_pages:pages,
             paginated_questions: all_questions.slice(0,this.state.results_per_page),
         });
+
+        let userid = localStorage.getItem("userid");
+        await this.props.getProfilePic(userid);
     }
 
     closeDiv = (event, index) => {
@@ -189,4 +194,4 @@ const mapStateToProps = state => ({
     questions : state.question.payload
 });
 
-export default connect(mapStateToProps, { getAllQuestions })(Home);
+export default connect(mapStateToProps, { getAllQuestions, getProfilePic })(Home);

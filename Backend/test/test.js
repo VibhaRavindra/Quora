@@ -69,7 +69,7 @@ describe('Quora Mocha Test Harness:', () => {
        it("Test Case 4 - Get profile info", (done) => {
 
         const data = { 
-           "user_name":"mango2@sjsu.edu"
+           "user_name":"mango243@sjsu.edu"
         }
         chai.request(rooturl)
         .get(`/quora/getprofileinfo`)
@@ -78,7 +78,7 @@ describe('Quora Mocha Test Harness:', () => {
         .end((err, res) => {
             expect(err).to.be.null;
             res.body.should.be.a('Object');
-            res.status.should.be.equal(200);  
+            res.status.should.be.equal(204);  
         done();
         });
     })
