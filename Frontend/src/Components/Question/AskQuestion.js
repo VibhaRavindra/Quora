@@ -33,9 +33,7 @@ class AskQuestion extends Component {
                      "topic_name": this.state.selectValue, 
                      "owner_id": localStorage.getItem("userid"),
                      "owner_name": localStorage.getItem("fullname"),
-                     "owner_username":localStorage.getItem("user_name"),
-                     "owner_profile_pic": localStorage.getItem("b64"),
-                     "owner_tagline": localStorage.getItem("tagline")
+                     "owner_username":localStorage.getItem("user_name")
                     };
         await this.props.addQuestion(data);
         this.refs.question.value="";

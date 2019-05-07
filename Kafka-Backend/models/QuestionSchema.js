@@ -20,8 +20,7 @@ const QuestionSchema = new Schema({
         required: true
     },
     owner_name: {
-        type: String,
-        required: true
+        type: String
     },
     owner_tagline: {
         type: String
