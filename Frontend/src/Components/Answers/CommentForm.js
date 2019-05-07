@@ -49,7 +49,6 @@ componentWillMount() {
    user_username: localStorage.user_name,
    user_id: localStorage.userid,
    user_name: localStorage.fullname,
-   user_profile_pic: localStorage.b64,
  }
 
  axios.defaults.withCredentials = true;

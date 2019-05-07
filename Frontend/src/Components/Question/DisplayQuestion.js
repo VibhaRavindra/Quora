@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../../Styles/Home.css';
 import { Link } from "react-router-dom";
 import unfollow from '../../Images/unfollow.png';
+import followImg from '../../Images/feed-unfollow.svg';
 import axios from 'axios';
 import AnswerDetails from '../Answers/AnswerDetails';
 import AnswerForm from "../Answers/AnswerForm";
@@ -82,8 +83,9 @@ class DisplayQuestion extends Component {
         else 
         {
             followDiv= <div id="unfollow-ques answer-icon-label" onClick={e=>this.unfollowquestion(e,record._id,record.question)}>
-            <img src={unfollow} width="60" height="40" />{"  "}{(record.followers.length == 0)? ""
-            :record.followers.length}</div>
+            <div className="home-follow-div home-follow-icon">
+            <img src={followImg} className="home-follow-img" width="60" height="40" alt="0"/>Unfollow {"  "}{(record.followers.length == 0)? ""
+            :record.followers.length}</div> </div>
               
         }
 
@@ -101,7 +103,7 @@ class DisplayQuestion extends Component {
                     <div className="question-footer-elem" >
                        {followDiv}
                     </div>
-                    <div className="question-footer-elem-share-icons" style={{ marginLeft: "18em" }}>
+                    <div className="question-footer-elem-share-icons">
                         <div className="fb-icon answer-icon-hide">a</div>
                     </div>
                     <div className="question-footer-elem-share-icons">

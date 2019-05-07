@@ -8,8 +8,10 @@ import AskQuestion from "../Question/AskQuestion";
 import { connect } from 'react-redux';
 import { getAllQuestions } from '../../js/actions/question_actions';
 import { getProfilePic } from '../../js/actions/profile_actions';
+import defaultProfilePic from '../../Images/profile_logo.png'
 import DisplayQuestion from '../Question/DisplayQuestion';
 import { Link } from "react-router-dom";
+import axios from 'axios'
 //for pagination
 import ReactPaginate from 'react-paginate';
 
@@ -25,7 +27,8 @@ class Home extends Component {
             paginated_questions:[],
             results_per_page: 3,
             num_pages:0,
-            profile_b64: null
+            profile_b64: null,
+            userImg: ''
         }
         //for pagination
         this.handlePageClick = this.handlePageClick.bind(this);
@@ -60,7 +63,24 @@ class Home extends Component {
         });
 
         let userid = localStorage.getItem("userid");
-        await this.props.getProfilePic(userid);
+        // await this.props.getProfilePic(userid);
+
+        axios.defaults.withCredentials = true;
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+        axios.get('/quora/profilepic?userid=' + userid)
+            .then((response) => {
+                if (response !== undefined)
+                if (response.status === 200) {
+                  
+                  if(response.data.base64.length > 0) {
+                    this.setState({ 
+                        userImg: response.data.base64[0].b64 ,
+                        user_tagline: response.data.base64[0].user_tagline 
+                    });
+                }
+              }
+        })
+
     }
 
     closeDiv = (event, index) => {
@@ -105,6 +125,11 @@ class Home extends Component {
             )
         });
 
+        var userImg = defaultProfilePic;
+        if(this.state.userImg !== '' && this.state.userImg !== 'default') {
+            userImg = this.state.userImg
+        } 
+
         return (
             <div className="home-container">
                 <Header />
@@ -146,8 +171,8 @@ class Home extends Component {
                                                             <div className="card-body profile-card-body">
                                                                 {this.state.defaultImg &&
                                                                     <div className="row">
-                                                                        <div className="profile-logo-home"></div>
-                                                                        <div className="home-profie-name">{localStorage.getItem("fullname")}</div>
+                                                                        <img src={userImg} className="home-profile-pic" alt="profile-pic"/>
+                                                                        <div className="home-name home-profie-name">{localStorage.getItem("fullname")}</div>
                                                                     </div>
                                                                 }
                                                                 <button className="btn" data-toggle="modal" data-target="#askQuestion">

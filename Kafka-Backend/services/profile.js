@@ -6,7 +6,9 @@ const {redisClient} = require('../redisClient')
 exports.profileService = function profileService(msg, callback){
     console.log("In follow Service path:", msg.path);
     switch(msg.path){
-       
+	    case "healthcheck":
+		    healthcheck(msg,callback);
+		    break;
             case "addtagline":
             addtagline(msg,callback);
             break;
@@ -41,6 +43,17 @@ exports.profileService = function profileService(msg, callback){
     
     }
 };
+
+
+
+
+function healthcheck(msg, callback){
+var result="";
+    
+            callback(null, {status: 200, result});
+
+       
+}
 
 function addtagline(msg, callback){
 
@@ -233,14 +246,14 @@ function getprofileinfo(msg, callback){
 
 function getprofilepic(msg, callback) {
     console.log("In message get profile pic. Msg: ", msg);
-    Users.users.find({"_id":msg.body.userid}, { "b64": 1, "_id": 0 }, function (err, results) {
+    Users.users.find({"_id":msg.body.userid}, { "b64": 1, "_id": 0, "user_tagline": 1 }, function (err, results) {
         if (err) {
             console.log(err);
             console.log("DB error");
             callback(err, "DB error");
         } else {
             if (results) {
-                console.log("results:", results)
+                console.log("RESULTS IN GETPROFILEPIC:", results)
                 callback(null, { status: 200, base64: results });
             }
             else {

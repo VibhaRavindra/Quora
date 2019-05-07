@@ -142,7 +142,7 @@ function deactivate(msg, callback) {
                                     console.log(err)
                                     callback(null, { deactivateSuccess: false })
                                 } else {
-                                    users.updateMany({ "bookmarks.answers.0.owner_userid": returnvalue.userid }, { '$set': { "bookmarks.$.answers.0.owner_status": "Deactivated" } }, (err, res) => {
+                                    users.updateMany({"bookmarks.answers.0.owner_userid": returnvalue.userid }, { '$set': { "bookmarks.$.answers.0.owner_status": "Deactivated" } }, (err, res) => {
                                         if (err) {
                                             console.log(err)
                                             callback(null, { deactivateSuccess: false })
@@ -331,8 +331,30 @@ function signin(msg, callback) {
                                 deactivated: false
                             })
                         } else {
-                            console.log(":mongo all set, user Activated.")
-                            callback(null, returnvalue)
+                            questions.updateMany({ "answers.owner_userid": returnvalue.userid }, { '$set': { "answers.$.owner_status": "Activated" } }, (err, res) => {
+                                if (err) {
+                                    console.log(err)
+                                    callback(null, {
+                                        signinSuccess: false,
+                                        signinMessage: "Sign In Failed",
+                                        deactivated: false
+                                    })
+                                } else {
+                                    users.updateMany({"bookmarks.answers.0.owner_userid": returnvalue.userid }, { '$set': { "bookmarks.$.answers.0.owner_status": "Activated" } }, (err, res) => {
+                                        if (err) {
+                                            console.log(err)
+                                            callback(null, {
+                                                signinSuccess: false,
+                                                signinMessage: "Sign In Failed",
+                                                deactivated: false
+                                            })
+                                        } else {
+                                            console.log(":mongo all set, user Activated.")
+                                            callback(null, returnvalue)
+                                        }
+                                    })  
+                                }
+                            });
                         }
                     })
                 }

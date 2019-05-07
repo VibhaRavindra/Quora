@@ -33,7 +33,8 @@ class AnswerDetails extends Component {
       upvoteCount: 0,
       upvoteClass: "answer-upvote-unselected-icon answer-upvote-unselected-icon-label",
       bookmarkClass: "answer-bookmark-unselected-icon answer-bookmark-unselected-icon-label",
-      downvoteClass: "answer-downvote-unselected-icon"
+      downvoteClass: "answer-downvote-unselected-icon",
+      tagline: ''
     };
     this.UpvoteAnswer = this.UpvoteAnswer.bind(this);
     this.DownvoteAnswer = this.DownvoteAnswer.bind(this);
@@ -101,7 +102,10 @@ class AnswerDetails extends Component {
                 if (response.status === 200) {
                   console.log("Debug Profile pic : " + this.props.answer.owner_username)
                   if(response.data.base64.length > 0) {
-                    this.setState({ userImg: response.data.base64[0].b64 });
+                    this.setState({ 
+                      userImg: response.data.base64[0].b64,
+                      tagline: response.data.base64[0].user_tagline
+                    });
                 }
               }
         })
@@ -379,14 +383,23 @@ class AnswerDetails extends Component {
           userImg = this.state.userImg
       }
 
-      var profileNameDiv = (
-        <h1><Link className="question-link" to={"/quora/profile/" + this.props.answer.owner_username}>{this.props.answer.owner_name}</Link>{tagline}</h1>
-      );
+      var tagline = (this.state.tagline && this.state.tagline !== 'undefined' && this.state.tagline !== '') ? ', ' + this.state.tagline : ''
+      var profileNameDiv;
+      if(this.props.answer.owner_name==="Anonymous"){
+        profileNameDiv = (
+          <h1>{this.props.answer.owner_name}{tagline}</h1>
+        );
+      } else {
+        profileNameDiv = (
+          <h1><Link className="question-link" to={"/quora/profile/" + this.props.answer.owner_username}>{this.props.answer.owner_name}</Link>{tagline}</h1>
+        );
+      }
+      
       if(this.props.answer.owner_status === 'Deactivated') {
         profileNameDiv = (<h1>{this.props.answer.owner_name}{tagline} (Deactivated)</h1>);
       }
 
-      var tagline = (this.props.answer.owner_tagline && this.props.answer.owner_tagline !== 'undefined' && this.props.answer.owner_tagline !== '') ? ', ' + this.props.answer.owner_tagline : ''
+      
       return (
         <li className="answer-item">
           <div className="answer-header">

@@ -12,6 +12,7 @@ import AskQuestion from '../Question/AskQuestion';
 import { Modal, Button } from 'react-bootstrap';
 import {signout} from "../../js/actions/action";
 import { connect } from "react-redux";
+import defaultProfilePic from '../../Images/profile_logo.png';
 function mapStateToProps(store) {
     return {
     }
@@ -35,7 +36,8 @@ class Header extends Component {
             deactivate: false,
             logout:false,
             messagePopUpDelete: false,
-            closePopUpDelete:false
+            closePopUpDelete:false,
+            userImg: ''
         }
         this.onSearchEnter = this.onSearchEnter.bind(this);
         this.clickDelete = this.clickDelete.bind(this);
@@ -126,6 +128,23 @@ class Header extends Component {
             }
         })
         .catch()
+
+        let userid = localStorage.getItem("userid");
+        axios.defaults.withCredentials = true;
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+        axios.get('/quora/profilepic?userid=' + userid)
+            .then((response) => {
+                if (response !== undefined)
+                if (response.status === 200) {
+                  
+                  if(response.data.base64.length > 0) {
+                    this.setState({ 
+                        userImg: response.data.base64[0].b64 ,
+                        user_tagline: response.data.base64[0].user_tagline 
+                    });
+                }
+              }
+        })
     }
 
     render() {
@@ -139,12 +158,20 @@ class Header extends Component {
         }
         if(this.state.logout)
             redirect = <Redirect to="/signup"/>
-    return (
-        <div className="row">
+
+        var userImg = defaultProfilePic;
+        if(this.state.userImg !== '' && this.state.userImg !== 'default') {
+            userImg = this.state.userImg
+        } 
+
+        return (
+        <div>
             {redirect}
             <div className="header" >
                 <div>
-                    <img className="quora-logo" src={Logo} alt="Quora"/>
+                    <Link to="/quora/home" >
+                        <img className="quora-logo" src={Logo} alt="Quora"/>
+                    </Link>
                 </div>
                 <div className="header-elem home">
                     <Link to="/quora/home" >
@@ -169,7 +196,8 @@ class Header extends Component {
                     <input className="search-box" placeholder="Search Quora" onKeyDown={this.onSearchEnter}></input>
                 </div>
                 <div className="profile">
-                    <div className="profile-logo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div className="\" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src={userImg} className="header-profile-pic" alt="profile-pic"/>
                         <span class="sr-only">Toggle Dropdown</span>
                     </div>
                     <div class="dropdown-menu dropdown-menu-profile">

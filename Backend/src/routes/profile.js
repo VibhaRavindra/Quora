@@ -228,7 +228,9 @@ console.log(req.file.filename)
       else if (result.status === 200)
       {
         console.log("Found pic");
-        res.status(200).json({ base64: result.base64 });
+        res.status(200).json({ 
+          base64: result.base64
+        });
       } else if (result.status === 204){
         console.log("No results found");
         res.status(200).json({ responseMessage: 'No results found' });
