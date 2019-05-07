@@ -19,8 +19,7 @@ owner_name: {
     required: true
 },
 owner_profile_pic: {
-    type: String,
-    required: true
+    type: String
 },
    timestamp: {
      type: Date, 

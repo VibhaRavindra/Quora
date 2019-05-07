@@ -17,6 +17,7 @@ import SearchTopics from './Search/SearchTopics';
 import QuestionsAsked from './Content/QuestionsAsked';
 import QuestionsFollowed from './Content/QuestionsFollowed';
 import QuestionsAnswered from './Content/QuestionsAnswered';
+import SingleQuestionAnswer from './Answers/SingleQuestionAnswer';
 import upvotegraph from './Graph/upvotegraph';
 import downvotegraph from './Graph/downvotegraph';
 import answerviewsgraph from './Graph/answerviewsgraph';
@@ -32,7 +33,8 @@ class Main extends Component {
           <Route path="/header" component={Header} />
           <Route path="/signup" component={SignUp} />
           <Route path="/quora/topics" component={ChooseTopics} />
-          <Route path="/quora/question/:questionId" component={QuestionAnswers} />
+          <Route exact path="/quora/question/:questionId" component={QuestionAnswers} />
+          <Route path="/quora/question/:questionId/:answerId" component={SingleQuestionAnswer} />
           <Route exact path="/quora/home" component={Home} />
           <Route exact path="/quora/bookmarks" component={Bookmarks} />
           <Route exact path="/quora/topic/:topicName" component={Topic} />
