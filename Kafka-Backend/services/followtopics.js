@@ -197,8 +197,6 @@ function unfollowuser(msg, callback){
     console.log("In listing property topic service. Msg: ", msg)
     Users.users.update( {"user_name":msg.body.follower_username},{$pull:{questions_followed:{
         qid:msg.body.qid,
-        question:msg.body.question,
-        timestamp:new Date()
     }}}, function (error,result) {
         redisClient.del("applicantProfile_" + msg.body.follower_username); 
         console.log("yippppe",result)
