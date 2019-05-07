@@ -128,10 +128,8 @@ router.route('/adddescription').post( function (req, res) {
       console.log("Question not found");
       res.status(400).json({responseMessage: 'Question not found'});
     } else {
-      console.log("Question Found");
-      
-      res.writeHead(200, {'content-type':'application/json'});
-      res.end(JSON.stringify(result.result));
+   
+      res.status(200).json({ responseMessage: 'Successfully Added!' });
     }
   })
 });

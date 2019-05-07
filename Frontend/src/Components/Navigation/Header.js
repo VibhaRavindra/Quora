@@ -213,6 +213,7 @@ class Header extends Component {
                         <a class="dropdown-item-profile" href="#" onClick={this.logout}>Logout</a>
                         <a class="dropdown-item-profile" data-toggle="modal" data-target="#delete" href="#" onClick={this.clickDelete}>Delete</a>
                         <a class="dropdown-item-profile" data-toggle="modal" data-target="#deactivate" href="#" onClick={this.clickDeactivate}>Deactivate</a>
+                        <a class="dropdown-item-profile" href="/quora/AnalyticsDashboard">Analytics Dashboard</a>
                     </div>
                     <MessageList />
                 </div>

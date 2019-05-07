@@ -379,18 +379,12 @@ showprofile(){
                                       
 <b>Feeds</b>
 <div onClick={this.showprofile}>Profile<br /></div>
-Answers<br />
-Questions<br />
-Shares<br />
-Spaces<br />
-Posts<br />
-Blogs<br />
+
 
 <div onClick={this.showfollowers}>Followers{this.state.followers != null || this.state.followers != undefined || this.state.followers !=null ? <span>{this.state.followers.length}</span> : <span>0</span>}</div>
 
 <div onClick={this.showfollowing}>Following {this.state.following != null || this.state.following != undefined || this.state.following !=null ? <span>{this.state.following.length}</span> : <span>0</span>}</div>
-Edits<br />
-Activity<br />
+
                                             </Nav>
                                         </Col>
                                         <Col sm={9}>
