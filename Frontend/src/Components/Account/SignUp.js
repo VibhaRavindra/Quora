@@ -31,6 +31,7 @@ class SignUp extends Component {
         e.preventDefault();
         const data = new FormData(e.target);
         this.props.signup(data);
+        document.getElementById("signupform").reset();
     }
     submitSignIn(e) {
         e.preventDefault();
@@ -38,8 +39,8 @@ class SignUp extends Component {
         this.props.signin(data);
     }
     render() {
-        console.log("singup render")
-        let message;
+        console.log("signup render")
+        let message=null;
         if(localStorage.getItem("jwtToken")!== null && localStorage.getItem("isTopicSelected") === "false"){
             return(<Redirect to="/quora/topics"/>)
         } else if(localStorage.getItem("jwtToken")!== null && localStorage.getItem("isTopicSelected") === "true"){
@@ -65,7 +66,7 @@ class SignUp extends Component {
                     {message}
                     <div className="signup">
                         <p className="signup-text">Sign Up</p>
-                        <form className="form" onSubmit={this.submitSignUp}>
+                        <form className="form" onSubmit={this.submitSignUp} id="signupform">
                             <div className="row">
                                 <div className="first-half">
                                     <label className="account-labels first-name-label">FIRST NAME</label>

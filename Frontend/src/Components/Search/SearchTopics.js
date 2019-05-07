@@ -114,16 +114,16 @@ handlePageClick(data){
                 console.log(topic.career);
               
                 let img = topic.name;
+                let topicurl = "/quora/topic/"+topic.name.toLowerCase();
                 return(
                     
                     <div className="question-container">
-                        {/* <Link to={} ></Link> */}
                         <div className="profile-header">
                             <img className="topic-img" src={require('../../Images/'+topic.name+'.png')} alt={topic.name}></img>
                             <span className="profile-text">Topic: </span>
-                            {/* <Link to={topicurl}> */}
+                             <Link to={topicurl}>
                                 <span className="question-text">{topic.name}</span>
-                            {/* </Link> */}
+                             </Link>
                         </div>
                         <div className="row question-row">
                            

@@ -117,9 +117,8 @@ describe('Quora Mocha Test Harness:', () => {
     })
 
     it("Test Case 7 - Get All answers", (done) => {
-
         chai.request(rooturl)
-        .get(`/answer/5cc69ab70b487ecef8fc8c74`)
+        .get(`/answer/5cd14b795e70255146f4031a`)
         .set('Accept', 'application/json')
         .end((err, res) => {
             expect(err).to.be.null;
@@ -131,8 +130,8 @@ describe('Quora Mocha Test Harness:', () => {
     it("Test Case 8 - Get user bookmarks", (done) => {
 
         const data = { 
-            user_id: "5cc5e68b7be83718d457a28b"
-         }
+            user_id: "5cd14303ae3b384d0039e3a5"
+        }
         chai.request(rooturl)
         .post('/bookmarks')
         .send(data)
@@ -146,8 +145,8 @@ describe('Quora Mocha Test Harness:', () => {
     it("Test Case 9 - Get questions asked", (done) => {
 
         const data = { 
-            user_id: "5cc5e68b7be83718d457a28b"
-         }
+            user_id: "5cd14303ae3b384d0039e3a5"
+        }
         chai.request(rooturl)
         .get(`/content/questions_asked`)
         .set('Accept', 'application/json')
