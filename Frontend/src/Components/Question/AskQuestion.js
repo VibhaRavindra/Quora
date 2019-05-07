@@ -36,9 +36,10 @@ class AskQuestion extends Component {
                      "owner_username":localStorage.getItem("user_name")
                     };
         await this.props.addQuestion(data);
-        this.refs.question.value="";
+        this.setState({questionText:"", selectValue:"technology"});
         this.inputElement.click();
-        window.location.reload();
+        //window.location.reload();
+        this.props.refreshQuestions();
     }
 
     render() {

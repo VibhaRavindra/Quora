@@ -111,6 +111,8 @@ class Header extends Component {
             this.props.signout();
         }
     }
+
+    
     componentDidMount(){
         var data={
             "user_name":localStorage.getItem("user_name")
@@ -145,6 +147,10 @@ class Header extends Component {
                 }
               }
         })
+    }
+
+    refreshQuestionsOnHome = () => {
+        this.props.refreshQuestionsOnHome()
     }
 
     render() {
@@ -212,7 +218,7 @@ class Header extends Component {
                 </div>
                 <div>
                     <div className="add-question" data-toggle="modal" data-target="#askQuestion">Add Question or Link</div>
-                    <AskQuestion/>
+                    <AskQuestion refreshQuestions={this.refreshQuestionsOnHome}/>
                 </div>
             </div>
         <Modal className="modal-deleteAccount" id="delete" show={this.state.messagePopUpDelete} onHide={this.closePopUpDelete} aria-labelledby="contained-modal-title-vcenter" centered>
