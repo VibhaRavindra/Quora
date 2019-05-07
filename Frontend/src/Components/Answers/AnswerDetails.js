@@ -384,10 +384,17 @@ class AnswerDetails extends Component {
       }
 
       var tagline = (this.state.tagline && this.state.tagline !== 'undefined' && this.state.tagline !== '') ? ', ' + this.state.tagline : ''
-
-      var profileNameDiv = (
-        <h1><Link className="question-link" to={"/quora/profile/" + this.props.answer.owner_username}>{this.props.answer.owner_name}</Link>{tagline}</h1>
-      );
+      var profileNameDiv;
+      if(this.props.answer.owner_name==="Anonymous"){
+        profileNameDiv = (
+          <h1>{this.props.answer.owner_name}{tagline}</h1>
+        );
+      } else {
+        profileNameDiv = (
+          <h1><Link className="question-link" to={"/quora/profile/" + this.props.answer.owner_username}>{this.props.answer.owner_name}</Link>{tagline}</h1>
+        );
+      }
+      
       if(this.props.answer.owner_status === 'Deactivated') {
         profileNameDiv = (<h1>{this.props.answer.owner_name}{tagline} (Deactivated)</h1>);
       }
