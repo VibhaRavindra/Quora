@@ -69,7 +69,7 @@ describe('Quora Mocha Test Harness:', () => {
        it("Test Case 4 - adddescription", (done) => {
 
         const data = { 
-            "user_name":"alice@sjsu.edu",
+            "user_name":"swetha.suresh@sjsu.edu",
             "aboutme":"i am in wonderland"
         }
         chai.request(rooturl)
