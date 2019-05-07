@@ -48,11 +48,8 @@ exports.profileService = function profileService(msg, callback){
 
 
 function healthcheck(msg, callback){
-var result="";
-    
-            callback(null, {status: 200, result});
-
-       
+    var result="";
+    callback(null, {status: 200, result});    
 }
 
 function addtagline(msg, callback){
