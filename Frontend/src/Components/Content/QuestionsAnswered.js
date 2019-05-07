@@ -63,9 +63,9 @@ class SearchQuestions extends Component {
         let sorted_questions_answered_array = this.props.questions_answered_array.sort((e1, e2)=>{
             console.log("in sort ", new Date(e1.timestamp).getTime() , new Date(e2.timestamp).getTime())
             if(sortOrderParam === "newest")
-            return new Date(e1.timestamp).getTime() - new Date(e2.timestamp).getTime()
-            else
             return new Date(e2.timestamp).getTime() - new Date(e1.timestamp).getTime()
+            else
+            return new Date(e1.timestamp).getTime() - new Date(e2.timestamp).getTime()
         })
         let questions_answered = sorted_questions_answered_array.map(question_answered => {   
             let d = new Date(question_answered.timestamp);

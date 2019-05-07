@@ -44,6 +44,7 @@ function getanswer(message, callback) {
 }
 
 function questions_asked(msg, callback){
+    console.log("Inside Kafka-Backend: Getting all the questions asked by the user")
     questions.find({ owner_id : msg.body.userid }, { question: 1, timestamp: 1 },function(err, results) {
         let questions_asked_array = []
         if(err) {
@@ -69,6 +70,7 @@ function questions_asked(msg, callback){
 }
 
 function questions_followed(msg, callback){
+    console.log("Inside Kafka-Backend: Getting all the questions followed by the user")
     users.find({ _id : msg.body.userid }, { questions_followed: 1},function(err, results) {
         let questions_followed_array = []
         if(err) {
