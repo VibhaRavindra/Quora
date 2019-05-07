@@ -102,15 +102,16 @@ class SearchQuestions extends Component {
         const getQuestions = await getQuestionsDetails.json();
         const all_questions = getQuestions.questions_array
         const pages = Math.ceil(all_questions.length/this.state.results_per_page)
-
+        this.setState({
+            questions : all_questions,
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
+        });
         var status={},inc={};
         this.state.questions.map(member=> member.followers.includes(localStorage.getItem("user_name")) ? status[member.questionid]=true:status[member.questionid]=false
         )
         this.state.questions.map(member=>inc[member.questionid]=member.num_of_followers)
         this.setState({
-            questions : all_questions,
-            num_pages:pages,
-            paginated_questions: all_questions.slice(0,this.state.results_per_page),
             status:status,inc:inc
         });
     }

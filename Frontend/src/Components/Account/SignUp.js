@@ -83,7 +83,7 @@ class SignUp extends Component {
                             <div className="email-div">
                                 <label className="account-labels email-label">EMAIL</label>
                                 <div className="input-email">
-                                    <input className="email account-input" type="email" name="user_name" required></input>
+                                    <input className="email account-input" type="input" name="user_name" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" title="abc@example.com" required></input>
                                 </div>
                             </div>
                             <div className="pw">

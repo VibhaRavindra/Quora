@@ -64,7 +64,7 @@ class Home extends Component {
 
         let userid = localStorage.getItem("userid");
         // await this.props.getProfilePic(userid);
-
+        if(userid !== undefined){
         axios.defaults.withCredentials = true;
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
         axios.get('/quora/profilepic?userid=' + userid)
@@ -80,7 +80,7 @@ class Home extends Component {
                 }
               }
         })
-
+    }
     }
 
     closeDiv = (event, index) => {
@@ -96,6 +96,26 @@ class Home extends Component {
             num_pages:pages,
             paginated_questions: all_questions.slice(0,this.state.results_per_page),
         });
+    }
+
+    reload = async () => {
+        await this.props.getAllQuestions();
+        let questions = null;
+        questions = this.props.questions.questions;
+        console.log(this.props.questions.questions);
+        this.setState({ questions: questions});
+        // for pagination
+        const all_questions = questions;
+        const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+        this.setState({
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
+        });
+    }
+
+    refreshQuestionsOnHome = () => {
+        console.log("New question added");
+        this.reload();
     }
 
     render() {
@@ -118,10 +138,11 @@ class Home extends Component {
             )
         });
 
+        
        
         questionsDiv = this.state.paginated_questions.map((record, index) => {
             return (
-            <DisplayQuestion question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} closeCardMethod={this.closeDiv}/>
+            <DisplayQuestion question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} closeCardMethod={this.closeDiv} reload={this.reload}/>
             )
         });
 
@@ -132,7 +153,7 @@ class Home extends Component {
 
         return (
             <div className="home-container">
-                <Header />
+                <Header refreshQuestionsOnHome={this.refreshQuestionsOnHome}/>
                 <div className="row">
                     <div className="container" style={{ marginTop: "5em" }}>
                         <div className="row justify-content-center align-items-center">
@@ -179,7 +200,7 @@ class Home extends Component {
 
                                                                     <span className="card-title profile-question-card">What is your question or link?</span>
                                                                 </button>
-                                                                <AskQuestion/>
+                                                                <AskQuestion refreshQuestionsOnHome={this.props.refreshQuestionsOnHome}/>
                                                             </div>
                                                         </div>
                                                         {questionsDiv}

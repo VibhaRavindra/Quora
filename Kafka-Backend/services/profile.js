@@ -6,7 +6,9 @@ const {redisClient} = require('../redisClient')
 exports.profileService = function profileService(msg, callback){
     console.log("In follow Service path:", msg.path);
     switch(msg.path){
-       
+	    case "healthcheck":
+		    healthcheck(msg,callback);
+		    break;
             case "addtagline":
             addtagline(msg,callback);
             break;
@@ -41,6 +43,14 @@ exports.profileService = function profileService(msg, callback){
     
     }
 };
+
+
+
+
+function healthcheck(msg, callback){
+    var result="";
+    callback(null, {status: 200, result});    
+}
 
 function addtagline(msg, callback){
 
