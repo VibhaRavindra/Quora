@@ -50,9 +50,30 @@ exports.followService = function followService(msg, callback) {
         case "delete":
             deleteMethod(msg, callback);
             break;
+        default:
+            deleteMongo(msg, callback);
     }
 };
 
+function deleteMongo(msg, callback) {
+    switch(msg.path){
+        case "delete-user":
+            users.deleteOne({user_name:msg.body.user_name});
+            break;
+        case "delete-answers":
+            answers.deleteMany({ owner_username: msg.body.user_name });
+            break;
+        case "delete-comments":
+            comments.deleteMany({ owner_username: msg.body.user_name });
+            break;
+        case "delete-questions_answers":
+            questions.update({"answers.owner_username":msg.body.user_name}, {$pull:{"answers.$":{owner_username:msg.body.user_name}}})
+            break;
+        case "delete-users_bookmarks_answers":
+            users.update({"bookmarks.answers.owner_username":msg.body.user_name}, {$pull:{"bookmarks.$.answers.$":{owner_username:msg.body.user_name}}})
+            break;
+    }
+}
 function signup(msg, callback) {
     let hashpw;
     bcrypt.hash(msg.body.password, saltRounds, function (err, hash) {
@@ -61,7 +82,7 @@ function signup(msg, callback) {
         }
         hashpw = hash;
     });
-    let newUser = new users({ user_name: msg.body.user_name, firstname: msg.body.firstname, lastname: msg.body.lastname })
+    let newUser = new users({ user_name: msg.body.user_name, firstname:msg.body.firstname, lastname:msg.body.lastname })
     let mongo_userid = String(newUser._id);
     mysqlconnection.beginTransaction(function (err) {
         if (err) {
@@ -72,8 +93,8 @@ function signup(msg, callback) {
             })
             // throw err; 
         }
-        const signUpQuery = "INSERT INTO Users(user_name,firstname,lastname, password, mongo_userid) VALUES(?,?,?,?,?)"
-        mysqlconnection.query(signUpQuery, [msg.body.user_name, msg.body.firstname, msg.body.lastname, hashpw, mongo_userid], (err, result) => {
+        const signUpQuery = "INSERT INTO Users(user_name, password, mongo_userid) VALUES(?,?,?)"
+        mysqlconnection.query(signUpQuery, [msg.body.user_name, hashpw, mongo_userid], (err, result) => {
             if (err) {
                 console.log(err)
                 console.log("INSIDE ERROR 2")
@@ -89,6 +110,7 @@ function signup(msg, callback) {
                 newUser.save(function (err, result) {
                     if (err) {
                         console.log("err newUser save")
+                        console.log(err)
                         mysqlconnection.rollback(function (err) {
                             if (err)
                                 console.log(err)
@@ -163,52 +185,58 @@ function deactivate(msg, callback) {
     })
 }
 
+// should delete from users, answers, bookmarks, comments, questions.answers, users.bookmarks.answers.
 function deleteMethod(msg, callback) {
-    signinHelper(msg, (returnvalue) => {
-        if (returnvalue.signinSuccess) {
-            mysqlconnection.beginTransaction(function (err) {
+    signinHelper(msg, async (returnvalue) => {
+        if (returnvalue.signinSuccess) {          
+            mysqlconnection.query('DELETE FROM Users WHERE user_name=?', [msg.body.user_name], (err, res) => {
                 if (err) {
-                    console.log("INSIDE ERROR 1")
+                    console.log("INSIDE ERROR 2", err)
                     callback(null, { deleteSuccess: false })
                 } else {
-                    mysqlconnection.query('DELETE FROM Users WHERE user_name=?', [msg.body.user_name], (err, res) => {
-                        if (err) {
-                            console.log("INSIDE ERROR 2", err)
-                            callback(null, { deleteSuccess: false })
-                        } else {
-                            users.deleteOne({ _id: returnvalue.userid }, (err, res) => {
-                                if (err) {
-                                    console.log(err)
-                                    mysqlconnection.rollback();
-                                    callback(null, { deleteSuccess: false })
-                                }
-                                else {
-                                    answers.deleteMany({ owner_userid: returnvalue.userid }, (err, res) => {
-                                        if (err) {
-                                            console.log(err)
-                                            mysqlconnection.rollback();
-                                            callback(null, { deleteSuccess: false })
-                                        }
-                                        else {
-                                            comments.deleteMany({ owner_username: returnvalue.user_name }, (err, res) => {
-                                                if (err) {
-                                                    console.log(err);
-                                                    mysqlconnection.rollback();
-                                                    callback(null, { deleteSuccess: false })
-                                                }
-                                                else {
-                                                    mysqlconnection.commit();
-                                                    callback(null, { deleteSuccess: true })
-                                                }
-                                            });
-                                        }
-                                    })
-                                }
-                            })
-                        }
-                    });
+                    callback(null, { deleteSuccess: true })
                 }
-            })
+            });
+            //                 try {
+            //                     const userdelete = await users.deleteOne({ _id: returnvalue.userid });
+            //                 } catch(error){
+            //                     console.log(error);
+            //                     mysqlconnection.rollback();
+            //                     callback(null, { deleteSuccess: false })
+            //                 }
+            //                 // users.deleteOne({ _id: returnvalue.userid }, (err, res) => {
+            //                 //     if (err) {
+            //                 //         console.log(err)
+            //                 //         mysqlconnection.rollback();
+            //                 //         callback(null, { deleteSuccess: false })
+            //                 //     }
+            //                 //     else {
+            //                 //         answers.deleteMany({ owner_userid: returnvalue.userid }, (err, res) => {
+            //                 //             if (err) {
+            //                 //                 console.log(err)
+            //                 //                 mysqlconnection.rollback();
+            //                 //                 callback(null, { deleteSuccess: false })
+            //                 //             }
+            //                 //             else {
+            //                 //                 comments.deleteMany({ owner_username: returnvalue.user_name }, (err, res) => {
+            //                 //                     if (err) {
+            //                 //                         console.log(err);
+            //                 //                         mysqlconnection.rollback();
+            //                 //                         callback(null, { deleteSuccess: false })
+            //                 //                     }
+            //                 //                     else {
+            //                 //                         mysqlconnection.commit();
+            //                 //                         callback(null, { deleteSuccess: true })
+            //                 //                     }
+            //                 //                 });
+            //                 //             }
+            //                 //         })
+            //                 //     }
+            //                 // })
+            //             }
+            //         });
+            //     }
+            // })
         } else {
             callback(null, { deleteSuccess: false })
         }
@@ -242,10 +270,7 @@ function signinHelper(msg, callback) {
                     var result = bcrypt.compareSync(msg.body.password, rowsOfTable[0].password);
                     if (result) {
                         console.log("SIGNIN SUCCESS")
-                        console.log(rowsOfTable[0].firstname)
-                        console.log(rowsOfTable[0].lastname)
                         console.log(rowsOfTable[0].mongo_userid)
-                        console.log(rowsOfTable[0].select_topics)
                         users.findOne({ _id: rowsOfTable[0].mongo_userid }, function (err, result) {
                             if (err) {
                                 mysqlconnection.rollback(function (err) {
@@ -275,10 +300,10 @@ function signinHelper(msg, callback) {
                             console.log("topics : ", topics);
                             callback({
                                 signinSuccess: true,
-                                user_name: rowsOfTable[0].user_name,
-                                firstname: rowsOfTable[0].firstname,
-                                lastname: rowsOfTable[0].lastname,
-                                userid: rowsOfTable[0].mongo_userid,
+                                user_name: result.user_name,
+                                firstname: result.firstname,
+                                lastname: result.lastname,
+                                userid: result._id,
                                 topics: topics,
                                 isTopicSelected: isTopicSelected,
                                 signinMessage: "Success!",
