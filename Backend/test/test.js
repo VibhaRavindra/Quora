@@ -26,11 +26,11 @@ describe('Quora Mocha Test Harness:', () => {
 
         //sample data
         const questionData = { 
-            "question":"why is technology not so op oi oh so important?",
+            "question":"Will the iphone work at -2deg?",
             "topic_name": "technology",
-            "owner_id": "5cc69cca0b036cd050eaa901",
-            "owner_name": "Mocha Test",
-            "owner_username":"mocha@gmail.com"
+            "owner_id": "5cd14cab5e70255146f4031b",
+            "owner_name": "swetha",
+            "owner_username":"swetha.suresh@sjsu.edu"
         }
         chai.request(rooturl)
         .post('/quora/question')
@@ -52,7 +52,7 @@ describe('Quora Mocha Test Harness:', () => {
             "to": "vibhashree.ravindra@sjsu.edu", 
             "from": "swetha.suresh@sjsu.edu", 
             "message": "This message is send from mocha",
-            "sent_from_name": "swetha suresh"
+            "sent_from_name": "swetha"
         }
         chai.request(rooturl)
         .post('/quora/new/message')
@@ -65,20 +65,20 @@ describe('Quora Mocha Test Harness:', () => {
         });
     })
 
-       // Get profile info
-       it("Test Case 4 - Get profile info", (done) => {
+       // add description
+       it("Test Case 4 - adddescription", (done) => {
 
         const data = { 
-           "user_name":"mango243@sjsu.edu"
+            "user_name":"alice@sjsu.edu",
+            "aboutme":"i am in wonderland"
         }
         chai.request(rooturl)
-        .get(`/quora/getprofileinfo`)
+        .post(`/quora/adddescription`)
         .send(data)
-        .set('Accept', 'application/json')
         .end((err, res) => {
             expect(err).to.be.null;
-            res.body.should.be.a('Object');
-            res.status.should.be.equal(204);  
+            res.should.have.status(200);
+            res.body.should.have.property('responseMessage').equal('Successfully Added!');
         done();
         });
     })
@@ -87,7 +87,7 @@ describe('Quora Mocha Test Harness:', () => {
 
         //sample data
         var data={
-            "user_name":"mango2@sjsu.edu",
+            "user_name":"swetha.suresh@sjsu.edu",
             "tagline":"appleapple"
           }
         chai.request(rooturl)
@@ -103,7 +103,7 @@ describe('Quora Mocha Test Harness:', () => {
     it("Test Case 6 - Get notifications", (done) => {
 
         const data = { 
-           "user_name":"mango2@sjsu.edu"
+           "user_name":"swetha.suresh@sjsu.edu"
         }
         chai.request(rooturl)
         .get(`/quora/notifications`)

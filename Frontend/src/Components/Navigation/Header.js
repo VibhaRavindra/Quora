@@ -111,6 +111,8 @@ class Header extends Component {
             this.props.signout();
         }
     }
+
+    
     componentDidMount(){
         var data={
             "user_name":localStorage.getItem("user_name")
@@ -145,6 +147,10 @@ class Header extends Component {
                 }
               }
         })
+    }
+
+    refreshQuestionsOnHome = () => {
+        this.props.refreshQuestionsOnHome()
     }
 
     render() {
@@ -207,12 +213,13 @@ class Header extends Component {
                         <a class="dropdown-item-profile" href="#" onClick={this.logout}>Logout</a>
                         <a class="dropdown-item-profile" data-toggle="modal" data-target="#delete" href="#" onClick={this.clickDelete}>Delete</a>
                         <a class="dropdown-item-profile" data-toggle="modal" data-target="#deactivate" href="#" onClick={this.clickDeactivate}>Deactivate</a>
+                        <a class="dropdown-item-profile" href="/quora/AnalyticsDashboard">Analytics Dashboard</a>
                     </div>
                     <MessageList />
                 </div>
                 <div>
                     <div className="add-question" data-toggle="modal" data-target="#askQuestion">Add Question or Link</div>
-                    <AskQuestion/>
+                    <AskQuestion refreshQuestions={this.refreshQuestionsOnHome}/>
                 </div>
             </div>
         <Modal className="modal-deleteAccount" id="delete" show={this.state.messagePopUpDelete} onHide={this.closePopUpDelete} aria-labelledby="contained-modal-title-vcenter" centered>
