@@ -53,21 +53,12 @@ router.delete("/delete", FormData.none(), (req,res)=>{
         user_name: req.body.user_name,
         password: req.body.password
     }
-    // this only deletes from MYSQL & returns.
     kafka.make_request('account', {"path":"delete", "body":body}, function(err,result){
         if (err){
             res.send({
                 deleteSuccess:false
             })
         }else{
-            if(result.deleteSuccess) {
-                kafka.make_request('account', {"path":"delete-user", "body":body},function(err,result){});
-                kafka.make_request('account', {"path":"delete-answers", "body":body},function(err,result){});
-                kafka.make_request('account', {"path":"delete-bookmarks", "body":body},function(err,result){});
-                kafka.make_request('account', {"path":"delete-comments", "body":body},function(err,result){});
-                kafka.make_request('account', {"path":"delete-questions_answers", "body":body},function(err,result){});
-                kafka.make_request('account', {"path":"delete-users_bookmarks_answers", "body":body},function(err,result){});
-            }
             console.log(result)
             res.send(result)
         }

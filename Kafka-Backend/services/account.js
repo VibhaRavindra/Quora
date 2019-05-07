@@ -58,18 +58,23 @@ exports.followService = function followService(msg, callback) {
 function deleteMongo(msg, callback) {
     switch(msg.path){
         case "delete-user":
+            console.log("In delete mongo ", msg.path)
             users.deleteOne({user_name:msg.body.user_name});
             break;
         case "delete-answers":
+            console.log("In delete mongo ", msg.path)
             answers.deleteMany({ owner_username: msg.body.user_name });
             break;
         case "delete-comments":
+        console.log("In delete mongo ", msg.path)
             comments.deleteMany({ owner_username: msg.body.user_name });
             break;
         case "delete-questions_answers":
+        console.log("In delete mongo ", msg.path)
             questions.update({"answers.owner_username":msg.body.user_name}, {$pull:{"answers.$":{owner_username:msg.body.user_name}}})
             break;
         case "delete-users_bookmarks_answers":
+        console.log("In delete mongo ", msg.path)
             users.update({"bookmarks.answers.owner_username":msg.body.user_name}, {$pull:{"bookmarks.$.answers.$":{owner_username:msg.body.user_name}}})
             break;
     }
@@ -91,7 +96,6 @@ function signup(msg, callback) {
                 signupSuccess: false,
                 signupMessage: "Sign Up Failed"
             })
-            // throw err; 
         }
         const signUpQuery = "INSERT INTO Users(user_name, password, mongo_userid) VALUES(?,?,?)"
         mysqlconnection.query(signUpQuery, [msg.body.user_name, hashpw, mongo_userid], (err, result) => {
@@ -137,7 +141,6 @@ function signup(msg, callback) {
                                 })
                             }
                         });
-
                     }
                 })
             }
@@ -187,56 +190,37 @@ function deactivate(msg, callback) {
 
 // should delete from users, answers, bookmarks, comments, questions.answers, users.bookmarks.answers.
 function deleteMethod(msg, callback) {
-    signinHelper(msg, async (returnvalue) => {
-        if (returnvalue.signinSuccess) {          
+    signinHelper(msg, (returnvalue) => {
+        if (returnvalue.signinSuccess) {
+            console.log("In delete method after good passwrod ", msg.path)
+            mysqlconnection.beginTransaction((err)=>{
             mysqlconnection.query('DELETE FROM Users WHERE user_name=?', [msg.body.user_name], (err, res) => {
                 if (err) {
                     console.log("INSIDE ERROR 2", err)
                     callback(null, { deleteSuccess: false })
                 } else {
-                    callback(null, { deleteSuccess: true })
+                    console.log(res);
+                    console.log("users.deleteOne")
+                    users.deleteOne({user_name:msg.body.user_name},(e,r)=>{
+
+                    answers.deleteMany({ owner_username:msg.body.user_name },(e,r)=>{
+
+                    comments.deleteMany({ owner_username: msg.body.user_name },(e,r)=>{
+
+                    questions.update({"answers.owner_username":msg.body.user_name}, {$pull:{"answers":{owner_username:msg.body.user_name}}},(e,r)=>{
+                    users.update({"bookmarks.answers.owner_username":msg.body.user_name}, {$pull:{"bookmarks.$.answers":{owner_username:msg.body.user_name}}},(e,r)=>{
+                        mysqlconnection.commit((e)=>{
+                            console.log("ALL MONG DELETION DONE.")
+                            callback(null, { deleteSuccess: true })
+                        })
+                    })
+                    });
+                    });   
+                    });
+                    });
                 }
+            })
             });
-            //                 try {
-            //                     const userdelete = await users.deleteOne({ _id: returnvalue.userid });
-            //                 } catch(error){
-            //                     console.log(error);
-            //                     mysqlconnection.rollback();
-            //                     callback(null, { deleteSuccess: false })
-            //                 }
-            //                 // users.deleteOne({ _id: returnvalue.userid }, (err, res) => {
-            //                 //     if (err) {
-            //                 //         console.log(err)
-            //                 //         mysqlconnection.rollback();
-            //                 //         callback(null, { deleteSuccess: false })
-            //                 //     }
-            //                 //     else {
-            //                 //         answers.deleteMany({ owner_userid: returnvalue.userid }, (err, res) => {
-            //                 //             if (err) {
-            //                 //                 console.log(err)
-            //                 //                 mysqlconnection.rollback();
-            //                 //                 callback(null, { deleteSuccess: false })
-            //                 //             }
-            //                 //             else {
-            //                 //                 comments.deleteMany({ owner_username: returnvalue.user_name }, (err, res) => {
-            //                 //                     if (err) {
-            //                 //                         console.log(err);
-            //                 //                         mysqlconnection.rollback();
-            //                 //                         callback(null, { deleteSuccess: false })
-            //                 //                     }
-            //                 //                     else {
-            //                 //                         mysqlconnection.commit();
-            //                 //                         callback(null, { deleteSuccess: true })
-            //                 //                     }
-            //                 //                 });
-            //                 //             }
-            //                 //         })
-            //                 //     }
-            //                 // })
-            //             }
-            //         });
-            //     }
-            // })
         } else {
             callback(null, { deleteSuccess: false })
         }
@@ -289,7 +273,7 @@ function signinHelper(msg, callback) {
                                     signinSuccess: false,
                                     signinMessage: "User does not Exist!"
                                 })
-                            }
+                            } else {
                             let topics = result.topics_followed;
                             let isTopicSelected;
                             if (topics.length > 0) {
@@ -309,6 +293,7 @@ function signinHelper(msg, callback) {
                                 signinMessage: "Success!",
                                 deactivated: result.status === "Deactivated"
                             })
+                            }
                         })
                     } else {
                         console.log("INSIDE PASS FAIL")
@@ -391,38 +376,10 @@ function signin(msg, callback) {
 }
 
 function selectedTopics(msg, callback) {
-    // mysqlconnection.beginTransaction(function(err) {
-    //     if (err) { 
-    //         callback(null,{
-    //             selectTopicsSuccess:false,
-    //             select_topics: false,
-    //             isTopicSelected: false,
-    //             topics: []
-    //         })
-    //     }
-    //     console.log("msg.body.user_name ",msg.body.user_name)
-    //     const query = "UPDATE Users SET select_topics = ? WHERE user_name = ?"
-    //     mysqlconnection.query(query,[1,msg.body.user_name],(err,result)=>{
-    //         if(err){
-    //             console.log(err)
-    //             mysqlconnection.rollback(function(err) {
-    //                 if(err)
-    //                     console.log(err)
-    //             });
-    //             callback(null,{
-    //                 selectTopicsSuccess:false,
-    //                 select_topics: false,
-    //                 isTopicSelected: false,
-    //                 topics: []
-    //             })
-    //         } else {
+    
     users.findOneAndUpdate({ _id: msg.body.userid }, { $push: { topics_followed: { $each: msg.body.topics } } }, function (err, result) {
         if (err) {
             console.log(err)
-            // mysqlconnection.rollback(function(err) {
-            //     if(err)
-            //         console.log(err)
-            // });
             callback(null, {
                 selectTopicsSuccess: false,
                 select_topics: false,
@@ -457,17 +414,6 @@ function selectedTopics(msg, callback) {
                         })
                     }
                 })
-            // mysqlconnection.commit(function(err) {
-            //     if (err) { 
-            //         mysqlconnection.rollback(function(err) {
-            //             if(err)
-            //                 console.log(err)
-            //         });
-            //     }
-            // });
         }
     })
-    //         }
-    //     })
-    // })
 }
