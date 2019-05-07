@@ -23,7 +23,7 @@ exports.messageService = function messageService(msg, callback) {
 
 function getEmailList(msg, callback) {
     console.log("In message get email list. Msg: ", msg);
-    Users.users.find({}, { "user_name": 1, "_id": 0 }, function (err, results) {
+    Users.users.find({ "status": { $ne: "Deactivated" } }, { "user_name": 1, "_id": 0 }, function (err, results) {
         if (err) {
             console.log(err);
             console.log("Email list not found");
