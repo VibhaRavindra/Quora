@@ -38,6 +38,7 @@ class AskQuestion extends Component {
         await this.props.addQuestion(data);
         this.refs.question.value="";
         this.inputElement.click();
+        window.location.reload();
     }
 
     render() {
