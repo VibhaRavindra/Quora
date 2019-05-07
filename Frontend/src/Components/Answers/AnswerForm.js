@@ -42,6 +42,11 @@ class AnswerForm extends React.Component {
    var delta = {}
    if(this.props.isEditing) {
      delta = this.props.answer.answer
+
+     if(this.props.editedAnswer && this.props.editedAnswer !== 'undefined' && this.props.editedAnswer !== '') {
+       delta = this.props.editedAnswer
+     }
+
     let deltaOps = JSON.parse(delta).ops
     htmlText = new QuillDeltaToHtmlConverter(deltaOps, {}).convert();
    }

@@ -176,7 +176,10 @@ class AnswerDetails extends Component {
                 if (response.status === 200) {
                   console.log("Debug Profile pic : " + nextProps.answer.owner_username)
                   if(response.data.base64.length > 0) {
-                    this.setState({ userImg: response.data.base64[0].b64 });
+                    this.setState({ 
+                      userImg: response.data.base64[0].b64,
+                      tagline: response.data.base64[0].user_tagline 
+                    });
                 }
               }
         })
@@ -330,7 +333,7 @@ class AnswerDetails extends Component {
 
     if (this.state.isEditing) {
 
-      return (<AnswerForm isEditing={true} answer={this.props.answer} question_id={this.props.answer.question_id} closeAnswerFormAndReload={(answer) => {this.closeEdit(answer)}} />);
+      return (<AnswerForm isEditing={true} answer={this.props.answer} editedAnswer={this.state.answer} question_id={this.props.answer.question_id} closeAnswerFormAndReload={(answer) => {this.closeEdit(answer)}} />);
     } else {
       //const { answer } = this.props;
       // const {id, body, author, time_posted_ago, upvoter_ids, upvoted, downvoted, commentIds} = answer;
