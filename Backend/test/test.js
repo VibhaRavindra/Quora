@@ -4,7 +4,7 @@ var should = require('chai').should();
 chai.use(chaiHttp);
 var assert = require('assert');
 var expect = chai.expect;
-let rooturl = 'http://localhost:3001';
+let rooturl = 'http://backend-kafka-zookeeper-320127944.us-west-1.elb.amazonaws.com:3001';
 
 describe('Quora Mocha Test Harness:', () => {
 
@@ -24,9 +24,10 @@ describe('Quora Mocha Test Harness:', () => {
     //Add new question
     it("Test Case 2 - User should be able to add a new question", (done) => { 
 
+        let timestamp = new Date();
         //sample data
         const questionData = { 
-            "question":"Will the iphone work at -2deg?",
+            "question":"Will the iphone work at -2deg? "+timestamp,
             "topic_name": "technology",
             "owner_id": "5cd14cab5e70255146f4031b",
             "owner_name": "swetha",
@@ -69,7 +70,7 @@ describe('Quora Mocha Test Harness:', () => {
        it("Test Case 4 - adddescription", (done) => {
 
         const data = { 
-            "user_name":"alice@sjsu.edu",
+            "user_name":"swetha.suresh@sjsu.edu",
             "aboutme":"i am in wonderland"
         }
         chai.request(rooturl)
@@ -118,7 +119,7 @@ describe('Quora Mocha Test Harness:', () => {
 
     it("Test Case 7 - Get All answers", (done) => {
         chai.request(rooturl)
-        .get(`/answer/5cd14b795e70255146f4031a`)
+        .get(`/answer/5cd1c996781c14520863e869`)
         .set('Accept', 'application/json')
         .end((err, res) => {
             expect(err).to.be.null;
@@ -130,8 +131,8 @@ describe('Quora Mocha Test Harness:', () => {
     it("Test Case 8 - Get user bookmarks", (done) => {
 
         const data = { 
-            user_id: "5cd14303ae3b384d0039e3a5"
-        }
+            user_id: "5cd1c96638a6d0560e944fca"
+         }
         chai.request(rooturl)
         .post('/bookmarks')
         .send(data)
@@ -145,8 +146,8 @@ describe('Quora Mocha Test Harness:', () => {
     it("Test Case 9 - Get questions asked", (done) => {
 
         const data = { 
-            user_id: "5cd14303ae3b384d0039e3a5"
-        }
+            user_id: "5cd1c96638a6d0560e944fca"
+         }
         chai.request(rooturl)
         .get(`/content/questions_asked`)
         .set('Accept', 'application/json')
