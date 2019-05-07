@@ -113,6 +113,11 @@ class Home extends Component {
         });
     }
 
+    refreshQuestionsOnHome = () => {
+        console.log("New question added");
+        this.reload();
+    }
+
     render() {
 
         let topicsNavDiv = null;
@@ -133,6 +138,7 @@ class Home extends Component {
             )
         });
 
+        
        
         questionsDiv = this.state.paginated_questions.map((record, index) => {
             return (
@@ -147,7 +153,7 @@ class Home extends Component {
 
         return (
             <div className="home-container">
-                <Header />
+                <Header refreshQuestionsOnHome={this.refreshQuestionsOnHome}/>
                 <div className="row">
                     <div className="container" style={{ marginTop: "5em" }}>
                         <div className="row justify-content-center align-items-center">
@@ -194,7 +200,7 @@ class Home extends Component {
 
                                                                     <span className="card-title profile-question-card">What is your question or link?</span>
                                                                 </button>
-                                                                <AskQuestion/>
+                                                                <AskQuestion refreshQuestionsOnHome={this.props.refreshQuestionsOnHome}/>
                                                             </div>
                                                         </div>
                                                         {questionsDiv}
