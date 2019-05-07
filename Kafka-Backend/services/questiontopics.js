@@ -27,8 +27,6 @@ function createQuestion(msg, callback) {
         "owner_id": msg.body.owner_id,
         "owner_name": msg.body.owner_name,
         "owner_username": msg.body.owner_username,
-        "owner_profile_pic": msg.body.owner_profile_pic,
-        "owner_tagline": msg.body.owner_tagline,
         "timestamp" : timestamp
     }
     // console.log("question data:", questionData);
@@ -73,7 +71,7 @@ function getAllQuestions(msg, callback) {
 
     sort = {'timestamp': -1}
     // console.log("In get questions. Msg: ", msg);
-    Questions.questions.find({ }, function (err, results) {
+    Questions.questions.find({ }, { question : 1, answers: 1, followers: 1 }, function (err, results) {
         if (err) {
             console.log(err);
             callback(err, "Database Error");
@@ -92,7 +90,7 @@ function getTopicQuestions(msg, callback) {
 
     sort = {'timestamp': -1}
     console.log("In get topic questions. Msg: ", msg);
-    Questions.questions.find({"topic_name" : (msg.body.topic).toLowerCase() }, function (err, results) {
+    Questions.questions.find({"topic_name" : (msg.body.topic).toLowerCase() },{question : 1, answers: 1, followers: 1}, function (err, results) {
         if (err) {
             console.log(err);
             callback(err, "Database Error");

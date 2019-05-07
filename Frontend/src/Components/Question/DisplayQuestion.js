@@ -30,6 +30,7 @@ class DisplayQuestion extends Component {
     closeFormAndReload = () => {
             swal("Saved answer");
             this.setState({ openAnswer: '' });
+            this.props.reload();
     }
 
     followquestion=(e,x,y)=>{

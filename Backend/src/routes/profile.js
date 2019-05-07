@@ -22,7 +22,15 @@ var fs=require("fs");
 var passport = require('passport');
 var requireAuth = passport.authenticate('jwt', {session: false});
 
-
+router.route("/healthcheck").get(function(req, res){
+  kafka.make_request('profile', {"path":"healthcheck"}, function(err, result){
+    if(err){
+      res.status(400).json({});
+    } else {
+      res.status(200).json({});
+    }
+  })
+})
 router.route('/addtagline').post( function (req, res) {
 
   console.log("In addtagline Route");
