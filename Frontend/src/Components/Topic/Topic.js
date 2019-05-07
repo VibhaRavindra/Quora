@@ -95,7 +95,7 @@ class Topic extends Component {
     }
 
     updateTopicQuestions = async (event, topic) => {
-        //console.log("tab clicked");
+        console.log("tab clicked");
         //console.log(topic);
         await this.props.getTopicQuestions(topic);
         let questions = null;
@@ -157,11 +157,11 @@ if (index > -1) {
         topicsNavDiv = userTopics.map((record, index) => {
             let topicurl = "/quora/topic/" + record.toLowerCase();
             return (
-                <Link className="feed-home-nav" to={topicurl} onClick={(event) => this.updateTopicQuestions(event, record)}>
+                <a className="feed-home-nav" href={topicurl} onClick={(event) => this.updateTopicQuestions(event, record)}>
                     <Nav.Item>
                         <div className="label feed-label">{record}</div>
                     </Nav.Item>
-                </Link>
+                </a>
             )
         });
 
