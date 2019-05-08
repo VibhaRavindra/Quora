@@ -1,0 +1,300 @@
+#left-tabs-example-tab-first {
+    padding: 0.3em;
+    width: 85%;
+    height: 50%;
+    color: #666;
+}
+
+#left-tabs-example-tab-second {
+  padding: 0.3em;
+  width: 85%;
+  height: 50%;
+  color: #666;
+}
+
+
+.left-tabs-feed{
+    padding: 0.3em;
+    width: 85%;
+    height: 50%;
+    color: #666;
+
+}
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+    padding: 0.3em;
+    width: 85%;
+    height: 50%;
+    color: #666;
+    background-color: #e6e6e6;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+  padding: 0.3em;
+  width: 85%;
+  height: 50%;
+  color: #666;
+  background-color: #e6e6e6;
+}
+
+.left-nav-feed-img{
+    width: 20px;
+    height:20px;
+    margin-left: 15px;
+    margin-right: 10px;
+    padding: 2px;
+    background: #b92b27;
+    border-radius:3px;
+}
+
+.feed-label{
+font-weight: 500;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 13px;
+}
+
+.bookmark-label{
+  font-weight: 500;
+      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-size: 13px;
+  }
+
+.profile-question-card{
+    margin-top:.3em;
+    font-weight: bold;
+    font-size: 18px;
+    color: #949494;
+    display: block;
+    font-family: 'q_serif',Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif;
+}
+
+.home-container {
+  background: #fafafa;
+  overflow-y: scroll;
+  height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+.home-profie-name{
+    font-size: 15px;
+    color: #949494;
+}
+.profile-logo-home{
+    margin-left: 1em;
+    margin-right: 0.3em;
+    width: 25px;
+    height: 25px;
+    border-radius: 100%;
+    background: url('../Images/profile_logo.png');
+  }
+
+.profile-card-body{
+    padding: 0.5em;
+    
+}
+
+.profile-card{
+    margin-bottom: 0.5em;
+    position: relative;
+}
+
+.question-card{
+    margin-bottom: 0.5em;
+}
+
+
+
+.question-card-subtitle{
+    font-size: 13px;
+    color: #949494;
+    font-family:  "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 400;
+    margin-bottom: 2px;
+}
+
+.question-card-body{
+    font-weight: bold;
+    font-size: 18px;
+    display: block;
+    font-family: 'q_serif',Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif;
+}
+
+.question-link{
+    color: #333333
+}
+
+.question-link:hover{
+    color: #333333
+}
+
+.answer-user-profile{
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.answer-timestamp{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: #949494;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.questions-default-logo{
+    margin-top: 0.3em;
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+    background: url('../Images/profile_logo.png') no-repeat;
+    margin-right:0px;
+  }
+
+  .answer-user-pic{
+    max-width: 7.333333%;
+  }
+
+  .answer-to-question{
+      margin-left:0.3em;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  .close-icon {
+    cursor: pointer;
+  }
+
+  .question-footer-elem div{
+    padding: 0px 30px;
+    margin-right: -0.7em;
+  }
+
+  .question-footer-elem{
+    cursor: pointer;
+  }
+
+  .answer-icon{
+    background: url('../Images/feed-answer.svg') no-repeat 3px center;
+  }
+
+  .pass-icon{
+    background: url('../Images/feed-pass.svg') no-repeat 3px center;
+  }
+
+  .follow-icon{
+    background: url('../Images/feed-follow.svg') no-repeat 3px center;
+  }
+  
+
+  .fb-icon{
+    background: url('../Images/feed-fb.svg') no-repeat 3px center;
+  }
+
+  .twitter-icon{
+    background: url('../Images/feed-twitter.svg') no-repeat 3px center;
+  }
+
+  .share-icon{
+    background: url('../Images/feed-share.svg') no-repeat 3px center;
+  }
+
+  .dots-icon{
+    background: url('../Images/feed-dots.svg') no-repeat 3px center;
+  }
+
+  .answer-icon-label{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    margin-left: 5px!important;
+    font-weight: 500!important;
+    font-size: 14px!important;
+    color: #666!important;
+  }
+
+  .header-logo-text{
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+    float: left;
+    line-height: 51px;
+  }
+
+  .answer-icon-hide{
+    color: #fff;
+  }
+
+  .question-footer-elem-share-icons div{
+    padding: 0px 30px;
+    margin-right: -1.7em;
+  }
+
+  .question-footer-elem-share-icons{
+    cursor: pointer;
+  }
+
+  .feed-home-nav{
+    color: #666;
+  padding-bottom: 0.7em;
+  }   
+  
+  .bookmark-home-nav{
+    color: #666;
+  padding-bottom: 0.7em;
+  }   
+
+.topic-heading{
+  font-family: 'q_serif',Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif;
+  font-weight: bold;
+  line-height: 1.3;
+  color: #333;
+  font-size: 23px;
+  margin-bottom: 2em;
+}
+
+.follow-topic{
+  color: #329bff!important;
+  font-size: 15px!important;
+  font-weight: 500!important;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  padding-left: 2em;
+}
+
+
+.follow-topic-icon{
+  background: url('../Images/follow-topic-icon.svg') no-repeat 3.5px center;
+}
+
+.following-topic-icon{
+  background: url('../Images/following-topic-icon.svg') no-repeat 3.5px center;
+}
+
+  #unfollow-ques{
+    top: 75px;
+    left:170px;
+    position: absolute;
+  }
+  .head{
+    position: fixed;
+  }
+.home-profile-pic{
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  margin-left: 23px;
+  margin-right: 8px;
+}
+.home-name{
+  line-height: 38px;
+}
+.home-follow-img{
+  width: 25px;
+  margin-top: -4px;
+}
+.home-follow-div{
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  margin-left: 5px!important;
+  font-weight: 500!important;
+  font-size: 14px!important;
+  color: #329bff!important;
+}
+.home-follow-icon{
+  margin-left: -56px !important;
+  margin-top: -14px;
+  margin-top: -6px;
+}

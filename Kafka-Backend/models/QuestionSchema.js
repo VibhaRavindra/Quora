@@ -11,21 +11,22 @@ const QuestionSchema = new Schema({
     topic_name: {
         type: String
     },
+    owner_id:{
+        type: String,
+        required: true
+    },
     owner_username: {
         type: String,
         required: true
     },
     owner_name: {
-        type: String,
-        required: true
+        type: String
     },
     owner_tagline: {
-        type: String,
-        required: true
+        type: String
     },
     owner_profile_pic: {
-        type: String,
-        required: true
+        type: String
     },
     followers: {
         type: Array,

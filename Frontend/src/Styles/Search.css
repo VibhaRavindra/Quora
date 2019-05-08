@@ -1,0 +1,223 @@
+.container-wrapper{
+    width: 1002px;
+    margin: 0 auto;
+    padding-top: 83px;
+    /* padding-left: 32px; */
+    padding-right: 32px;
+    padding-bottom: 32px;
+}
+.search-sidebar{
+    width: 142px;
+    float: left;
+    min-height: 1px;
+    margin-left: 10px;
+    clear: left;
+    font-size: 13px;
+    /* position: fixed; */
+}
+.search-title{
+    color: #333;
+    font-weight: 700;
+    position: relative;
+    border-bottom: 1px solid #e2e2e2;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    font-size: 15px;
+    letter-spacing: 0;
+    text-transform: none;
+}
+.search-ul{
+    margin-left: -44px;
+}
+.search-ul a:hover{
+    text-decoration: none;
+}
+.search-div{
+    width: 140px;
+    height: 30px;
+    border-radius: 3px;
+    padding: 4px 0 0 8px;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+}
+.search-div:hover{
+    color: #2b6dad;
+}
+.search-div-bg{
+    background-color: #e6e6e6;
+}
+.content-wrapper{
+    width: 572px;
+    float: left;
+    min-height: 1px;
+    margin-left: 35px;
+}
+.question-container{
+    padding: 16px 0 0 0;
+    border-bottom: 1px solid #e2e2e2;
+}
+.question-text{
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 1.4;
+    color: #2b6dad;
+    padding-bottom: 5px;
+}
+.question-row{
+    margin-left: 0;
+    margin-right: 0;
+    display: flex!important;
+    padding-bottom: 6px;
+}
+.follow-question{
+    width: 120px;
+    height: 38px;
+    line-height: 36px;
+    margin-left: -12px;
+    text-align: center;
+    cursor: pointer;
+}
+.follow-question:hover{
+    background-color: rgba(0,0,0,0.02)!important;
+    border-radius: 40px;
+}
+.follow-logo{
+    margin-left: -10px;
+}
+.follow-text{
+    color: #666;
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.right-icons{
+    width: 190px;
+    margin-left: 274px;
+    line-height: 28px;
+}
+.right-icons div{
+    float: left;
+    width: 38px;
+    height: 38px;
+    text-align: center;
+    cursor: pointer;
+}
+.right-icons div:hover{
+    background-color: rgba(0,0,0,0.02)!important;
+    border-radius: 100%;
+}
+.right-icons div img{
+    padding-top: 8px;
+}
+.questn-title{
+    font-size: 15px;
+    line-height: 1.4;
+    width: 100%;
+    font-weight: 400;
+    color: #666;
+    display: inline;
+}
+.question-value{
+    font-weight: bold;
+}
+.question-header{
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e2e2e2;
+    margin-bottom: 10px;
+}
+.noSearchValue{
+    color: #7b7878;
+}
+.topic-img{
+    width: 27px;
+    border-radius: 5px;
+    margin-right: 8px;
+    margin-bottom: 5px;
+}
+
+/* Profile styles */
+.profile-text{
+    color: #000;
+    font-size: 15px;
+    line-height: 1.4;
+}
+.profile-aboutme{
+    color: #000;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.profile-notify{
+    color: #666;
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 5px;
+    width: 23px;
+}
+
+/* Your Content Styles */
+.letter-space{
+    letter-spacing: -0.5px;
+}
+.content-title{
+    color: #333;
+    font-weight: 700;
+    position: relative;
+    border-bottom: 1px solid #e2e2e2;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    font-size: 15px;
+    letter-spacing: 0;
+    text-transform: none;
+}
+.content-log{
+    color: #949494;
+    margin-top: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+/* Pagination styles */
+.pagination{
+    margin: auto;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    padding-right: 50px;
+  }
+  .pagination li{
+    margin-right: 12px;
+    width: 30px;
+    height: 35px;
+    line-height: 33px;
+    text-align: center;
+    border: 2px #b92b27 solid;
+    border-radius: 5px;
+    color: #b92b27;
+    font-weight: bold;
+    margin-top: 1px;
+    cursor: pointer;
+  }
+  .pagination li a{
+    color: #b92b27;
+    text-decoration: none;
+  }
+  .previous, .next{
+    width: 86px !important;
+    height: 40px !important;
+    line-height: 36px !important;
+    /* background-color: #0055a2; */
+    margin-top: -2px !important;
+    font-size: 15px;
+    font-weight: 400 !important;
+  }
+  .previous a, .next a{
+    color: #b92b27!important;
+    text-decoration: none;
+  }
+  .profile-search-pic{
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-right: 6px;
+  }

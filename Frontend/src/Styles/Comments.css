@@ -1,0 +1,85 @@
+.qa-comments {
+    background-color: #fafafa;
+    padding: 10px;
+    border: 1px solid #e2e2e2;
+    border-radius: 3px;
+}
+.qa-comments .comment-list {
+    padding-inline-start: 0px;
+  }
+.qa-comments .comment-form {
+    display: flex;
+    align-items: center;
+}
+.qa-comments .comment-form input {
+    height: 32px;
+    width: 1000px;
+    padding-left: 7px;
+    margin-right: 16px;
+    border-radius: 20px;
+    border: 1px solid #e2e2e2;
+    font-family: 'q_serif', Georgia, Times, "Times New Roman", "Hiragino Kaku Gothic Pro", "Meiryo", serif;
+    font-size: 13px;
+    line-height: 1.5;
+}
+.qa-comments .comment-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    font-size: 13px;
+    margin-bottom: 5px;
+    margin-top: 15px;
+}
+.qa-comments .comment-header img {
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+.qa-comments .comment-header h1 {
+    font: inherit;
+    font-family: 'q_serif', Georgia, Times, "Times New Roman", "Hiragino Kaku Gothic Pro", "Meiryo", serif;
+    font-weight: bold;
+    line-height: 1;
+    margin: 1px;
+}
+.qa-comments .comment-header h2 {
+    font: inherit;
+    color: #999;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.qa-comments .comment-body {
+    margin-left: 40px;
+    padding-bottom: 10px;
+    font-family: 'q_serif', Georgia, Times, "Times New Roman", "Hiragino Kaku Gothic Pro", "Meiryo", serif;
+    tab-size: 4;
+    word-wrap: break-word;
+    font-size: 13px;
+}
+
+.qa-comments .comment-button {
+    background: #329bff;
+    font-size: 13px;
+    font-weight: 500;
+    height: 32px;
+    min-width: fit-content!important;
+    border: 1px;
+    border-radius: 40px;
+    color: white;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    padding: 3px, 7px, 4px, 7px;
+    box-shadow: 0 1px 1px 0 rgba(200, 200, 200, 0.2);
+}
+
+.qa-comments img {
+        height: 42px;
+        width: 42px;
+        min-height: 42px;
+        min-width: 42px;
+        border-radius: 50%;
+        margin-right: 15px;
+}
+
+.qa-comments .comments-container li,ul {
+    list-style: none;
+}

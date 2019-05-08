@@ -3,59 +3,60 @@ var Schema = mongoose.Schema;
 var Comment = require('./CommentSchema');
 const AnswerSchema = new Schema({
     answer: {
-    type: String,
-      required: true,
+      type: String,
+      required: true
+    },
+    question_id: {
+      type: String,
+      required: true
     },
     owner_username: {
         type: String,
         required: true
     },
+    owner_userid: {
+      type: String,
+      required: true
+  },
     owner_name: {
         type: String,
         required: true
     },
     owner_tagline: {
-        type: String,
-        required: true
+        type: String
     },
     owner_profile_pic: {
         type: String,
-        required: true
     },
+     is_editied: {
+       type: Boolean,
+       default:false
+     },
      is_anonymous: {
        type: Boolean,
        default:false
      },
-     upvotes: [ new Schema({ 
-       username: {
-         type: 'string'
-       } 
-     })
-     ],
-     downvotes: [ new Schema({
-       username: {
-        type: 'string' 
-       } 
-     })
-     ],
+     upvotes: [ String ],
+     downvotes: [ String ],
      upvote_count: {
        type: Number
      },
      downvote_count: {
         type: Number
       },
-     timestamp: {
+      bookmarked_by: [ String ],
+      timestamp: {
        type: Date, 
          default: Date.now,
          required: true
      },
-     answer_images: {
-      type: Array,
-      default:[]
-     },
      comments: {
       type: [Comment.CommentSchema],
       default: []
+     },
+     owner_status:{
+       type:String,
+       default:"Activated"
      }
   })
   const answers=mongoose.model('Answers', AnswerSchema)

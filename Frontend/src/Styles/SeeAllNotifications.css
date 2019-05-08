@@ -1,0 +1,241 @@
+#left-tabs-example-tab-first {
+    padding: 0.3em;
+    width: 85%;
+    height: 50%;
+
+}
+
+
+.left-tabs-feed{
+    padding: 0.3em;
+    width: 85%;
+    height: 50%;
+   
+
+}
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+    padding: 0.3em;
+    width: 85%;
+    height: 50%;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+   
+}
+
+.left-nav-feed-img{
+    width: 20px;
+    height:20px;
+    margin-left: 15px;
+    margin-right: 10px;
+    padding: 2px;
+    background: #b92b27;
+    border-radius:3px;
+}
+
+.feed-label{
+font-weight: 500;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 13px;
+}
+
+.profile-question-card{
+    margin-top:.3em;
+    font-weight: bold;
+    font-size: 18px;
+
+    display: block;
+    font-family: 'q_serif',Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif;
+}
+
+.home-profie-name{
+    font-size: 15px;
+    color: #949494;
+}
+.profile-logo-home{
+    margin-left: 1em;
+    margin-right: 0.3em;
+    width: 25px;
+    height: 25px;
+    border-radius: 100%;
+    background: url('../Images/profile_logo.png');
+  }
+
+.profile-card-body{
+    padding: 0.5em;
+    
+}
+
+.profile-card{
+    margin-bottom: 0.5em;
+    position: relative;
+}
+
+.question-card{
+    margin-bottom: 0.5em;
+}
+
+.question-card-subtitle{
+    font-size: 13px;
+    color: #949494;
+    font-family:  "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 400;
+    margin-bottom: 2px;
+}
+
+.question-card-body{
+    font-weight: bold;
+    font-size: 18px;
+    display: block;
+    font-family: 'q_serif',Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif;
+}
+
+.question-link{
+    color: #333333
+}
+
+.question-link:hover{
+    color: #333333
+}
+
+.answer-user-profile{
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.answer-timestamp{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: #949494;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.questions-default-logo{
+    margin-top: 0.3em;
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+    background: url('../Images/profile_logo.png') no-repeat;
+    margin-right:0px;
+  }
+
+  .answer-user-pic{
+    max-width: 7.333333%;
+  }
+
+  .answer-to-question{
+      margin-left:0.3em;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  .close-icon {
+    cursor: pointer;
+  }
+
+  .question-footer-elem div{
+    padding: 0px 30px;
+    margin-right: -0.7em;
+  }
+
+  .question-footer-elem{
+    cursor: pointer;
+  }
+
+  .answer-icon{
+    background: url('../Images/feed-answer.svg') no-repeat 3px center;
+  }
+
+  .pass-icon{
+    background: url('../Images/feed-pass.svg') no-repeat 3px center;
+  }
+
+  .follow-icon{
+    background: url('../Images/feed-follow.svg') no-repeat 3px center;
+  }
+
+  .fb-icon{
+    background: url('../Images/feed-fb.svg') no-repeat 3px center;
+  }
+
+  .twitter-icon{
+    background: url('../Images/feed-twitter.svg') no-repeat 3px center;
+  }
+
+  .share-icon{
+    background: url('../Images/feed-share.svg') no-repeat 3px center;
+  }
+
+  .dots-icon{
+    background: url('../Images/feed-dots.svg') no-repeat 3px center;
+  }
+
+  .answer-icon-label{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    margin-left: 5px!important;
+    font-weight: 500!important;
+    font-size: 14px!important;
+   
+  }
+
+  .header-logo-text{
+    font-size: 14px;
+    font-weight: bold;
+
+    line-height: 51px;
+  }
+
+  .answer-icon-hide{
+    color: #fff;
+  }
+
+  .question-footer-elem-share-icons div{
+    padding: 0px 30px;
+    margin-right: -1.7em;
+  }
+
+  .question-footer-elem-share-icons{
+    cursor: pointer;
+  }
+  hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+    margin-bottom:-12px; 
+    position: relative; 
+
+}
+#notification-single-elem{
+
+    width: 830px; 
+    top: 2px; 
+    border-right: none;
+    border-left:none;
+    position: relative; 
+    float: left;
+ z-index: 2;
+ margin-bottom: 20px;
+ border-bottom: solid 0.25px #ccc ;
+ font-family: 'q_serif',Georgia,Times,"Times New Roman","Hiragino Kaku Gothic Pro","Meiryo",serif;
+}
+
+.read-notifications-elem{
+ right: 100px;
+  position: absolute;
+}
+.read-notifications-elem2{
+  right: 20px;
+  position: absolute;
+}
+.liclass{
+  border-bottom: 1px solid black;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  padding-bottom:10px; 
+  width: 400px;
+ 
+}
+.ulclass{
+  width: 600px;
+}
