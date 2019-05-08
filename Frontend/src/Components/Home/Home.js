@@ -7,8 +7,13 @@ import bookmarkImg from '../../Images/bookmark.png';
 import AskQuestion from "../Question/AskQuestion";
 import { connect } from 'react-redux';
 import { getAllQuestions } from '../../js/actions/question_actions';
+import { getProfilePic } from '../../js/actions/profile_actions';
+import defaultProfilePic from '../../Images/profile_logo.png'
 import DisplayQuestion from '../Question/DisplayQuestion';
 import { Link } from "react-router-dom";
+import axios from 'axios'
+//for pagination
+import ReactPaginate from 'react-paginate';
 
 class Home extends Component {
     constructor(props) {
@@ -17,8 +22,26 @@ class Home extends Component {
             defaultImg: false,
             questions: [],
             isDefaultTopic : true,
-            followedquestions:[]
+            followedquestions:[],
+             //for pagination
+            paginated_questions:[],
+            results_per_page: 3,
+            num_pages:0,
+            profile_b64: null,
+            userImg: ''
         }
+        //for pagination
+        this.handlePageClick = this.handlePageClick.bind(this);
+    }
+
+    //for pagination
+    handlePageClick(data){
+    console.log(data.selected)
+    let page_number = data.selected;
+    let offset = Math.ceil(page_number * this.state.results_per_page)
+    this.setState({
+        paginated_questions : this.state.questions.slice(offset, offset +this.state.results_per_page)
+    })
     }
 
     async componentDidMount() {
@@ -31,8 +54,33 @@ class Home extends Component {
         questions = this.props.questions.questions;
         console.log(this.props.questions.questions);
         this.setState({ questions: questions});
-        
+        // for pagination
+        const all_questions = questions;
+        const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+        this.setState({
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
+        });
 
+        let userid = localStorage.getItem("userid");
+        // await this.props.getProfilePic(userid);
+        if(userid !== undefined){
+        axios.defaults.withCredentials = true;
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+        axios.get('/quora/profilepic?userid=' + userid)
+            .then((response) => {
+                if (response !== undefined)
+                if (response.status === 200) {
+                  
+                  if(response.data.base64.length > 0) {
+                    this.setState({ 
+                        userImg: response.data.base64[0].b64 ,
+                        user_tagline: response.data.base64[0].user_tagline 
+                    });
+                }
+              }
+        })
+    }
     }
 
     closeDiv = (event, index) => {
@@ -41,6 +89,33 @@ class Home extends Component {
         console.log(questionsArr[index].question);
         questionsArr.splice(index, 1);
         this.setState({ questions: questionsArr });
+        // for pagination
+        const all_questions = this.state.questions;
+        const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+        this.setState({
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
+        });
+    }
+
+    reload = async () => {
+        await this.props.getAllQuestions();
+        let questions = null;
+        questions = this.props.questions.questions;
+        console.log(this.props.questions.questions);
+        this.setState({ questions: questions});
+        // for pagination
+        const all_questions = questions;
+        const pages = Math.ceil(all_questions.length/this.state.results_per_page)
+        this.setState({
+            num_pages:pages,
+            paginated_questions: all_questions.slice(0,this.state.results_per_page),
+        });
+    }
+
+    refreshQuestionsOnHome = () => {
+        console.log("New question added");
+        this.reload();
     }
 
     render() {
@@ -63,16 +138,22 @@ class Home extends Component {
             )
         });
 
+        
        
-        questionsDiv = this.state.questions.map((record, index) => {
+        questionsDiv = this.state.paginated_questions.map((record, index) => {
             return (
-            <DisplayQuestion question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} closeCardMethod={this.closeDiv}/>
+            <DisplayQuestion question={record} questionIndex={index} isDefaultTopic={this.state.isDefaultTopic} closeCardMethod={this.closeDiv} reload={this.reload}/>
             )
         });
 
+        var userImg = defaultProfilePic;
+        if(this.state.userImg !== '' && this.state.userImg !== 'default') {
+            userImg = this.state.userImg
+        } 
+
         return (
             <div className="home-container">
-                <Header />
+                <Header refreshQuestionsOnHome={this.refreshQuestionsOnHome}/>
                 <div className="row">
                     <div className="container" style={{ marginTop: "5em" }}>
                         <div className="row justify-content-center align-items-center">
@@ -111,21 +192,36 @@ class Home extends Component {
                                                             <div className="card-body profile-card-body">
                                                                 {this.state.defaultImg &&
                                                                     <div className="row">
-                                                                        <div className="profile-logo-home"></div>
-                                                                        <div className="home-profie-name">{localStorage.getItem("fullname")}</div>
+                                                                        <img src={userImg} className="home-profile-pic" alt="profile-pic"/>
+                                                                        <div className="home-name home-profie-name">{localStorage.getItem("fullname")}</div>
                                                                     </div>
                                                                 }
                                                                 <button className="btn" data-toggle="modal" data-target="#askQuestion">
 
                                                                     <span className="card-title profile-question-card">What is your question or link?</span>
                                                                 </button>
-                                                                <AskQuestion/>
+                                                                <AskQuestion refreshQuestionsOnHome={this.props.refreshQuestionsOnHome}/>
                                                             </div>
                                                         </div>
                                                         {questionsDiv}
                                                     </div>
                                                 </Tab.Pane>
                                             </Tab.Content>
+                                            <div className="row">
+                            <ReactPaginate
+                            previousLabel={'Previous'}
+                            nextLabel={'Next'}
+                            breakLabel={'...'}
+                            breakClassName={'break-me'}
+                            pageCount={this.state.num_pages}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={5}
+                            onPageChange={this.handlePageClick}
+                            containerClassName={'pagination'}
+                            subContainerClassName={'pages pagination'}
+                            activeClassName={'active'}
+                            />
+                        </div>
                                         </Col>
                                     </Row>
                                 </Tab.Container>
@@ -133,6 +229,7 @@ class Home extends Component {
                         </div>
 
                     </div>
+                    
                 </div>
             </div>
         )
@@ -143,4 +240,4 @@ const mapStateToProps = state => ({
     questions : state.question.payload
 });
 
-export default connect(mapStateToProps, { getAllQuestions })(Home);
+export default connect(mapStateToProps, { getAllQuestions, getProfilePic })(Home);

@@ -295,17 +295,10 @@ showfollowing(){
                                       
 <b>Feeds</b>
 <div onClick={this.showprofile}>Profile</div>
-Answers<br />
-Questions<br />
-Shares<br />
-Spaces<br />
-Posts<br />
-Blogs<br />
+
 <div onClick={this.showfollowers}>Followers {this.state.followerscount}</div>
 <div onClick={this.showfollowing}>Following {this.state.followingcount}</div>
-Edits<br />
-Activity<br />
-                                            </Nav>
+                             </Nav>
                                         </Col>
                                         <Col sm={9}>
                                             <Tab.Content>

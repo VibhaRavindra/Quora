@@ -10,13 +10,16 @@ const CommentSchema = new Schema({
     type: String,
     required: true
 },
+owner_userid: {
+  type: String,
+  required: true
+},
 owner_name: {
     type: String,
     required: true
 },
 owner_profile_pic: {
-    type: String,
-    required: true
+    type: String
 },
    timestamp: {
      type: Date, 

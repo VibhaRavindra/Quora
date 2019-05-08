@@ -12,6 +12,7 @@ import AskQuestion from '../Question/AskQuestion';
 import { Modal, Button } from 'react-bootstrap';
 import {signout} from "../../js/actions/action";
 import { connect } from "react-redux";
+import defaultProfilePic from '../../Images/profile_logo.png';
 function mapStateToProps(store) {
     return {
     }
@@ -33,7 +34,10 @@ class Header extends Component {
             contentClick: false,
             messagePopUp: false,
             deactivate: false,
-            logout:false
+            logout:false,
+            messagePopUpDelete: false,
+            closePopUpDelete:false,
+            userImg: ''
         }
         this.onSearchEnter = this.onSearchEnter.bind(this);
         this.clickDelete = this.clickDelete.bind(this);
@@ -41,6 +45,7 @@ class Header extends Component {
         this.deleteAccount = this.deleteAccount.bind(this);
         this.closePopUp = this.closePopUp.bind(this); 
         this.logout = this.logout.bind(this); 
+        this.closePopUpDelete = this.closePopUpDelete.bind(this); 
     }
     logout = () => {
         console.log("Inside frontend logout")
@@ -55,18 +60,38 @@ class Header extends Component {
         }
     }
     clickDelete = () => {
-        this.setState({messagePopUp: true})
+        this.setState({messagePopUpDelete: true})
     }
     clickDeactivate = () => {
         this.setState({messagePopUp: true})
     }
     closePopUp(){
         this.setState({
-            messagePopUp: false
+            messagePopUp: false,
         });
     }
-    deleteAccount = (event) => {
+    closePopUpDelete(){
+        this.setState({
+            messagePopUpDelete: false,
+        });
+    }
+    deleteAccount = async (event) => {
         event.preventDefault();
+        var data = new FormData(event.target);
+        console.log(data)
+        var fetchedRes = await fetch("/account/delete",{
+            method:"DELETE",
+            body:data,
+            headers:{
+                'Authorization': "Bearer " + localStorage.getItem("jwtToken")
+              }
+        })
+        var fetchedJson = await fetchedRes.json();
+        if(fetchedJson.deleteSuccess) {
+            localStorage.clear();
+            this.setState({logout:true})
+            this.props.signout();
+        }
     }
     deactivateAccount = async (event) => {
         event.preventDefault();
@@ -83,9 +108,11 @@ class Header extends Component {
         if(fetchedJson.deactivateSuccess) {
             localStorage.clear();
             this.setState({logout:true})
+            this.props.signout();
         }
-        this.props.signout();
     }
+
+    
     componentDidMount(){
         var data={
             "user_name":localStorage.getItem("user_name")
@@ -103,6 +130,27 @@ class Header extends Component {
             }
         })
         .catch()
+
+        let userid = localStorage.getItem("userid");
+        axios.defaults.withCredentials = true;
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('jwtToken');
+        axios.get('/quora/profilepic?userid=' + userid)
+            .then((response) => {
+                if (response !== undefined)
+                if (response.status === 200) {
+                  
+                  if(response.data.base64.length > 0) {
+                    this.setState({ 
+                        userImg: response.data.base64[0].b64 ,
+                        user_tagline: response.data.base64[0].user_tagline 
+                    });
+                }
+              }
+        })
+    }
+
+    refreshQuestionsOnHome = () => {
+        this.props.refreshQuestionsOnHome()
     }
 
     render() {
@@ -116,12 +164,20 @@ class Header extends Component {
         }
         if(this.state.logout)
             redirect = <Redirect to="/signup"/>
-    return (
-        <div className="row">
+
+        var userImg = defaultProfilePic;
+        if(this.state.userImg !== '' && this.state.userImg !== 'default') {
+            userImg = this.state.userImg
+        } 
+
+        return (
+        <div>
             {redirect}
             <div className="header" >
                 <div>
-                    <img className="quora-logo" src={Logo} alt="Quora"/>
+                    <Link to="/quora/home" >
+                        <img className="quora-logo" src={Logo} alt="Quora"/>
+                    </Link>
                 </div>
                 <div className="header-elem home">
                     <Link to="/quora/home" >
@@ -146,7 +202,8 @@ class Header extends Component {
                     <input className="search-box" placeholder="Search Quora" onKeyDown={this.onSearchEnter}></input>
                 </div>
                 <div className="profile">
-                    <div className="profile-logo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div className="\" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img src={userImg} className="header-profile-pic" alt="profile-pic"/>
                         <span class="sr-only">Toggle Dropdown</span>
                     </div>
                     <div class="dropdown-menu dropdown-menu-profile">
@@ -156,15 +213,16 @@ class Header extends Component {
                         <a class="dropdown-item-profile" href="#" onClick={this.logout}>Logout</a>
                         <a class="dropdown-item-profile" data-toggle="modal" data-target="#delete" href="#" onClick={this.clickDelete}>Delete</a>
                         <a class="dropdown-item-profile" data-toggle="modal" data-target="#deactivate" href="#" onClick={this.clickDeactivate}>Deactivate</a>
+                        <a class="dropdown-item-profile" href="/quora/AnalyticsDashboard">Analytics Dashboard</a>
                     </div>
                     <MessageList />
                 </div>
                 <div>
                     <div className="add-question" data-toggle="modal" data-target="#askQuestion">Add Question or Link</div>
-                    <AskQuestion/>
+                    <AskQuestion refreshQuestions={this.refreshQuestionsOnHome}/>
                 </div>
             </div>
-        <Modal className="modal-deleteAccount" show={this.state.messagePopUp} onHide={this.closePopUp} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal className="modal-deleteAccount" id="delete" show={this.state.messagePopUpDelete} onHide={this.closePopUpDelete} aria-labelledby="contained-modal-title-vcenter" centered>
             <form onSubmit={this.deleteAccount}>
                 <Modal.Header closeButton>
                     <h2 className="modal-delete-header">Enter Password</h2>
@@ -174,7 +232,7 @@ class Header extends Component {
                 <div className="modal-below-text">For security purposes, please enter your password in order to continue. If you signed up for Quora using Facebook or Google, please create an account password.</div>
                     <div className="incorrect-delete"></div>
                     <input type="hidden" name="user_name" value={localStorage.getItem("user_name")}/>
-                    <input type="password"  className="delete-pw" name="password"  placeholder="Password" maxlength="255" />
+                    <input type="password"  className="delete-pw" name="password"  placeholder="Password" />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button type="submit" className="deleteAccount-btn">
@@ -183,7 +241,7 @@ class Header extends Component {
                 </Modal.Footer>
             </form>
         </Modal>
-        <Modal className="modal-deleteAccount" show={this.state.messagePopUp} onHide={this.closePopUp} aria-labelledby="contained-modal-title-vcenter" centered>
+        <Modal className="modal-deleteAccount"  id="deactivate" show={this.state.messagePopUp} onHide={this.closePopUp} aria-labelledby="contained-modal-title-vcenter" centered>
         <form onSubmit={this.deactivateAccount}>
             <Modal.Header closeButton>
                 <h2 className="modal-delete-header">Enter Password</h2>

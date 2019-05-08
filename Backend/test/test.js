@@ -4,7 +4,7 @@ var should = require('chai').should();
 chai.use(chaiHttp);
 var assert = require('assert');
 var expect = chai.expect;
-let rooturl = 'http://localhost:3001';
+let rooturl = 'http://backend-kafka-zookeeper-320127944.us-west-1.elb.amazonaws.com:3001';
 
 describe('Quora Mocha Test Harness:', () => {
 
@@ -24,13 +24,14 @@ describe('Quora Mocha Test Harness:', () => {
     //Add new question
     it("Test Case 2 - User should be able to add a new question", (done) => { 
 
+        let timestamp = new Date();
         //sample data
         const questionData = { 
-            "question":"why is technology not so op oi oh so important?",
+            "question":"Will the iphone work at -2deg? "+timestamp,
             "topic_name": "technology",
-            "owner_id": "5cc69cca0b036cd050eaa901",
-            "owner_name": "Mocha Test",
-            "owner_username":"mocha@gmail.com"
+            "owner_id": "5cd14cab5e70255146f4031b",
+            "owner_name": "swetha",
+            "owner_username":"swetha.suresh@sjsu.edu"
         }
         chai.request(rooturl)
         .post('/quora/question')
@@ -52,7 +53,7 @@ describe('Quora Mocha Test Harness:', () => {
             "to": "vibhashree.ravindra@sjsu.edu", 
             "from": "swetha.suresh@sjsu.edu", 
             "message": "This message is send from mocha",
-            "sent_from_name": "swetha suresh"
+            "sent_from_name": "swetha"
         }
         chai.request(rooturl)
         .post('/quora/new/message')
@@ -65,20 +66,20 @@ describe('Quora Mocha Test Harness:', () => {
         });
     })
 
-       // Get profile info
-       it("Test Case 4 - Get profile info", (done) => {
+       // add description
+       it("Test Case 4 - adddescription", (done) => {
 
         const data = { 
-           "user_name":"mango2@sjsu.edu"
+            "user_name":"swetha.suresh@sjsu.edu",
+            "aboutme":"i am in wonderland"
         }
         chai.request(rooturl)
-        .get(`/quora/getprofileinfo`)
+        .post(`/quora/adddescription`)
         .send(data)
-        .set('Accept', 'application/json')
         .end((err, res) => {
             expect(err).to.be.null;
-            res.body.should.be.a('Object');
-            res.status.should.be.equal(200);  
+            res.should.have.status(200);
+            res.body.should.have.property('responseMessage').equal('Successfully Added!');
         done();
         });
     })
@@ -87,7 +88,7 @@ describe('Quora Mocha Test Harness:', () => {
 
         //sample data
         var data={
-            "user_name":"mango2@sjsu.edu",
+            "user_name":"swetha.suresh@sjsu.edu",
             "tagline":"appleapple"
           }
         chai.request(rooturl)
@@ -103,7 +104,7 @@ describe('Quora Mocha Test Harness:', () => {
     it("Test Case 6 - Get notifications", (done) => {
 
         const data = { 
-           "user_name":"mango2@sjsu.edu"
+           "user_name":"swetha.suresh@sjsu.edu"
         }
         chai.request(rooturl)
         .get(`/quora/notifications`)
@@ -115,5 +116,61 @@ describe('Quora Mocha Test Harness:', () => {
         done();
         });
     })
+
+    it("Test Case 7 - Get All answers", (done) => {
+
+        chai.request(rooturl)
+        .get(`/answer/5cd1c996781c14520863e869`)
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+            expect(err).to.be.null;
+            res.status.should.be.equal(200);  
+        done();
+        });
+    })
+
+    it("Test Case 8 - Get user bookmarks", (done) => {
+
+        const data = { 
+            user_id: "5cd1c96638a6d0560e944fca"
+         }
+        chai.request(rooturl)
+        .post('/bookmarks')
+        .send(data)
+        .end((err, res) => {
+            expect(err).to.be.null;
+            res.should.have.status(200);
+        done();
+        });
+    })
+
+    it("Test Case 9 - Get questions asked", (done) => {
+
+        const data = { 
+            user_id: "5cd1c96638a6d0560e944fca"
+         }
+        chai.request(rooturl)
+        .get(`/content/questions_asked`)
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+            expect(err).to.be.null;
+            res.status.should.be.equal(200);  
+        done();
+        });
+    })
+
+    it("Test Case 10 - Search topics", (done) => {
+
+         chai.request(rooturl)
+        .get(`/search/topics/technology`)
+        .set('Accept', 'application/json')
+        .end((err, res) => {
+            expect(err).to.be.null;
+            res.status.should.be.equal(200);  
+        done();
+        });
+    })
+
+
 
 })

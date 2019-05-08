@@ -73,7 +73,7 @@ app.use(express.static('public'));
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 // parse application/x-www-form-urlencoded
 // for easier testing with Postman or plain HTML forms
 app.use(bodyParser.urlencoded({extended: true}));

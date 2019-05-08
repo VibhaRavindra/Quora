@@ -10,18 +10,40 @@ var passport = require('passport');
 // Set up middleware
 var requireAuth = passport.authenticate('jwt', {session: false});
 
+router.get('/getanswer/:question_id/:answerId', (req, res) => {
+    console.log("Inside Quora Backend: Get One Answer");
+    kafka.make_request('yourcontent', {
+        "path": "getanswer", "req": {
+            "body": req.body,
+            "params": req.params,
+            "query": req.query
+        }
+    }, function (err, result) {
+        if (err) {
+            console.log(err);
+            console.log("Answer not found");
+            res.status(400).json({ responseMessage: 'Answer not found' });
+        } else {
+            console.log("Answer Details:" + JSON.stringify(result));
+
+            res.writeHead(200, { 'content-type': 'application/json' });
+            res.end(JSON.stringify(result));
+        }
+    })
+})
+
 router.get('/questions_asked', (req,res,next) => {
     let body = {
         userid: req.query.userid
     }
     kafka.make_request('yourcontent', {"path":"questions_asked", body}, function(err,result){
         if (err){
-            res.send({
+            res.status(400).send({
                 questionsAskedSuccess: false,
                 questions_asked_array: []
             })
         }else{
-            res.send(result);
+            res.status(200).send(result);
         }
     });
 });

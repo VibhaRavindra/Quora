@@ -3,14 +3,13 @@ import '../../Styles/Search.css';
 import Header from '../Navigation/Header';
 import { signup, signin } from "../../js/actions/action";
 import { connect } from "react-redux";
-import { Redirect, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import followImg from '../../Images/feed-follow.svg';
 import fb from '../../Images/feed-fb.svg';
 import twitter from '../../Images/feed-twitter.svg';
 import share from '../../Images/feed-share.svg';
 import dots from '../../Images/feed-dots.svg';
 import downvote_unselected from '../../Images/downvote-unselected.svg';
-import { timingSafeEqual } from 'crypto';
 import ReactPaginate from 'react-paginate';
 import unfollow from './unfollow.png'
 import axios from 'axios'
@@ -43,7 +42,6 @@ class SearchQuestions extends Component {
             num_pages:0,
             status:[],
             inc:[]
-        
         }
         this.populateSearchResults = this.populateSearchResults.bind(this)
         //for pagination
@@ -88,14 +86,13 @@ class SearchQuestions extends Component {
         var newinc=this.state.inc
         newinc[x]=newinc[x]-1;
         this.setState({status:newstatus,inc:newinc})
-     var data={
-         follower_username:localStorage.getItem("user_name"),
-         qid:x,
-         question:y
-     }
-     axios.post("http://"+rooturl+":3001/quora/question/unfollowquestion",data, localStorage.getItem('jwtToken'))
-     
- }
+        var data={
+            follower_username:localStorage.getItem("user_name"),
+            qid:x,
+            question:y
+        }
+        axios.post("http://"+rooturl+":3001/quora/question/unfollowquestion",data,              localStorage.getItem('jwtToken'))
+    }
       
     async populateSearchResults(searchString){
         const getQuestionsDetails = await fetch('/search/questions/'+searchString, {
@@ -106,26 +103,17 @@ class SearchQuestions extends Component {
         const all_questions = getQuestions.questions_array
         const pages = Math.ceil(all_questions.length/this.state.results_per_page)
         this.setState({
-            questions : getQuestions.questions_array,
+            questions : all_questions,
             num_pages:pages,
             paginated_questions: all_questions.slice(0,this.state.results_per_page),
         });
         var status={},inc={};
-        this.state.questions.map(member=>
-          
-            
-            member.followers.includes(localStorage.getItem("user_name")) ? status[member.questionid]=true
-            :
-            status[member.questionid]=false
-         
-            )
-            this.state.questions.map(member=>
-          
-                inc[member.questionid]=member.num_of_followers             
-             
-                )
-
-       this.setState({status:status,inc:inc})  
+        this.state.questions.map(member=> member.followers.includes(localStorage.getItem("user_name")) ? status[member.questionid]=true:status[member.questionid]=false
+        )
+        this.state.questions.map(member=>inc[member.questionid]=member.num_of_followers)
+        this.setState({
+            status:status,inc:inc
+        });
     }
     componentDidMount(){
         this.populateSearchResults(this.props.match.params.searchValue)
@@ -141,7 +129,7 @@ class SearchQuestions extends Component {
                             <div className="question-text">{question.question}</div>
                         </Link>
                         <div className="row question-row">
-                        { this.state.status[question.questionid]== false ?
+                        {this.state.status[question.questionid]=== false ?
                             <div className="follow-question"  onClick={(e)=>this.followquestion(e,question.questionid,question.question)}>
                                 <img className="follow-logo" src={followImg} alt="follow"/>
                                 <span className="follow-text">Follow</span>
@@ -153,14 +141,7 @@ class SearchQuestions extends Component {
                                 <img className="follow-logo" src={unfollow} alt="follow"/>
                                 {console.log(this.state.inc[question.questionid],"ufff")}
                                 <span className="numFollowers">{this.state.inc[question.questionid]}</span>
-                            </div>
-
-                        
-                        }
-
-
-
-
+                            </div>}
                             <div className="right-icons">
                                 <div>
                                     <img className="downvote" src={downvote_unselected} alt="downvote"/>
